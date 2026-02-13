@@ -200,15 +200,6 @@ export function useData(baseUrl = '') {
     fetchDashboards();
   }, [fetchDashboards]);
 
-  // 处理中时每 1.5 秒轮询以实时显示进度，空闲时每 10 秒
-  useEffect(() => {
-    const st = status?.status;
-    const isActive = st === 'processing' || st === 'filtering';
-    const interval = isActive ? 1500 : 10000;
-    const t = setInterval(() => refresh(), interval);
-    return () => clearInterval(t);
-  }, [refresh, status?.status]);
-
   useEffect(() => {
     fetchAppConfig();
   }, [fetchAppConfig]);

@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir for Personnel Readiness
+URL: https://www.youtube.com/watch?v=Ru6yrEMX6bw
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+From safeguarding national security to protecting public health, government organizations serve our nation's most critical missions. With limited personnel resources to achieve their goals, agencies must align their people against urgent priorities in an agile manner. However, the scale of personnel in performance data is immense. Data is often codified in disparate formats within a web of siloed systems, limiting leaders' visibility into their workforce, and making even the most basic personnel readiness questions like how many employees are at risk or at risk or need additional training difficult to answer. The talentiers personnel readiness module interoperates with existing infrastructure to unify this fractured landscape. With a collaborative foundation in place, users can seamlessly analyze workforce needs and retention gaps while enforcing agency data security policies using built-in, highly granular access controls. Now, with one click, leaders have visibility into their personnel pipeline. Personnel readiness supports competency alignment, career field health assessments, and retention modeling, and enables tailored development plans for employees, identifying the positions for which their skillset aligns and broadening assignments to develop skillsets critical to agency objectives. The module promotes proactive intervention of high risk behavior, enabling leaders to meet agencies' health and safety goals. Palantir's state-of-the-art access controls ensure sensitive data remains protected. Leveraging personnel readiness, leaders at a federal agency facilitated real-time decision making and supported operational planning at every echelon of a 1 million-plus-person organization. As the pace of innovation quickens, an instability becomes more norm than exception. Agents need immediate visibility into their personnel so they can develop and deploy the right people against ever-changing problems.

@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir for Supply Chain Resilience
+URL: https://www.youtube.com/watch?v=fFVZoPWA1fw
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Every day, around the world, things are breaking. Inherent volatility is pushing our systems beyond the breaking point. We see it in the fragility of our supply chains, and we feel it in our day-to-day lives. Simultaneously, we are in a period of rapid innovation. Technology is advancing by the day. And yet failing to address the challenges that matter the most. Why is this happening? Most enterprise software is designed to solve every problem in the same way, providing very narrow or very rigid solutions. When the unexpected happens, these technologies hamstring organisations' ability to respond, wasting crucial time and draining budgets with each incremental investment. Palantist software was developed for the world's most complex environment. The situations where the only certainty is uncertainty. The same software is now equipping corporate organisations the capability they need to survive and thrive. For times when you need to execute a pivotal transition. For when being the first and the fastest matters. For when you must achieve greatness in the midst of crisis. Palantist can integrate your systems in hours, allowing you to take control of your data, anticipate challenges before there runs, and survive in the world today, while building for the world of tomorrow.

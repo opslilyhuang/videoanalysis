@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir CEO Alex Karp on Software Development as Art | American Swiss Foundation
+URL: https://www.youtube.com/watch?v=uMOnjgDh3LU
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+If you have the wrong assumption, you build the wrong thing. And, okay, let me give you a different input this way. People think that it's like bug. We have this bug feature thing. It is actually a massive feature for sale and value that we've convinced the world. It's pure IQ. Because then somebody who's also got very high pure IQ will say my pure IQ is better than your pure IQ. But in fact, it's IQ times creativity and it's much more like art than science. And the scale function is much more like art.

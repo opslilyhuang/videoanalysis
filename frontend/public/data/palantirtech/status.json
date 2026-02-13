@@ -1,9 +1,9 @@
 {
-  "current": 8,
+  "current": 47,
   "total": 60,
   "status": "processing",
   "phase": "whisper",
   "failed_count": 0,
   "channel": "palantirtech",
-  "updatedAt": "2026-02-13T20:48:40.723670Z"
+  "updatedAt": "2026-02-13T21:12:19.830943Z"
 }
