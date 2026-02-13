@@ -522,6 +522,7 @@ class PalantirVideoAnalyzer:
         保存字幕为独立文本文件
         文件名格式: [等级]_[日期]_[标题].txt
         如果没有字幕，仍然保存元数据并标记 NO TRANSCRIPT AVAILABLE
+        重要：若目标文件已存在且含实际字幕（如 Whisper 转换结果），则不覆盖，避免后续流程破坏已有数据
         """
         # 解析日期
         upload_date = video_data.get('upload_date', '')
@@ -538,6 +539,16 @@ class PalantirVideoAnalyzer:
         title = self.sanitize_filename(video_data.get('title', 'Unknown'))
         filename = f"[{rank}]_{formatted_date}_{title}.txt"
         filepath = self.transcripts_dir / filename
+
+        # 若目标文件已存在且含实际字幕（如 Whisper 结果），不覆盖，避免后续流程破坏
+        if not has_transcript and filepath.exists():
+            try:
+                existing = filepath.read_text(encoding='utf-8')
+                if 'NO TRANSCRIPT AVAILABLE' not in existing:
+                    print(f"  跳过覆盖（保留已有字幕）: {filename}")
+                    return
+            except Exception:
+                pass
 
         # 构建元数据头
         transcript_status = "Available" if has_transcript else "NOT AVAILABLE"
@@ -951,25 +962,31 @@ TRANSCRIPT
             print(f"⚠️  写入 master_index.csv 失败: {e}")
 
     def _generate_transcript_index(self):
-        """生成 transcript_index.json: video_id -> filename，供 API 按 video_id 查找"""
+        """生成 transcript_index.json: video_id -> filename，供 API 按 video_id 查找。
+        同一视频若有多个 transcript 文件（如先无字幕占位、后 Whisper 转换），优先选用有实际内容的文件。"""
         import re
         path = self.data_dir / "transcript_index.json"
-        index = {}
-        for txt_file in self.transcripts_dir.glob("*.txt"):
+        index = {}  # video_id -> (filename, has_content)
+        for txt_file in sorted(self.transcripts_dir.glob("*.txt")):
             try:
                 with open(txt_file, "r", encoding="utf-8") as f:
-                    for line in f:
-                        if line.strip().startswith("URL:"):
-                            url = line.split(":", 1)[1].strip()
-                            m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
-                            if m:
-                                index[m.group(1)] = txt_file.name
-                            break
+                    raw = f.read()
+                for line in raw.split("\n"):
+                    if line.strip().startswith("URL:"):
+                        url = line.split(":", 1)[1].strip()
+                        m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
+                        if m:
+                            vid = m.group(1)
+                            has_content = "NO TRANSCRIPT AVAILABLE" not in raw
+                            if vid not in index or (has_content and not index[vid][1]):
+                                index[vid] = (txt_file.name, has_content)
+                        break
             except Exception:
                 pass
+        out = {vid: fn for vid, (fn, _) in index.items()}
         try:
             with open(path, "w", encoding="utf-8") as f:
-                json.dump(index, f, ensure_ascii=False, indent=2)
+                json.dump(out, f, ensure_ascii=False, indent=2)
         except Exception as e:
             print(f"⚠️  写入 transcript_index.json 失败: {e}")
 
@@ -1314,6 +1331,7 @@ TRANSCRIPT
         need_whisper = [r for r in rows if r.get("Transcript") == "无"]
         if not need_whisper:
             print("✅ 没有需要 Whisper 转录的视频")
+            self._write_status(0, 0, "idle", phase="whisper", failed_count=0)
             return
         vid_pat = re.compile(r"[?&]v=([a-zA-Z0-9_-]{11})")
         to_process = []
@@ -1452,8 +1470,7 @@ def main():
         analyzer.save_transcript(details, transcript, details.get("rank", "B"), details.get("score", 0), transcript is not None, category="")
         analyzer._write_status(1, 1, "idle", phase="whisper")
         if analyzer.data_dir:
-            analyzer._generate_master_index_csv()
-            analyzer._generate_transcript_index()
+            analyzer._sync_transcripts_to_data_dir()
         print("✅ 单视频转换完成")
         return
 

@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir | Secure Collaboration | Capabilities
+URL: https://www.youtube.com/watch?v=TekbB_X3mB4
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Let's take a look at how Palantir can power the next generation of secure collaboration for the joint force. With Gaia, mission partners can be securely integrated into all phases of an operation. Gaia overcomes traditional classification and networking challenges without compromising need to know by unifying a shared understanding of the mission and operating environment with granular data permissions and classification controls. By integrating structured and unstructured data from all sources, Gaia enables effective joint command control of the battlefield. With briefings, insights are fielded in real time, with slides backed by live data and maintained with a strict version control system. New briefs are quickly assembled with templates customized to organizational doctrine and requirements, while all information is updated and protected automatically. Intelligent fields auto-populate with existing data in the system and data sources are tracked to their origin point for confidence in information accuracy and integrity. Indocie users can create and collaborate on intelligence reports, mission plans, and orders in real time. Detailed audit trails capture every change and enforcement for appropriate data permissions and need to know in sure that the right information stays in the right hands. Inbox drives a unified experience to focus operations by providing a central, customizable, and connected place for users to stay up to date with activity happening across tools. Palantir chat unlocks communication by unifying the disjoint enclaves and networks that have historically hamstrunk partner collaboration. Chat enables users to securely share messages, files, and data in classification controlled hybrid network environments with automatic foreign language translation and bridging for interoperability with mission partners. Mission data is automatically extracted from conversation, enabling users to focus on the task at hand. Users can access the information and personnel wherever and whenever they need, from operation centers at their desktop to mobile devices in the field.

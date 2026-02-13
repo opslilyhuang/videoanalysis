@@ -2,7 +2,7 @@
 
 ## 📋 项目概述
 
-这是一个用于分析 Palantir YouTube 频道内容的自动化工具，专门为竞品分析和 AI 深度总结（NotebookLM）而设计。
+这是一个用于分析 Palantir YouTube 频道内容的自动化工具，专门为竞品分析和 AI 深度总结而设计。
 
 ## ✨ 核心功能
 
@@ -182,6 +182,31 @@ PALANTIR_CHANNEL_URL = "https://www.youtube.com/@其他频道"
 1. 将生成的所有 `.txt` 文件批量上传到 NotebookLM
 2. 使用 CSV 索引文件快速定位 S 级视频
 3. 针对 S 级视频可以单独创建 NotebookLM 实例进行深度分析
+
+## 🚀 部署到 Git 与 Vercel
+
+### 推送到 Git
+
+```bash
+cd /path/to/vedioanalysis
+git add .
+git commit -m "feat: 多轮问答、临时看板进度与清理、Vercel 部署配置"
+git remote add origin https://github.com/你的用户名/vedioanalysis.git   # 若已存在可跳过
+git push -u origin main
+```
+
+如需忽略大量数据文件（如 `frontend/public/data` 下的字幕与临时看板数据），可在 `.gitignore` 中增加相应规则后再提交。
+
+### 在 Vercel 上线（仅前端）
+
+1. 打开 [vercel.com](https://vercel.com)，用 GitHub 登录并 **Import** 本仓库。
+2. **Root Directory**：点击 Edit，选择 **`frontend`**。
+3. **Build Command**：`npm run build`（默认即可）  
+   **Output Directory**：`dist`（默认即可）。
+4. 环境变量（可选）：若线上需要接自有 API，可在 Vercel 项目 **Settings → Environment Variables** 中配置。
+5. 点击 **Deploy**，等待构建完成即可获得预览/生产域名。
+
+说明：当前后端 API（`api.py`）需在本地或其它服务器运行；Vercel 仅部署前端静态资源。若希望前后端一体部署，可考虑将 API 改为 Vercel Serverless Functions 或单独部署到 Railway/Render 等。
 
 ## 🛠️ 技术栈
 

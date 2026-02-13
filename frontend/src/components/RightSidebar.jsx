@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FileText, MessageSquare, Sparkles, Send, Volume2, Square } from 'lucide-react';
+import { FileText, MessageSquare, Sparkles, Send, Volume2, Square, Trash2 } from 'lucide-react';
+
+const CHAT_MAX_ROUNDS = 10;
 import { t } from '../i18n';
 import { apiFetch } from '../utils/api';
 
@@ -9,7 +11,7 @@ function extractVideoId(url) {
   return m ? m[1] : null;
 }
 
-export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', dashboardId = 'palantirtech' }) {
+export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideoClick, lang = 'zh', dashboardId = 'palantirtech' }) {
   const [transcript, setTranscript] = useState(null);
   const [summary, setSummary] = useState(null);
   const [loadingTranscript, setLoadingTranscript] = useState(false);
@@ -24,6 +26,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
   const [sending, setSending] = useState(false);
   const [chatScope, setChatScope] = useState('all');
   const [chatCategory, setChatCategory] = useState('A');
+  const [rightTab, setRightTab] = useState('transcript'); // 'transcript' | 'chat'
 
   const videoId = selectedVideo ? extractVideoId(selectedVideo.URL) : null;
 
@@ -40,7 +43,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
     setSummary(null);
     setTranslatedZh(null);
     setTranscriptViewMode('original');
-    apiFetch(`/api/transcript/${videoId}?dashboard_id=${dashboardId}`)
+    apiFetch(`/api/transcript/${videoId}?dashboard_id=${dashboardId}&_t=${Date.now()}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         setTranscript(data);
@@ -84,12 +87,16 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
     setMessages((m) => [...m, { role: 'user', content: q }]);
     setSending(true);
     try {
+      const historyForApi = messages
+        .slice(-CHAT_MAX_ROUNDS * 2)
+        .map((m) => ({ role: m.role, content: m.content }));
       const body = {
         query: q,
         scope: chatScope,
         category: chatScope === 'category' ? chatCategory : undefined,
         video_ids: chatScope === 'selected' && videoId ? [videoId] : undefined,
         dashboard_id: dashboardId,
+        history: historyForApi,
       };
       const r = await apiFetch('/api/chat', {
         method: 'POST',
@@ -97,7 +104,8 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
         body: JSON.stringify(body),
       });
       const data = await r.json();
-      setMessages((m) => [...m, { role: 'assistant', content: data.answer || data.detail || t(lang, 'requestFailed') }]);
+      const sources = Array.isArray(data.sources) && data.sources.length > 0 ? data.sources : undefined;
+      setMessages((m) => [...m, { role: 'assistant', content: data.answer || data.detail || t(lang, 'requestFailed'), sources }]);
     } catch (e) {
       setMessages((m) => [...m, { role: 'assistant', content: `${t(lang, 'error')}: ${e.message}` }]);
     } finally {
@@ -187,19 +195,45 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
 
   return (
     <aside className="w-full h-full flex flex-col border-l border-[var(--border)] bg-[var(--surface)] overflow-hidden">
-      <div className="flex-1 overflow-auto">
-        {/* 字幕面板 */}
-        <div className="p-4 border-b border-[var(--border)]">
-          <div className="flex items-center gap-2 mb-3 text-[var(--muted)] text-sm">
-            <FileText size={16} />
-            {t(lang, 'transcriptSummary')}
-          </div>
-          {!selectedVideo ? (
-            <p className="text-sm text-[var(--muted)]">{t(lang, 'clickVideoForTranscript')}</p>
-          ) : loadingTranscript ? (
-            <p className="text-sm text-[var(--muted)]">{t(lang, 'loading')}</p>
-          ) : transcript ? (
-            <div className="space-y-4">
+      {/* 切换：字幕总结 / 智能问答 */}
+      <div className="shrink-0 flex border-b border-[var(--border)]">
+        <button
+          onClick={() => setRightTab('transcript')}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            rightTab === 'transcript'
+              ? 'bg-[var(--accent)]/20 text-[var(--accent)] border-b-2 border-[var(--accent)]'
+              : 'text-[var(--muted)] hover:text-[var(--text)] hover:bg-white/5'
+          }`}
+        >
+          <FileText size={16} />
+          {t(lang, 'transcriptSummary')}
+        </button>
+        <button
+          onClick={() => setRightTab('chat')}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            rightTab === 'chat'
+              ? 'bg-[var(--accent)]/20 text-[var(--accent)] border-b-2 border-[var(--accent)]'
+              : 'text-[var(--muted)] hover:text-[var(--text)] hover:bg-white/5'
+          }`}
+        >
+          <MessageSquare size={16} />
+          {t(lang, 'aiChat')}
+        </button>
+      </div>
+
+      {/* 字幕面板 */}
+      <div className={`flex-1 min-h-0 flex flex-col overflow-hidden ${rightTab !== 'transcript' ? 'hidden' : ''}`}>
+        <div className="flex items-center gap-2 p-4 pb-2 text-[var(--muted)] text-sm shrink-0">
+          <FileText size={16} />
+          {t(lang, 'transcriptSummary')}
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto px-4 pb-4">
+        {!selectedVideo ? (
+          <p className="text-sm text-[var(--muted)]">{t(lang, 'clickVideoForTranscript')}</p>
+        ) : loadingTranscript ? (
+          <p className="text-sm text-[var(--muted)]">{t(lang, 'loading')}</p>
+        ) : transcript ? (
+          <div className="space-y-4">
               {loadingSummary ? (
                 <p className="text-sm text-[var(--muted)] flex items-center gap-2">
                   <Sparkles size={14} className="animate-pulse" /> {t(lang, 'generatingSummary')}
@@ -255,7 +289,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
                     </div>
                   )}
                 </div>
-                <div className="text-sm leading-relaxed max-h-64 overflow-auto p-3 rounded bg-[var(--bg)] border border-[var(--border)] whitespace-pre-wrap">
+                <div className="text-sm leading-relaxed p-3 rounded bg-[var(--bg)] border border-[var(--border)] whitespace-pre-wrap">
                   {displayTranscript()}
                 </div>
               </div>
@@ -264,14 +298,29 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
             <p className="text-sm text-[var(--muted)]">{t(lang, 'transcriptNotFound')}</p>
           )}
         </div>
+      </div>
 
-        {/* 对话框 */}
-        <div className="p-4 flex flex-col flex-1 min-h-[280px]">
-          <div className="flex items-center gap-2 mb-3 text-[var(--muted)] text-sm">
+      {/* 智能问答面板 */}
+      <div className={`flex-1 min-h-0 flex flex-col overflow-hidden p-4 ${rightTab !== 'chat' ? 'hidden' : ''}`}>
+        <div className="flex items-center justify-between gap-2 mb-3 text-[var(--muted)] text-sm shrink-0">
+          <div className="flex items-center gap-2">
             <MessageSquare size={16} />
             {t(lang, 'aiChat')}
+            <span className="text-xs opacity-75">({t(lang, 'chatMaxRounds', { n: CHAT_MAX_ROUNDS })})</span>
           </div>
-          <div className="flex gap-2 mb-2">
+          {messages.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setMessages([])}
+              className="flex items-center gap-1 px-2 py-1 text-xs rounded border border-[var(--border)] hover:border-red-500/50 hover:text-red-400"
+              title={t(lang, 'clearChat')}
+            >
+              <Trash2 size={14} />
+              {t(lang, 'clearChat')}
+            </button>
+          )}
+        </div>
+        <div className="flex gap-2 mb-2 shrink-0">
             <select
               value={chatScope}
               onChange={(e) => setChatScope(e.target.value)}
@@ -293,8 +342,8 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
                 <option value="B">{t(lang, 'rankBLevel')}</option>
               </select>
             )}
-          </div>
-          <div className="flex-1 overflow-auto space-y-2 mb-3 min-h-[120px]">
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto space-y-2 mb-3">
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -306,10 +355,27 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
               >
                 <span className="text-[var(--muted)] text-xs">{m.role === 'user' ? t(lang, 'me') : t(lang, 'ai')}</span>
                 <p className="mt-1 whitespace-pre-wrap">{m.content}</p>
+                {m.role === 'assistant' && m.sources && m.sources.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-[var(--border)]">
+                    <span className="text-xs text-[var(--muted)]">{t(lang, 'sources')}: </span>
+                    <span className="flex flex-wrap gap-x-2 gap-y-1">
+                      {m.sources.map((s, j) => (
+                        <button
+                          key={j}
+                          type="button"
+                          onClick={() => onSourceVideoClick?.(s.video_id)}
+                          className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] hover:underline"
+                        >
+                          {s.title || s.video_id}
+                        </button>
+                      ))}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
-          </div>
-          <div className="flex gap-2">
+        </div>
+        <div className="flex gap-2 shrink-0">
             <input
               type="text"
               value={input}
@@ -325,7 +391,6 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, lang = 'zh', 
             >
               <Send size={16} />
             </button>
-          </div>
         </div>
       </div>
     </aside>

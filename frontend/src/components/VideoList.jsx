@@ -16,7 +16,7 @@ function extractVideoId(url) {
 
 const PRODUCT_KEYWORDS = ['AIPCon', 'Foundrycon', 'Paragon', 'Pipeline', 'AIP', 'Foundry', 'Gotham', 'Apollo', 'Demo', 'Tutorial', 'Workshop', 'Case Study', 'Bootcamp', 'How to', 'Guide'];
 
-export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang = 'zh', dashboardId, onConvertSuccess, config }) {
+export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang = 'zh', dashboardId, onConvertSuccess, config, scrollToVideoId, onScrolledToVideo, isEmptyTemp }) {
   const { setFilters } = useFilters();
   const { leftPct } = useLayout();
   const keywords = config?.keywords && Object.keys(config.keywords).length > 0 ? Object.keys(config.keywords) : PRODUCT_KEYWORDS;
@@ -110,6 +110,29 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
   }, [search, rankFilter, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, pageSize]);
 
   useEffect(() => {
+    if (!scrollToVideoId || !onScrolledToVideo) return;
+    const idx = filtered.findIndex((v) => extractVideoId(v.URL) === scrollToVideoId);
+    if (idx < 0) {
+      onScrolledToVideo();
+      return;
+    }
+    const targetPage = Math.floor(idx / pageSize) + 1;
+    setPage(targetPage);
+  }, [scrollToVideoId, onScrolledToVideo, filtered, pageSize]);
+
+  useEffect(() => {
+    if (!scrollToVideoId || !onScrolledToVideo) return;
+    const inPage = paginated.some((v) => extractVideoId(v.URL) === scrollToVideoId);
+    if (!inPage) return;
+    const timer = setTimeout(() => {
+      const el = document.querySelector(`[data-video-id="${scrollToVideoId}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      onScrolledToVideo();
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [scrollToVideoId, onScrolledToVideo, paginated]);
+
+  useEffect(() => {
     setFilters({
       search,
       searchInKeywords,
@@ -132,6 +155,14 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
   if (loading) {
     return (
       <div className="text-center py-12 text-[var(--muted)]">{t(lang, 'loading')}</div>
+    );
+  }
+
+  if (isEmptyTemp) {
+    return (
+      <div className="border border-[var(--border)] rounded-lg p-8 text-center">
+        <p className="text-[var(--muted)]">{t(lang, 'tempEmptyHint')}</p>
+      </div>
     );
   }
 
@@ -226,8 +257,8 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
 
       <div className="space-y-1">
         {paginated.map((v) => (
-          <VideoRow
-            key={v._id}
+          <div key={v._id} data-video-id={extractVideoId(v.URL)}>
+            <VideoRow
             video={v}
             lang={lang}
             isSelected={selectedVideo && extractVideoId(selectedVideo.URL) === extractVideoId(v.URL)}
@@ -238,6 +269,7 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
             dashboardId={dashboardId}
             onConvertSuccess={onConvertSuccess}
           />
+          </div>
         ))}
       </div>
       {overlayVideo && createPortal(
@@ -286,6 +318,7 @@ function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect
   const handleConvert = async (e) => {
     e.stopPropagation();
     if (!vid || !dashboardId || converting) return;
+    if (!window.confirm(t(lang, 'convertSingleConfirm'))) return;
     setConverting(true);
     try {
       const { apiFetch } = await import('../utils/api');

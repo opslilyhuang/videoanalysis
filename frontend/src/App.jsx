@@ -30,8 +30,12 @@ function App() {
   const [progressHistoryOpen, setProgressHistoryOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [whisperConfirmOpen, setWhisperConfirmOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [statsExpanded, setStatsExpanded] = useState(true);
+  const [scrollToVideoId, setScrollToVideoId] = useState(null);
+  const [statsExpanded, setStatsExpanded] = useState(false);
+
+  const extractVideoId = (url) => (url || '').match(/[?&]v=([a-zA-Z0-9_-]{11})/)?.[1] || null;
   const {
     dashboards,
     channelId,
@@ -49,14 +53,14 @@ function App() {
     runAnalysisLoading,
   } = useData();
 
-  const isTempBoard = dashboards.find((d) => d.id === channelId)?.isTemp ?? false;
+  const isTempBoard = channelId === 'temp' || (dashboards.find((d) => d.id === channelId)?.isTemp ?? false);
   const displayVideos = videos.length > 0 ? videos : (isTempBoard ? [] : MOCK_VIDEOS);
   const failedCount = failedVideos?.length ?? status?.failed_count ?? 0;
   const isAnalyzing = status?.status === 'processing' || status?.status === 'filtering';
 
   const leftPanel = (
-    <div className="h-full overflow-auto p-6">
-        <header className="flex flex-wrap items-center gap-4 mb-6">
+    <div className="h-full flex flex-col overflow-hidden">
+        <header className="shrink-0 flex flex-wrap items-center gap-4 p-6 pb-4">
         <h1 className="text-xl font-bold">{t(lang, 'title')}</h1>
         <button
           onClick={() => setGuideOpen(true)}
@@ -114,7 +118,7 @@ function App() {
             {runAnalysisLoading || isAnalyzing ? t(lang, 'runAnalysisStarting') : t(lang, 'runAnalysis')}
           </button>
           <button
-            onClick={() => runAnalysis('whisper-missing')}
+            onClick={() => setWhisperConfirmOpen(true)}
             disabled={loading || runAnalysisLoading || isAnalyzing}
             className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
             title={t(lang, 'runAnalysisWhisper')}
@@ -157,9 +161,10 @@ function App() {
         </div>
       </header>
 
-      <div className="space-y-6">
+      <div className="flex-1 min-h-0 overflow-auto px-6 pb-6">
+        <div className="space-y-6">
         {isTempBoard && (
-          <TempBoardPanel onConvert={refresh} loading={runAnalysisLoading} lang={lang} />
+          <TempBoardPanel onConvert={refresh} onCleanEmpty={refresh} loading={runAnalysisLoading} lang={lang} />
         )}
         {!isTempBoard && (
           <div className="border border-[var(--border)] rounded-lg overflow-hidden">
@@ -186,8 +191,7 @@ function App() {
             )}
           </div>
         )}
-        {(!isTempBoard || displayVideos.length > 0) && (
-          <VideoList
+        <VideoList
             videos={displayVideos}
             loading={loading}
             selectedVideo={selectedVideo}
@@ -196,8 +200,11 @@ function App() {
             dashboardId={channelId}
             onConvertSuccess={refresh}
             config={config}
+            scrollToVideoId={scrollToVideoId}
+            onScrolledToVideo={() => setScrollToVideoId(null)}
+            isEmptyTemp={isTempBoard && displayVideos.length === 0}
           />
-        )}
+        </div>
       </div>
       <ProgressHistoryModal
         open={progressHistoryOpen}
@@ -210,7 +217,13 @@ function App() {
     </div>
   );
 
-  const rightPanel = <RightSidebar selectedVideo={selectedVideo} videos={displayVideos} onMetaSaved={refresh} lang={lang} dashboardId={channelId} />;
+  const handleSourceVideoClick = (videoId) => {
+    const v = displayVideos.find((x) => extractVideoId(x.URL) === videoId);
+    if (v) setSelectedVideo(v);
+    setScrollToVideoId(videoId);
+  };
+
+  const rightPanel = <RightSidebar selectedVideo={selectedVideo} videos={displayVideos} onMetaSaved={refresh} onSourceVideoClick={handleSourceVideoClick} lang={lang} dashboardId={channelId} />;
 
   return (
     <FilterProvider>
@@ -227,6 +240,33 @@ function App() {
         config={config}
       />
       <UsageGuide open={guideOpen} onClose={() => setGuideOpen(false)} lang={lang} />
+      {whisperConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold mb-3">{t(lang, 'whisperConfirmTitle')}</h3>
+            <p className="text-sm text-[var(--muted)] mb-6">
+              {t(lang, 'whisperConfirmMsg', { n: displayVideos.filter((v) => v.Transcript === '无').length })}
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setWhisperConfirmOpen(false)}
+                className="px-4 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] hover:border-[var(--accent)] text-sm"
+              >
+                {t(lang, 'cancel')}
+              </button>
+              <button
+                onClick={async () => {
+                  setWhisperConfirmOpen(false);
+                  await runAnalysis('whisper-missing');
+                }}
+                className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium"
+              >
+                {t(lang, 'confirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </FilterProvider>
   );
 }

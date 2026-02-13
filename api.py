@@ -140,6 +140,71 @@ def load_transcript_index(dashboard_id: str = "palantirtech"):
         return json.load(f)
 
 
+def regen_transcript_index(dashboard_id: str = "palantirtech") -> dict:
+    """重新生成 transcript_index.json，同一视频若有多个 transcript 文件则优先选用有实际内容的"""
+    transcripts_path = get_transcripts_dir(dashboard_id)
+    index: dict[str, tuple[str, bool]] = {}
+    for txt_path in sorted(transcripts_path.glob("*.txt")):
+        try:
+            raw = txt_path.read_text(encoding="utf-8")
+            for line in raw.split("\n"):
+                if line.strip().startswith("URL:"):
+                    url = line.split(":", 1)[1].strip()
+                    m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
+                    if m:
+                        vid = m.group(1)
+                        has_content = "NO TRANSCRIPT AVAILABLE" not in raw
+                        if vid not in index or (has_content and not index[vid][1]):
+                            index[vid] = (txt_path.name, has_content)
+                    break
+        except Exception:
+            pass
+    out = {vid: fn for vid, (fn, _) in index.items()}
+    path = get_data_dir(dashboard_id) / "transcript_index.json"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+    return out
+
+
+def _find_best_transcript_file(video_id: str, dashboard_id: str = "palantirtech") -> str | None:
+    """返回该视频最合适的 transcript 文件名（优先有实际内容的文件）。若无可读字幕则返回 None。
+    若通过扫描找到比索引更好的文件，会更新 transcript_index 以便后续请求更快。"""
+    transcripts_path = get_transcripts_dir(dashboard_id)
+    index = load_transcript_index(dashboard_id)
+    candidate = index.get(video_id)
+    if candidate:
+        path = transcripts_path / candidate
+        if path.exists():
+            raw = path.read_text(encoding="utf-8")
+            if "NO TRANSCRIPT AVAILABLE" not in raw:
+                return candidate
+    # 索引指向空内容或无，扫描 transcripts 查找有内容的同视频文件
+    for txt_path in sorted(transcripts_path.glob("*.txt")):
+        try:
+            raw = txt_path.read_text(encoding="utf-8")
+            if "NO TRANSCRIPT AVAILABLE" in raw:
+                continue
+            for line in raw.split("\n"):
+                if line.strip().startswith("URL:"):
+                    url = line.split(":", 1)[1].strip()
+                    m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
+                    if m and m.group(1) == video_id:
+                        found = txt_path.name
+                        # 更新索引，下次直接命中
+                        index[video_id] = found
+                        idx_path = get_data_dir(dashboard_id) / "transcript_index.json"
+                        try:
+                            with open(idx_path, "w", encoding="utf-8") as f:
+                                json.dump(index, f, ensure_ascii=False, indent=2)
+                        except Exception:
+                            pass
+                        return found
+                    break
+        except Exception:
+            pass
+    return None
+
+
 def read_transcript_content(filename: str, dashboard_id: str = "palantirtech") -> tuple[str, str]:
     """返回 (metadata_section, transcript_text)"""
     path = get_transcripts_dir(dashboard_id) / filename
@@ -280,9 +345,8 @@ def get_status(dashboard_id: str = "palantirtech"):
 
 @app.get("/api/transcript/{video_id}")
 def get_transcript(video_id: str, dashboard_id: str = "palantirtech"):
-    """根据 video_id 获取字幕内容"""
-    index = load_transcript_index(dashboard_id)
-    filename = index.get(video_id)
+    """根据 video_id 获取字幕内容。自动优先选用有实际内容的文件（即使 transcript_index 指向空文件）"""
+    filename = _find_best_transcript_file(video_id, dashboard_id)
     if not filename:
         raise HTTPException(status_code=404, detail="未找到该视频的字幕")
     meta, transcript = read_transcript_content(filename, dashboard_id)
@@ -295,6 +359,13 @@ def get_transcript_by_url(url: str):
     if not vid:
         raise HTTPException(status_code=400, detail="无效的 URL")
     return get_transcript(vid)
+
+
+@app.post("/api/regen-transcript-index")
+def api_regen_transcript_index(dashboard_id: str = "palantirtech"):
+    """重新生成 transcript_index.json，修复同一视频多个 transcript 文件时指向空内容文件的问题"""
+    regen_transcript_index(dashboard_id)
+    return {"ok": True, "message": "已重新生成 transcript_index"}
 
 
 class SummarizeRequest(BaseModel):
@@ -382,12 +453,21 @@ keyword1, keyword2, keyword3, ...
     return {"summary": summary, "keywords": keywords, "category": category or "非产品介绍"}
 
 
+CHAT_MAX_ROUNDS = 10  # 多轮对话最多保留的轮数（每轮 = 1 用户问题 + 1 助手回答）
+
+
+class ChatHistoryItem(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+
 class ChatRequest(BaseModel):
     query: str
     video_ids: Optional[List[str]] = None
     scope: Optional[str] = None
     category: Optional[str] = None
     dashboard_id: Optional[str] = "palantirtech"
+    history: Optional[List[ChatHistoryItem]] = None
 
 
 @app.post("/api/chat")
@@ -436,8 +516,15 @@ def chat(request: ChatRequest):
 
     combined = "\n\n---\n\n".join([f"[视频 {c[1]}]\n{c[2]}" for c in contexts[:15]])
 
-    system = """你是 Palantir 视频内容的分析助手。基于提供的字幕摘录回答问题，回答要准确、简洁。若内容中无相关信息，请如实说明。"""
-    user = f"""参考以下视频字幕内容回答用户问题。若需要可结合你的知识补充，但请注明。
+    vid_to_title = {r.get("_video_id", ""): (r.get("Title") or r.get("URL", "")) for r in master if r.get("_video_id")}
+    used_vids = list(dict.fromkeys([c[1] for c in contexts[:15] if c[1]]))
+    sources = [
+        {"video_id": vid, "title": vid_to_title.get(vid) or vid}
+        for vid in used_vids
+    ]
+
+    system = """你是 Palantir 视频内容的分析助手。基于提供的字幕摘录回答问题，回答要准确、简洁。若内容中无相关信息，请如实说明。支持多轮追问，可结合上下文回答。"""
+    user_with_context = f"""参考以下视频字幕内容回答用户问题。若需要可结合你的知识补充，但请注明。
 
 【字幕摘录】
 {combined[:25000]}
@@ -445,11 +532,17 @@ def chat(request: ChatRequest):
 【用户问题】
 {query}
 """
-    answer = call_deepseek([
-        {"role": "system", "content": system},
-        {"role": "user", "content": user}
-    ], max_tokens=2000)
-    return {"answer": answer.strip(), "sources_count": len(contexts)}
+    messages_for_llm = [{"role": "system", "content": system}]
+    # 多轮历史：最多 CHAT_MAX_ROUNDS 轮
+    if request.history:
+        valid = [h for h in request.history if h.role in ("user", "assistant") and (h.content or "").strip()]
+        last_n = valid[-(CHAT_MAX_ROUNDS * 2) :]  # 每轮 2 条
+        for h in last_n:
+            messages_for_llm.append({"role": h.role, "content": (h.content or "").strip()})
+    messages_for_llm.append({"role": "user", "content": user_with_context})
+
+    answer = call_deepseek(messages_for_llm, max_tokens=2000)
+    return {"answer": answer.strip(), "sources_count": len(contexts), "sources": sources}
 
 
 # --- 扩展 API ---
@@ -676,7 +769,69 @@ def convert_temp_videos(request: ConvertVideosRequest, background_tasks: Backgro
             print(f"convert_videos error: {e}")
 
     background_tasks.add_task(_run)
-    return {"ok": True, "message": f"已启动转换 {len(vids)} 个视频", "count": len(vids)}
+    return {"ok": True, "message": f"已启动转换 {len(vids)} 个视频", "count": len(vids), "video_ids": vids}
+
+
+@app.get("/api/temp-convert-status")
+def temp_convert_status(video_ids: str = ""):
+    """检查临时看板中是否已包含指定视频 ID，用于轮询转换进度"""
+    ids = [v.strip() for v in video_ids.split(",") if v.strip()]
+    if not ids:
+        return {"all_found": True, "found": []}
+    temp_dir = get_data_dir("temp")
+    csv_path = temp_dir / "master_index.csv"
+    if not csv_path.exists():
+        return {"all_found": False, "found": []}
+    import csv
+    existing = set()
+    with open(csv_path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            vid = get_video_id(row.get("URL", ""))
+            if vid:
+                existing.add(vid)
+    found = [v for v in ids if v in existing]
+    return {"all_found": len(found) == len(ids), "found": found}
+
+
+@app.post("/api/temp-clean-empty")
+def temp_clean_empty():
+    """清理临时看板中的空记录（无 URL 或无标题）"""
+    temp_dir = get_data_dir("temp")
+    csv_path = temp_dir / "master_index.csv"
+    if not csv_path.exists():
+        return {"ok": True, "removed": 0}
+    import csv
+    rows = []
+    removed = 0
+    with open(csv_path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
+        for row in reader:
+            url = row.get("URL", "").strip()
+            title = (row.get("Title") or "").strip()
+            vid = get_video_id(url)
+            if not url or not vid or not title:
+                removed += 1
+                continue
+            rows.append(row)
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    # 同时更新 transcript_index
+    idx_path = temp_dir / "transcript_index.json"
+    if idx_path.exists():
+        try:
+            with open(idx_path, encoding="utf-8") as fp:
+                idx = json.load(fp)
+            valid_vids = {get_video_id(r.get("URL", "")) for r in rows}
+            idx = {k: v for k, v in idx.items() if k in valid_vids}
+            with open(idx_path, "w", encoding="utf-8") as fp:
+                json.dump(idx, fp, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+    return {"ok": True, "removed": removed}
 
 
 # --- 智能报告生成 ---

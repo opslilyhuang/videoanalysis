@@ -50,9 +50,9 @@ export function ResizableLayout({ left, right }) {
 
   return (
     <LayoutProvider leftPct={leftPct}>
-    <div className="flex w-full h-full min-h-screen">
+    <div className="flex w-full h-screen overflow-hidden">
       <div
-        className="shrink-0 overflow-auto relative"
+        className="shrink-0 h-full overflow-hidden relative flex flex-col"
         style={{ width: `${leftPct}%`, minWidth: MIN_LEFT }}
       >
         {left}
@@ -67,7 +67,7 @@ export function ResizableLayout({ left, right }) {
         <div className="w-1 h-full group-hover:bg-[var(--accent)]" />
       </div>
       <div
-        className="flex-1 min-w-0 overflow-hidden shrink-0"
+        className="flex-1 min-w-0 h-full overflow-hidden shrink-0 flex flex-col"
         style={{ minWidth: MIN_RIGHT }}
       >
         {right}

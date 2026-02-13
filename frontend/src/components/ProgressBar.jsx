@@ -13,6 +13,7 @@ export function ProgressBar({ status, savedCount, lang = 'zh', onHistoryClick })
 
   const phaseLabel = phase === 'filter' ? t(lang, 'filterProgress') : phase === 'whisper' ? t(lang, 'whisperProgress') : t(lang, 'processProgress');
   const statusLabel = st === 'filtering' ? t(lang, 'filtering') : st === 'processing' ? (phase === 'whisper' ? t(lang, 'whisperConverting') : t(lang, 'processing')) : t(lang, 'taskProgress');
+  const idleLabel = !isProcessing && total === 0 ? t(lang, 'noTaskInProgress') : (isProcessing ? statusLabel : phaseLabel);
 
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-4">
@@ -20,11 +21,11 @@ export function ProgressBar({ status, savedCount, lang = 'zh', onHistoryClick })
         <div className="flex items-center gap-2">
           {isProcessing && <Loader2 size={18} className="animate-spin text-[var(--accent)]" />}
           <span className="text-sm text-[var(--muted)]">
-            {isProcessing ? statusLabel : phaseLabel}
+            {idleLabel}
           </span>
         </div>
         <span className="text-sm font-mono flex items-center gap-2">
-          {displayCurrent} / {total}
+          {total > 0 ? `${displayCurrent} / ${total}` : ''}
           {!isProcessing && savedCount != null && phase === 'process' && (
             <span className="text-[var(--muted)] font-normal">({t(lang, 'saved')})</span>
           )}

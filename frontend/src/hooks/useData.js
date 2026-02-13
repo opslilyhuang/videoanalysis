@@ -32,7 +32,10 @@ const parseCSV = (text) => {
 };
 
 export function useData(baseUrl = '') {
-  const [dashboards, setDashboards] = useState([{ id: 'palantirtech', name: 'Palantir', isTemp: false }]);
+  const [dashboards, setDashboards] = useState([
+    { id: 'palantirtech', name: 'Palantir', isTemp: false },
+    { id: 'temp', name: '临时看板', isTemp: true },
+  ]);
   const [channelId, setChannelId] = useState('palantirtech');  // 即 dashboardId
   const [videos, setVideos] = useState([]);
   const [config, setConfig] = useState(null);
@@ -55,7 +58,10 @@ export function useData(baseUrl = '') {
         setDashboards(Array.isArray(data) ? data : []);
       }
     } catch (e) {
-      setDashboards([{ id: 'palantirtech', name: 'Palantir', isTemp: false }]);
+      setDashboards([
+        { id: 'palantirtech', name: 'Palantir', isTemp: false },
+        { id: 'temp', name: '临时看板', isTemp: true },
+      ]);
     }
   }, [baseUrl]);
 
@@ -172,6 +178,8 @@ export function useData(baseUrl = '') {
       fetchFilterSummary(channelId),
       fetchFailedVideos(channelId),
       fetchAppConfig(),
+      // 修复 transcript_index：同一视频多个文件时优先指向有实际字幕的
+      apiFetch(apiUrl(`/regen-transcript-index?dashboard_id=${channelId}`), { method: 'POST' }).catch(() => {}),
     ]);
     setLoading(false);
   }, [channelId, fetchDashboards, fetchVideos, fetchConfig, fetchStatus, fetchFilterSummary, fetchFailedVideos, fetchAppConfig]);
@@ -186,6 +194,25 @@ export function useData(baseUrl = '') {
       });
       if (!res.ok) throw new Error(await res.text());
       await refresh();
+      // Whisper 转换：轮询 status 直到 idle，再刷新以更新统计数据
+      if (mode === 'whisper-missing') {
+        const did = dashboardId || channelId;
+        (async () => {
+          for (let i = 0; i < 360; i++) {
+            await new Promise((r) => setTimeout(r, 5000));
+            try {
+              const stRes = await fetch(dataUrl(`${did}/status.json?t=${Date.now()}`), { cache: 'no-store' });
+              if (stRes.ok) {
+                const st = await stRes.json();
+                if (st?.status === 'idle') {
+                  await refresh();
+                  break;
+                }
+              }
+            } catch {}
+          }
+        })();
+      }
     } catch (e) {
       console.error('runAnalysis failed:', e);
     } finally {
@@ -194,6 +221,7 @@ export function useData(baseUrl = '') {
   }, [refresh, baseUrl, channelId]);
 
   useEffect(() => {
+    setVideos([]);
     refresh();
   }, [channelId]);
   useEffect(() => {
