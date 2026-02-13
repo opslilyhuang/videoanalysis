@@ -1,0 +1,93 @@
+================================================================================
+METADATA
+================================================================================
+Title: Protecting America’s Security with AIP for Nuclear Construction | The Nuclear Company at AIPCon 8
+URL: https://www.youtube.com/watch?v=hTjGU14bxP0
+Published: 2025-09-08
+View Count: 3,350
+Duration: 513 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome co-founder and CEO at 
+the nuclear company, Jonathan Webb. [Music] Just let this sink in for a moment. That 
+pink line is the US. That blue line is China. We still have the largest nuclear operating fleet 
+in the world. But if you see that trajectory, that's about to change. And it's unacceptable. We're all here talking about AI. There's 
+no AI without power. And the most stable power in the world is nuclear power. 
+It was invented right here in the US. Our grandparents, our parents, they built stuff in the 60s and 70s that's 
+still powering 20% of the country today. In the last 30 years, we built two reactors. 
+Those two reactors were just recently finished. They were budgeted at $14 billion. 
+They came in at $36 billion. 10,000 people on the construction site working to 
+execute that job, managing it with paper. We're the largest economy in the world. We talk about 
+innovation and we're giving our frontline teams wagons and wheelbarls of paper. No more. So the 
+nuclear company a few years ago formed with the sole purpose in life to deploy nuclear safer, 
+higher quality and faster and lower cost than anywhere in the world. We have a lot of companies 
+in the US right now designing reactors. Those are all great reactor types. The reactor is not the 
+problem. About 20 to 30% of the total project cost of a nuclear power plant is the reactor. 
+Legacy designs in the US are incredible. Some of the highest operating performance around 
+the world. The new designs coming to market are going to be incredible. The problem is we 
+need to be able to deploy those reactors at a scale that's almost unconscionable for this room. 
+We have a president that set out a goal to build 300 gigawatts by 2050. That's a goal to keep us 
+up with the demand of advanced manufacturing, electrification of everything into this room. AI, 
+I just told you two reactors cost $ 36 billion, took 10,000 people on a construction site. How are 
+we going to slash that? My client's the frontline worker. Probably got some investors and bored 
+watching today. I don't work for you. I work for that man and woman waking up at 3:00 a.m. in 
+a construction trailer. And it's our job to give them tools and technology to win. We can't just 
+talk about the American spirit and not give our people the technology they need. With Palunteer, 
+we're going to do that. And we're doing it in a way that's going to completely shock this world. 
+Right here, what you're looking at is mission control. So, the same way you're launching rockets 
+into space, we're going to we we're designing a control room where our essentially SEAL team 
+six, our best operators are going to be they're going to be managing that project virtually from 
+from afar. As we have multiple projects going, we're going to be looking at the the budget, 
+productivity, everything is running through that data lake. That data lake is going to have 
+LLMs and AI on top of it. My frontline teams, those men and women waking up at 3:00 a.m. in 
+a construction trailer are going to be getting predictive analytics. Supply chains delayed 
+the night before. We need you to redirect. We have corrective action quality control from 
+the day before. We need to redirect teams. Zooming from project from mission control down 
+to project. You're zooming in fleets across the country. Now we've got localized construction 
+teams. Me and my wife got engaged on the last construction site. It's unacceptable the 
+way we're building here in this country. It's unacceptable. We're going to show you 
+what a modern construction site looks like. You're going to come into our construction 
+trailers. It's going to look like this. Not a bunch of paper on the floor. And we're 
+going to take that budget and we're going to slash it in half. We're going to take that 
+time. We're going to slash it in half. We're going to take the people from 10,000 down to 
+5,000. And we can do this with technology. It's this worker first mentality. My client is the 
+frontline employee. How can I reduce the friction from their life? How can I take every piece of 
+element that they need to worry about every day away so that they're getting predictive analytics 
+in real time? Construction foreman, we're going to have drones with LAR. Welds are off. What might 
+have taken 3 weeks to find welds that are off, drone will find it. They're going to let the 
+construction foreman know in an earpiece in real time immediately. We're going to take 
+teams corrective action. redo those welds. What might have cost tens of millions, if not 
+more, in weeks or months in delay can be done in hours. Why are we building stuff like we live 
+in 1985? Well, we're not going to traceability, full traceability, full transparency. This nuclear 
+industry, all you're going to hear about is everybody blaming the regulator. It's the victim, 
+biggest victim Eeyore industry I've ever seen. The regulator is not our problem. We have the safest 
+nuclear on planet Earth. You know how many people have died in the US of of nuclear radiation due 
+to due to power plants? 0.0 ever. That's because of our regulator. We're going to give them radical 
+transparency in real time. All the data we have, let them come in in real time and challenge us 
+on how we can get better. Every decision we make, every change we make will be in that data 
+repository. the last project that was built down in Georgia, hundreds of thousands of pages of 
+documents managing the project with paper. Later this month or next month, uh there's a state here 
+in the US that is about to select an awardee to go finish what is going to be about a 20 billion 
+nuclear power plant, a site that got abandoned uh and was unable to be completed. The state might 
+pick us. So, I hope you know I we've we've shown them our capabilities. In less than two years, 
+because of Palunteer, because of this technology, and because of the team I've been able to 
+hire to partner with the Palunteer team, we are confident we can give those frontline 
+employees not only the tools and that Iron Man suit to go build on time, on budget, but we're 
+going to do it in the safest possible way. The stakes are too high. If you're a sports 
+fan, we're in the fourth quarter, you know, we're in that that second 
+inning or the ninth inning. Our children, that American dream we talk about, 
+it's fading. And China is just beating us. They are winning. So to all the tech bros and 
+all the big CEOs at Fortune 500 companies, it's time for us to work together, leave our 
+ego at the door, be a little bit humbled, and understand that it is possible, but right 
+now we have a long hill to climb. We're not only going to build these power plants low cost 
+and fast. These these are power plants that are going to last a hundred years. They're going 
+to outlive me and my team and my grandkids or kids or your kids are going to be benefiting 
+from the work we're doing. Thank you to the Palunteer team for supporting what we're 
+doing and and look forward to inviting you all onto our construction site later this 
+year, early next year. Thank you. [Music]

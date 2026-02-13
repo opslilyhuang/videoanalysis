@@ -1,0 +1,18 @@
+================================================================================
+METADATA
+================================================================================
+Title: Life at Palantir
+URL: https://www.youtube.com/watch?v=ydrDSQeh1JM
+Published: 2021-12-13
+View Count: 53,909
+Duration: 197 seconds
+Score: 53.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+It was very important to me that I was doing something that I felt really mattered and I was making the world a better place. I liked how teams were small and we had a lot of responsibility within our team. While still getting a lot of the mentorship and guidance that you might see more often than a bigger company. The mission was originally what attracted me. I wanted to work on something with important real world consequences. Collaboration, really valuing what the people around you have to say. Engineering culture probably most of all means that we're in it together. Constant reflection is a key part of our engineering culture. When I think of an engineer, I think of someone who is curious and I think of somebody who wants to understand how the machine is built and break it and rebuild it in a better way. It's very non-traditional when you're comparing it to other software engineering companies. I think Palantir's attitude towards personal growth is letting people step up to the plate. It's really just a matter of going and doing it. This is a place where I feel like highly motivated people really thrive because they're given the luxury to form what they want their own path to look like. I've had a lot of opportunities to kind of like stretch beyond what I thought I was capable of doing. Still drinking the same amount of coffee, still writing the same amount of code. I think we all have a sense of shared ownership now and how our company is trending. It's added more visibility into the kind of problems we work on. It's focused the public on the actual substance of our work. Palantir still has that same underdog mentality that I had when it was still private. I mean we're always trying to expand, we're always trying to improve our value on new use cases, gain new customers and prove that our products can help with these really important workflows. It's also just been easier to explain to family and friends what we do. I just found it to be extremely motivating the actual output of our efforts. The people here are awesome, super smart, super willing to help and just a blast to be around. It's also the dogs. Yeah, definitely the dogs. I'm going to tell them to come join us because I really like to have them on my team. There's always a clear why to the features that you're writing or the code that you're delivering and it is very, very gratifying to be able to see the code that you write today actually deployed in production tomorrow and like solving someone's problem. Just jump in, say yes, do it!

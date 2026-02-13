@@ -1,0 +1,108 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir and the NHS | UK Stories
+URL: https://www.youtube.com/watch?v=NANvLfyDQBI
+Published: 2026-01-30
+View Count: 6,437
+Duration: 450 seconds
+Score: 58.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+One of the, junior nurses said to me,
+I used to have a pocket full of papers, and I used to have to,
+before the end of my shift, I’d look at all my bits of paper
+to make sure I've done everything. Now, with the Federated Data
+Platform, it's all in the system, so she doesn't have to worry about it. And she says it makes a difference
+because she would quite often go home, sit in the car, in the car park and think,
+oh gosh, I've forgotten about Mrs. or whatever, and she would run back
+in or she’d phone somebody that again shows you the level of care
+that our staff have for their patients. A lot of clinicians in their day to day
+roles, when you speak to them, they're logging into
+7, 8 different systems just to complete
+one patient transfer Spreadsheets, bits of paper, email trails,
+you know, the logistics of care. That’s how I think about it
+has many steps and many handovers. There are a number of logistics activities
+that need to happen and come together in order for you to be released
+from the hospital. You've got all this data, all in different shapes,
+and we want to bring it together so that you can see everything
+in one view. That basically means we're connecting
+and liberating data from siloed systems
+into a single repository. Now the opportunity on the
+back of that is phenomenal. So the NHS Federated Data Platform
+is software that enables us to connect together
+lots of our local organisational systems, the asset management system, your
+workforce system, your patient system. It allows us to connect all those together
+so that we can use that information in operational workflows. What we designed in the FDP was we created segregated instances, which every NHS
+organisation owns for themselves, but underpinned by what we refer to
+as the Canonical Data Model, the CDM. The CDM is consistent across
+every instance that we deploy. Data should not have to leave
+a sovereign organisation. It can be called and queried upon need rather than it needs to move
+every single time. Foundry as a tool that underpins
+the Federated Data Platform, provides this unique capability of
+Purpose-based Access Controls. So the data that you have is only for the use
+that it's already been permitted for. This is from my perspective,
+is pretty unique to the Foundry tool. And I've been absolutely blown away
+by this capability. So we spend a lot of time on-site, meeting
+with real operational teams, frontline clinicians, and trying to experience
+those problems firsthand. Working Palantir is fantastic
+because you've got very young, dedicated kind of guys that just want to get on
+with doing things. They are very happy to have a go
+and iterate. Largely for me, Palantir has been really good in that,
+they've kind of given me a lot of responsibility
+and a lot of autonomy and put me on a problem actually,
+I cared quite a lot about. It's been fantastic
+working with Palantir as a partner. We are at the table together,
+working with our local organisations, thinking about innovative solutions
+to the biggest challenges that the NHS is facing today
+and the tenacity, the skills that the Palantir engineers
+bring is phenomenal. We were able to build the first Theatre Scheduling product
+in a matter of weeks. From ideation to and concept to product was done
+I think in about three weeks. And we were testing with one clinician at the hospital
+and a theatre manager. It was demonstrating activities
+which previously took over four minutes to do,
+to be done in 30 seconds. We were able to look at individual
+cases of patients who had had appointments cancelled at one trust, and they've been transferred over to another trust
+and were able to be seen sooner. I think on average, people
+being seen about 40 days sooner, some up to two, three months sooner,
+which is incredible. And this is people
+just going 20 minutes down the road to a different hospital
+who has more capacity. Every hospital
+that uses our Inpatient product generally sees over 120 extra procedures per month, per trust that uses it. We've already delivered over 80,000 extra procedures
+since the rollout of FDP. That's 80,000 extra patients
+been seen in existing NHS capacity. What's been brilliant is hearing the feedback
+from our local organisations. So we have maybe anaesthetist
+in a hospital that say it's normally really difficult for me
+to understand what my schedule looks like. And actually with the FDP
+I can log in myself. I know my patient list and “game
+changing” is one of the phrases that I hear the most. One of our matron
+said, you've changed my life. It's just so much easier. I can log into one system, I can access the information I need,
+and I can discharge my patients on time. People like me do this job for a reason,
+right? It's for public value. And sometimes you come across things
+that really melt your heart. It really gets to you. The consultant, cancer consultant that we were working
+on, on the Cancer Waiting List tool. What she said to me was,
+since using the Federated Data Platform, she's been able to space her day out
+in a way that means that she can spread good news amongst the bad news
+that she has to give to patients. Now, that seems quite a small thing, but if you're giving bad news
+all the time, it really means a lot. And so to me, the FDP provides
+an opportunity for us to actually systematically solve
+some of those bigger problems in a way that isn't just limited to a trust,
+but it's actually kind of like scalable and will actually make a larger difference
+across the whole NHS. The skills that the Palantir engineers bring to
+the NHS FDP programme are phenomenal. Their technical capabilities,
+their engineering capabilities, their business acumen and their ability
+to work with our local organisations and really understand
+what those challenges are, is fantastic. And that means that when we're presented
+with the biggest challenges that the NHS faces today, having a Palantir engineer working side
+by side with those in partnership means that we know
+that we'll come up with a solution that means that we can deliver
+better patient outcomes and services. So we have a lot of staff that burn out because of the extraordinary, tasks
+that they have to do and the amount
+of bureaucracy in the system. So being able to help deliver a tool like the Federated
+Data Platform is immensely helpful. And for me, that's kind of
+worth all its weight in gold.

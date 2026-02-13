@@ -1,0 +1,157 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir CEO Alex Karp Opening Remarks | AIPCon 8
+URL: https://www.youtube.com/watch?v=AsTpgn1Bd2o
+Published: 2025-09-08
+View Count: 40,527
+Duration: 857 seconds
+Score: 84.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome co-founder and chief executive 
+officer at Palunteer, Dr. Alex Karp. [Music] Uh even this working is it working? Even 
+I find that motivational. It's uh it's pretty good. I should just sit down. It's like wow. I 
+don't have anything else to say. But um at at the risk of regurgitating the one thing here, 
+it's like that Silicon Valley uh we've been at odds with Silicon Valley on and off for since our 
+inception, you know, 20 years ago where we were essentially patriotic and um that was optional 
+in Silicon Valley and kind of viewed skeptically. um being pro, you know, America winning was kind 
+of like um I don't know, kind of like being into origami in high school. It's like you didn't get 
+any dates. People kind of felt sorry for you kind of vibe. It's like and you're like, "But my my 
+swan is so beautiful. Why why can't I get why doesn't anyone love me or even like me or why?" 
+And um uh but uh and interestingly now we're largely aligned certainly in private um this is in 
+private become uh the one place in America uh that um is really really disproport disproportionately 
+uh uh showing the world that we can do things that really don't exist it in the western world like 
+the the way in which we scale tech, build tech, create build things creatively. Um, and 
+it's actually a place where people still believe in basic uh controversial concepts like uh 
+meritocracy, agency. Like we actually believe that you can start off with something that looks crazy 
+and if you fight really hard and you surround yourself with highly annoying uh but the most 
+competent people and that's often correlated. It's not causation but you could if you were building 
+Palunteer you could think it's causation. It's uh somewhere between causation and correlation 
+um depending on how much sleep you've had. Uh, and we, you know, literally do not care here 
+where you were born, where you came from, what your parents did. We just don't care. And 
+I, you know, I spent half my life in Europe and, uh, in Germany, a tremendous intellectual 
+culture, but yeah, you will more likely end up uh, where you were born uh, when you're 50 or 
+60 than any other variable. And that's just not the case in Silicon Valley. The what what I think 
+where we're very aligned then though in in in like became very aligned with our our partners was uh 
+and I really underestimated this choice by simply saying we're going to build the product that's 
+going to make this government agency superior. And by the way then you know it's like all these 
+conspiracy things online that like they got us and it's like it was actually the opposite. 
+We fought the government. the government. We actually there were two big things that 
+led to where we got here. One, we're like, we're going to build the thing the government 
+ought to build, which is data protection while finding the bad person. And that the alpha, it's 
+very similar to alpha in a business is margin and growth. It's not one. Alpha in government is not 
+finding bad person. It's finding bad person while enhancing civil liberties or at very the very 
+least making sure those civil liberties are harder to evviscerate. That's the alpha and but 
+then the underlying proposition was we are going to build the whole company around what creates 
+the most value. Now it was partly because we in great part because we believed in it. It was also 
+because we and especially I had the sense no one's going to buy this product from us unless it's 10 
+times better because they are not looking at me and saying you look like me and I'm going to buy 
+that product. uh uh you know I so and if you build downstream from value creation you end up with 
+forward deployed engineers, echoes, deltas, devs, uh very few trained people and the reason you end 
+up with forward deployed engineers especially in the beginning is you have to extend the product 
+and the product we built in the beginning was essentially uh how do you enhance uh data 
+protection and find terrorists in a context where you don't have LLMs and so you have to use very 
+primitive of NLP technology. And the the answer to that is you build this incredibly difficult to 
+build product with a team of the best engineers I think anyone's seen in Silicon Valley in decades. 
+But then even that didn't work. So we had to have people on the front end who are essentially 
+engineers extending the product to a place where the product couldn't go. And why did we do that? 
+I again those of you who are, you know, I don't know, over 40 know the punishment of doing that 
+meant that every single financially trained person was on the other side of the business because what 
+did everyone know as a fact? If you're doing quote unquote services, you have a one multiple. Nobody 
+wants to invest in a business that has a one multiple. So, you are screwed. Uh, and in fact, 
+the fact that everyone thought it was a cult, we kind of were, was what saved the company 
+because we were so in our cult, we were like, "Huh, multiples. We're not interested in that. 
+We're not going public." So, you know, uh, but but if you then fast forward to now, what is driving 
+our business in the US? Like, and it's like, yeah, of course, we have the best partners. You're the 
+best partners. Uh, what defines a best partner? A partner is somebody who is wants to create maximum 
+value in their business. Uh meaning revenue and margin shift and everything that is kind of 
+downstream of that safety goes up, happiness goes up of employees, workers. You know, one of the 
+things I do think Silicon Valley is totally effed up. It's like in overhyping the value of LLMs by 
+by not listening to our treatises of truth that an LLM is a raw material that has to be processed and 
+the processing of the LLM will change America and change the world. By overhyping the LLM and saying 
+you're going to have AGI tomorrow when of course that wasn't what was going to happen. you had to 
+go adversarial to to workers because you had to say, "Well, of course you're going to disappear 
+tomorrow because our LLM doesn't work the way it should today and isn't is very valuable, but 
+it's not without an ontology archite architecture around it to make it predictive, a very unsemingly 
+powerful predict tool that's built on statistics, more precise. you had to say the less precise 
+thing is going to be fully valued tomorrow. And so instead of doing what it should have done, 
+which is you can actually transform your business by being open to different ways of doing business. 
+And what would that mean? It would mean anywhere where human ingenuity can be enhanced. Whether 
+that's the worker, whether that's the person running something, where the person who's in 
+charge of a part of their business can take large language models, use them inside their enterprise. 
+And what does that mean? It means uh extending the human mind. It means being able to use the large 
+language model to change margins, to increase safety, to increase revenue. And how do you do 
+that? Well, of course, the model has to interact with an understanding of your business as it is. 
+What is your business? It is a concatenation of your insights, your knowledge of how to run the 
+business, your competitive advantage, which is essentially tribal. I know how to do this in a 
+different way than anyone else. The highfidelity data sets in your business. Um, and your ability 
+to orchestrate the large language models outside of your business while being inside an abstraction 
+of your business. You would need something like ontology and foundry. Maybe you could get it from 
+someone else. And you would need forward deployed engineers on our side to teach your people how to 
+be forward deployed engineers because there's a way in which you still have to extend the product. 
+So it's it is extending your uniqueness. It is not making you a commodity. And by the way, this is 
+where we're aligned against what most people view as a business cuz we are not building. We want a 
+non-commodified business. We want a business that is completely differentiated than anyone else's 
+so that people struggle to compete to the point where they just have to complain about you on TV, 
+which is what happens to us every day. Everyone's complaining about, you know, it's like, oh, you 
+know, it's like that's what you want for your business. And that's exactly what you can get by 
+taking essentially this very, very important raw material and using it in a processed form in 
+your business. And I I think this is why we're so happy with you and I hope you're as happy 
+with us as we are with you and why, you know, we can and I think basically transfer over time 
+our financials to your financials because we're doing exactly the same thing. And then what I 
+personally love about this is it gives a massively unfair advantage largely to businesses in this 
+country. Why? Because if you compare corporate culture in America to any other country, you have 
+highly dynamic meritocratic structures that are plastic in the sense that people will move and 
+change to what works, not what worked yesterday. It is like Germany is an incredible culture. But 
+the way in which the corporate structure works is the whole corporate structure is in charge for 
+like 30 years. Like it is nearly impossible to change how you do things. in America, we're like, 
+you know, what the we're just going to do what works. And then you have a native essentially this 
+is a native capacity. It's in America. And that also makes a is a huge differentiator because de 
+facto. It's very hard to accept a new way of doing things if the person explaining it is not rooted 
+deeply into your culture. And so this like just completely hypercharges industry. Um now it also 
+hypercharges government which is why we're doing very well in government. Although it's worthy of 
+note whenever people are like Palanteer is doing too well in government. I was like yeah we are 
+doing very well but it's 40 points less than how we're doing in commercial. But any case, what what 
+makes me really look forward to these conferences and every time even more is we are fully aligned 
+with making sure your world looks closer to our world, which is you're able to radically increase 
+growth, radically decrease margins, and increase the happiness of the people in your business 
+at all levels of business, including workers. And that is actually the real promise of the AI 
+revolution. and uh you know and I'm really happy you're here and then the other you know it's just 
+like it's incredible to have you know it's easy for you know like in the end of the day people 
+are going to think well yeah he's in charge of the company he's a large owner of course he says that 
+well again that's why we have people here it's like one of the things we learned when we built PG 
+in the beginning was we could run around telling governments it's the best product or we could 
+put people in the room and you could talk about your experiences good bad ugly And and then what 
+you're doing here is you are actually a change agent function because in fact you got on the boat 
+and the reason why I'm grateful to you, you got on the boat before anyone else. And now everybody's 
+like, "Huh, I have a bot in my company that's not really working. I have a piece of software in my 
+company that was basically you know I don't know like we every single company we look at there's 
+like I don't know in at scale there's like a billion dollars of like duplicative software that 
+is just a Frankenstein monster lurking in your company preventing you from doing what you want. 
+What is it you want to know? I want to know the cost of goods. I want to know how I'm going to 
+increase. How am I going to be more efficient? How do I deal with a a situation where there's 
+macroeconomic disruption? Like, and and the thing that's impeding you from that is the software that 
+is lurking in your system that you somehow can't take out. And we're going to partner with you to 
+do that. And you're going to partner with us to make your company great and occasionally tell us 
+that tell other people that you we helped you and that we're not the freak show that people think or 
+we are. My my favorite compliments in government were like honestly from the special forces. 
+They're like, "Man, you guys look really freaky." And in the beginning, I didn't like you, but 
+when you save help save my buddy's life, I really learned to like you. And another lesson in Silicon 
+Valley is we are able to learn to like people and partner with people. That in the beginning, we're 
+not exactly our cup of tea. And we do this as a culture. It's one of the most underestimated parts 
+of our culture. American culture learns to like what works. And that's a very rare quality. Uh 
+it's very different than like other interesting great places in the world. We really do learn to 
+like and value what is working. Not what worked in the past, not what could work, not what they 
+say at Berkeley philosophy department is going to work. not what some crazy person on the right 
+left aspires to believe could work in a society where that wasn't differentiated that didn't have 
+technology that didn't have finance and didn't have any enemies yeah lots of things work under 
+those conditions including you know the faculty lounge at Berkeley but in this world Americans 
+learn to like and love things that actually do work and give disruptive value and that's 
+essentially what we're claiming to do with you as partners so very happy to have you here. Delighted 
+and I hope you have a great time. Take care. Bye.

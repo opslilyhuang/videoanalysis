@@ -1,0 +1,132 @@
+================================================================================
+METADATA
+================================================================================
+Title: Transforming Network Planning for Aviation | American Airlines at AIPCon 8
+URL: https://www.youtube.com/watch?v=DLx3ix6c0Oo
+Published: 2025-09-08
+View Count: 7,300
+Duration: 676 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome from American Airlines 
+vice president of operations strategic planning and performance an Moroni 
+and director operations schedule and block planning Amit Shindai. Good morning. Um so I hope your journey here was smooth and 
+I hope if you flew that it was on American Airlines. So thank you for your business. Um my 
+name is Ann Moroni. I'm the vice president of operations planning and performance at American 
+and I'm here with my colleague Amit Chandai who's our director of operation strategic planning. 
+Our team's mission to put it simply is to build the best possible plan for the airline that will 
+support our incredibly competitive network and deliver reliably, efficiently, and safely for 
+you, our customers every day. Um, so with that, we're really excited to talk to you about our 
+partnership with Palunteer today and what we've been starting to do with Foundry and how we 
+transform the way that we actually build our network. So nearly a hundred years of innovation 
+at American Airlines and it's led us to be the largest um airline in the world carrying the most 
+passengers and operating the most flight than any other airlines. 630,000 customers will fly on 
+us today. To put it in perspective, that's 220 million passengers a year. 6,500 flights, that's 
+about five times the size of the entire London Heathrow operation will be operated today on 
+American. And we do this with a phenomenal team. Um over 14,000 pilots, 24,000 flight attendants, 
+35,000 airport employees, and 6,000 mechanics who will work 247 365 to run the operation safely. So, 
+our planning um bear with me for a minute. Imagine you're at a gate ready to board your flight. For 
+that moment to happen, the planning has started long in the making to ensure that that aircraft 
+is at that gate with the right crew with fueling, catering, servicing on board, baggage and 
+cargo loaded, the flight plan ready to go, security checks done, and the ground crew and 
+ground equipment ready to push your aircraft. That planning starts month in advance and we'll 
+go all the way to the day of operation where an integrated operation center will actually dispatch 
+your flight. It's an incredibly complex logistical problem and um and unfortunately as you can 
+imagine many of of you in the room can relate our current planning is incredibly um manual 
+uh incredibly sequential and unfortunately as a result quite siloed. So from outdated UIs like 
+you can see on the screen, Excel spreadsheets, attachments being sent via emails between teams, 
+we spend an inordinate amount of time trying to actually build the best schedule we can. We rely 
+on expert planners to weigh thousands of different variables and look at many different data points 
+to find the balance between profitability and reliability. And as you can imagine, it doesn't 
+leave a whole lot of room for optimization. Now our schedule build starts at the core of 
+it with demand. Making sure that our network is the most competitive and can be to serve 
+our customers needs. But obviously a lot of operational constraints need to factor in. 
+Fleet is a big part of it. Pilot hours, gate and infrastructure, airspace conraint 
+constraint, the time we need on the ground to maintain our aircraft and to turn our aircraft 
+at the airport. All of that is built by our network planning team into a first version of a 
+schedule that will then be sent over to all of our operational teams who will then provide feedback, 
+but also build their own plans, workforce plan, workload plan, material plan, ground equipment 
+plan, and you name it. Unfortunately, by the time a team finds an opportunity in the 
+schedule, it is often too late to build in their original plan or the solution they have in mind 
+works great for them but does not actually work for the enterprise. Fixing a crew issue could 
+actually cause a maintenance issue if it's not thought through the right way. We have to solve 
+earlier in the process as a network and we have to solve on a continuous basis. Time is against 
+us when we do this. Of course, the world changes as we build those schedules. Things change and we 
+need to be dynamic and competitive to respond to the market demands. So, we set out to partner with 
+Palunteer to completely redesign this workflow and rethink the way that we do business. And it's 
+been an incredible journey. In just about a year, we've already unlocked millions, tens of millions 
+of dollar value. Um the idea here is to actually collect all of this data and integrate the 
+workflows between network planning and operations planning and really unlock efficiencies that 
+otherwise would not have even been visible to our people. The goal again here in what we've been 
+building is to do this continuously dynamically because the world keeps evolving. So with that 
+I'm going to pass it to Amit who's going to take you a little deeper into what we've built. 
+Thank you an good morning everyone. So for the next five minutes, I want you to imagine 
+that you're the world's best airline scheduler, right? There's a very simple homework problem in 
+front of us. We need to look at that incredibly complex chart that Ant showed and we need to find 
+all the inefficient patterns in it and we need to provide solutions from those patterns uh that 
+helps us operate a safe uh schedule, a reliable schedule for our customers and most importantly a 
+profitable schedule as well. So what's an example of a uh inefficient pattern right? So consider 
+this example uh I have a flight that is coming into San Francisco tonight and there's a flight 
+departing early morning from San Francisco. Those flight timings just are tight enough where the 
+same crew doesn't have adequate amount of rest in between and so the same crew cannot operate the 
+flight that came in and they cannot operate the flight that goes out. As a consequence, that crew 
+has to sit in San Francisco or be a lovely city um for an extra day and we have to ferry in 
+another crew to operate the next day's flight. That's a highly inefficient pattern, right? And 
+we have thousands and thousands of these embedded and hidden in the schedules that we need to go 
+find. Over the last year or so, uh we've been on a journey with Palunteer to try and reimagine our 
+workflows on how do we effectively identify these issues, how do we localize where those issues 
+are happening and how do we actually fix them. So there's a lot going on on the screen that this is 
+a solution we call vector. Uh it's it's obviously built on Foundry otherwise they wouldn't be here. 
+um uh but it shows us sort of the the critical information right like these are key performance 
+indicators at the top uh but there's something really interesting that is happening on the left 
+hand side of your screen right so if you look at the crew advisor uh module you will realize that 
+instead of us having to go hunt and peck where these inefficiencies are those are actually being 
+surfaced to me right so these are recommendations that the models are scanning the entire network on 
+and they're saying there's there's something that I found you probably want to take a look at it. 
+So, let's let's go a little bit deeper into this. As I'm sort of going in a layer deeper, uh 
+what I see is that it's recommending that my San Francisco flight needs to be rettimed by 
+15 minutes, right? And you would think like, okay, that's a really simple thing. 
+like what's the big deal in that right um you should be doing that in any case problem is 
+this happens to be a notoriously difficult problem uh that one flight ret time is going to 
+trigger a whole bunch of upstreams and downstream constraints that now come into 
+conflict and I need a mechanism where I'm starting to think through all of these different 
+possibilities as I work through the schedule to help us with this there are models that are 
+integrated in the background that provide live checks for me, right? And these checks are 
+looking at am I creating a gating issue? Am I creating a turn issue? Am I violating any of my 
+standards? Am I violating any of my site barriers? And those models are running continuously in the 
+background. Right? The the end result of this is I'm going to come into this and you will realize 
+that it's actually identified a conflict for me. So that 15-minute read time even if I implement 
+it the models are now saying that hey you have a problem you need to go resolve this through some 
+other mechanism and in this case instead of just dumping that problem in my lab vector is smart 
+enough where it is actually going in and looking at what are the other possible ways through 
+which you can solve out of this issue and in this case it's looking at some models these are 
+optimization models that are saying if you just flow your lines a little bit differently you have 
+a really good solution right so that's what we are going to do. We're not done yet though, right? So 
+from a customer's experience, um we need to make sure that any solutions, any augmentations of the 
+schedule can operate not just on beautiful blue sky days that we see here in California most of 
+the times, but also on gray sky days, right? When there are thunderstorms uh that are happening. So 
+we have integrated network simulation models in the background that are constantly stressing 
+our network. They're stressing our schedules and they're trying to evaluate where are the 
+choke points, where are the break points in the network. So as you can see on the screen, uh 
+it had identified a potential problem and at the same time if you if you follow the pattern here, 
+it's also going to make recommendations on other edits that I need to do so that I can actually go 
+ahead and fix out of it or solve out of it. This would be a terrible demo if that that uh did not 
+turn green. Um but this is an actual example and as a consequence of this right so the the initial 
+proposition was you can save costs by retiming a a particular flight and you had to work through a 
+whole bunch of layers on other constraints that you have to go solve for and foundry sort of 
+guiding our analysts guiding our scheduulers all the way through at the end of it I'm now 
+confident that the solutions or the schedules that I'm putting out for you are safe, they're 
+reliable, and they're profitable at the same time. that I'm gonna hand it over to Wan. So you saw the 
+the focus that we've had with Foundry has been on driving those efficiencies out of the network and 
+a great example that Amit walked through through crew but the potential for this is a lot bigger 
+and we want to expand their use of Foundry into this integrated planning platform to network 
+planning all the way to all of our operational planning teams and really collapse the workflows 
+to find more areas for efficiencies like we have so far. We're incredibly excited. It's just been 
+about a years'sl long journey. Like I mentioned, tens of millions of dollars already saved and we 
+can't wait for what's next. Thank you. [Applause]

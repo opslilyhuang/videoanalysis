@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir Prix Highlights
+URL: https://www.youtube.com/watch?v=RCw7eakzt5Y
+Published: 2024-01-09
+View Count: 15,479
+Duration: 102 seconds
+Score: 64.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The excitement and energy around AIP is unlike anything I've seen. Everybody wanted a generative AI strategy and nobody had a product and that's our time. With Foundry we were able to influence the outcome of the game while it was being played. From the field, from the operators who actually are playing the game. We've been on a bootcamp with the Palate team for two days and a lot of speed to value right there. And getting to work with some of the best engineers. Typically we get a lot of sales folks from software and a company is working with us and the reason why we are here for the bootcamp as well. Talent here across different use cases has accelerated not only accelerated the journey but it also enables clients to test out various prototypes of the use cases in a very safe, secure and responsible environment. It wasn't the worst quintile getting to the average. Just what we saw immediately in terms of productivity and accuracy, I've just never seen something like that. I've never seen software that can take the knowledge base of our best operators and really institutionalize it. You can have an investor in your stock. Buy that stock at the 4th of July and the company won't even know about it until Thanksgiving. So we started talking to Palate here. This is the work that will forever change the care of our patients. This is the work that matters and we're just so excited to be part of this.

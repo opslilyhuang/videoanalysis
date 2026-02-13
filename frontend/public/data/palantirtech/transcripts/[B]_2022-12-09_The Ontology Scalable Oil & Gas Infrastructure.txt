@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: The Ontology: Scalable Oil & Gas Infrastructure
+URL: https://www.youtube.com/watch?v=UVNAWRN1nCg
+Published: 2022-12-09
+View Count: 16,806
+Duration: 172 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The Palantir Foundry on Tollogy is a unique category of software. It's the key differentiator for us. It's what you thought you were getting when you were promised a digital twin. Some of the most sophisticated players in the space, BP, Exxon, Apache, Kinder Morgan, are already using it as a base plate on which to unify, act, and build. For IT, the ontology means support doesn't need to multiply every time you make a new tech investment. IT can leverage a base plate that brings stability and adaptability to the organization's architecture, maximizing the value of all current and future investments. For the business, the ontology enables you to understand the impact of every decision before you make it. To understand what this really means, think of the complex data and model landscape that underlies your physical assets. Users that have been live for decades, skater systems that have been around for years, a fiber optic cable installed a few months ago, a maintenance work order from yesterday, physics models about reservoir performance, and surface network models about your facilities. The ontology synchronizes these diverse stores of data and models, no matter where they live, into one place. Within the ontology itself, millions of rows and columns of data are woven into an elastic fabric of real world concepts, like a rig or a well. By bringing the digital world in line with the physical world, all applications, problems, and opportunities associated with a real world well in Texas, for example, are then associated with the corresponding digital object. But the ontology doesn't just capture objects. It also captures the processes and actions of your business, concepts, the kinetic relationships between them, and in organizations and analytics, all exist in a dynamic system. This gives our oil and gas customers a common language with which to view data and to act, driving collaboration and interconnected feedback loops across geographies, teams, assets, and business lines. They can leverage data that was once only useful for one point solution against every other adjacent workflow, all while accounting for their permissions and security. Companies within Foundry or any third party tools can wield the ontology. Companies can combine inputs from across their business, from any source, any application, any model. This harmonizes and maximizes their existing technology investments, meaning they don't need to keep adding duplicative solutions and can decommission tools that aren't adding value. See what the ontology can do. Reach out to us to see it in action.

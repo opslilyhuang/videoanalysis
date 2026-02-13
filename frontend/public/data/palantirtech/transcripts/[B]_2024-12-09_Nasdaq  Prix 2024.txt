@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Nasdaq | Prix 2024
+URL: https://www.youtube.com/watch?v=gQRQEGXyZEI
+Published: 2024-12-09
+View Count: 3,327
+Duration: 200 seconds
+Score: 52.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Hi everyone, Jeff Thomas here from Nasdaq. We got our humble beginnings back 50 years ago as the world's first electronic stock exchange. Innovation has always been in our DNA here at Nasdaq and we've always tried to create more efficient markets through liquidity, transparency and integrity. But today Nasdaq is so much more. We are a scaled financial technology provider to the global financial markets. We work with thousands of institutions around the globe to provide information and technology. We have moved all of our infrastructure into the cloud, including some of our U.S. equities markets. We've rolled out AI technology across our products to generate more insights. Last year we generated over $4 billion in revenue and we're actually a publicly listed company on Nasdaq under the ticker NDAQ. So lots of people know us as the leading U.S. equities stock exchange here in the U.S. and we are. We welcome lots of great companies to the capital markets every year through IPOs. But what a lot of people don't know is that we actually generated nearly $1 billion in SaaS revenue last year. We sell technology to corporates, to investors and to financial institutions. We have over 10,000 corporate clients. Now there's only 5,000 companies listed on Nasdaq. So that tells you that we work with public companies on all different exchanges and private companies. Over 130 different exchanges around the world run on Nasdaq technology and billions of investors rely on Nasdaq market every day through retail trading platforms. So we really think that our mission at Nasdaq is to connect capital to opportunity. So when we think about our corporate clients, we serve a variety of different personas. We also work with a number of different groups within the investment community. We help them to simplify and streamline their workflows and create greater transparency. And one of the ways that we do that is through our investor relations business. It's something that we've been in the business of for over 20 years. We have the world's leading investor CRM that corporates use to log and track their interactions with investors. We track over 200,000 meetings annually. And then we also help companies to understand who's buying and selling their stock on a weekly basis. And then we help them to implement data. We map it into our proprietary databases and we estimate the underlying buyers and sellers ahead of the quarterly filings to help them really understand what's driving their valuation. So we sit on a lot of really interesting data about the capital markets. And that is why we are so excited to partner with Palantir. We are working with Palantir to create a custom ontology of all of our structured and unstructured data across the investor relations value chain. We are creating custom workflows through AIP to help unlock insights and efficiencies across the entire workflow of an investor relations professional. And what that's going to do is it's going to help every public company that we work with to figure out who their next great investor is going to be. And that's going to help all of our corporate clients maximize their valuations by leveraging the unique data, an expertise of Nasdaq, and the technology of Palantir. Thank you.

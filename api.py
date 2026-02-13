@@ -1,0 +1,1084 @@
+#!/usr/bin/env python3
+"""
+Palantir 视频分析 API
+- 获取字幕内容
+- 大模型总结
+- 对话问答（支持单篇/多篇/分类/自由查询）
+- 运行分析脚本（支持进度条实时状态）
+"""
+import os
+import re
+import json
+import subprocess
+import sys
+import base64
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import Optional, List
+
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# 项目根目录（api.py 所在目录），确保从正确路径加载 .env
+PROJECT_ROOT = Path(__file__).parent
+load_dotenv(PROJECT_ROOT / ".env")
+DATA_BASE = PROJECT_ROOT / "frontend" / "public" / "data"
+
+
+def get_data_dir(dashboard_id: str = "palantirtech") -> Path:
+    return DATA_BASE / dashboard_id
+
+
+def get_transcripts_dir(dashboard_id: str = "palantirtech") -> Path:
+    return get_data_dir(dashboard_id) / "transcripts"
+
+
+def get_reports_dir(dashboard_id: str = "palantirtech") -> Path:
+    p = DATA_BASE / "reports" / dashboard_id
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def _save_report(dashboard_id: str, payload: dict) -> str:
+    report_id = str(uuid.uuid4())[:8]
+    path = get_reports_dir(dashboard_id) / f"{report_id}.json"
+    payload["id"] = report_id
+    payload["created_at"] = datetime.now().isoformat()
+    if "status" not in payload:
+        payload["status"] = "completed"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return report_id
+
+
+def _update_report(report_id: str, dashboard_id: str, updates: dict):
+    """更新已有报告内容"""
+    path = get_reports_dir(dashboard_id) / f"{report_id}.json"
+    if not path.exists():
+        return
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    data.update(updates)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _list_reports(dashboard_id: str) -> List[dict]:
+    d = get_reports_dir(dashboard_id)
+    out = []
+    for f in sorted(d.glob("*.json"), key=lambda x: x.stat().st_mtime, reverse=True):
+        try:
+            with open(f, encoding="utf-8") as fp:
+                data = json.load(fp)
+            out.append({
+                "id": data.get("id"),
+                "title": data.get("title", ""),
+                "created_at": data.get("created_at", ""),
+                "mode": data.get("mode", ""),
+                "selected_count": data.get("selected_count", 0),
+                "status": data.get("status", "completed"),  # pending | processing | completed | failed
+                "error": data.get("error"),
+            })
+        except Exception:
+            pass
+    return out
+
+
+def _get_report(report_id: str, dashboard_id: str) -> Optional[dict]:
+    path = get_reports_dir(dashboard_id) / f"{report_id}.json"
+    if not path.exists():
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _delete_report(report_id: str, dashboard_id: str) -> bool:
+    path = get_reports_dir(dashboard_id) / f"{report_id}.json"
+    if path.exists():
+        path.unlink()
+        return True
+    return False
+
+
+VALID_AUTH = base64.b64encode(b"admin:admin@2026").decode()
+
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path.startswith("/api/") and request.method != "OPTIONS":
+            token = request.headers.get("X-Auth-Token") or request.headers.get("Authorization", "").replace("Bearer ", "")
+            if token != VALID_AUTH:
+                return JSONResponse({"detail": "未授权，请先登录"}, status_code=401)
+        return await call_next(request)
+
+
+app = FastAPI(title="Palantir Video Analysis API")
+app.add_middleware(AuthMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+def get_video_id(url: str) -> Optional[str]:
+    m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url or "")
+    return m.group(1) if m else None
+
+
+def load_transcript_index(dashboard_id: str = "palantirtech"):
+    path = get_data_dir(dashboard_id) / "transcript_index.json"
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def read_transcript_content(filename: str, dashboard_id: str = "palantirtech") -> tuple[str, str]:
+    """返回 (metadata_section, transcript_text)"""
+    path = get_transcripts_dir(dashboard_id) / filename
+    if not path.exists():
+        return "", ""
+    with open(path, encoding="utf-8") as f:
+        raw = f.read()
+    if "TRANSCRIPT" in raw and "=" * 80 in raw:
+        parts = raw.split("TRANSCRIPT")
+        if len(parts) >= 2:
+            meta = parts[0].strip()
+            transcript = parts[1].split("=" * 80, 1)[-1].strip() if "=" * 80 in parts[1] else parts[1].strip()
+            return meta, transcript
+    return "", raw
+
+
+def load_master_index(dashboard_id: str = "palantirtech") -> List[dict]:
+    import csv
+    path = get_data_dir(dashboard_id) / "master_index.csv"
+    if not path.exists():
+        return []
+    rows = []
+    with open(path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            r["_video_id"] = get_video_id(r.get("URL", ""))
+            rows.append(r)
+    return rows
+
+
+def call_deepseek(messages: list, max_tokens: int = 2000, model: str = "deepseek-chat") -> str:
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="DEEPSEEK_API_KEY 未配置，请在 .env 中设置")
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        r = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+        )
+        return r.choices[0].message.content or ""
+    except Exception as e:
+        err_msg = str(e).lower()
+        # 若 reasoner 返回 404/Not Found，给出更明确的提示
+        if "not found" in err_msg or "404" in err_msg:
+            raise HTTPException(
+                status_code=503,
+                detail="AI 模型暂时不可用（deepseek-reasoner），请稍后重试或联系管理员检查 API 配置"
+            )
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _call_deepseek_with_fallback(messages: list, max_tokens: int = 2000, prefer_reasoner: bool = False) -> str:
+    """优先使用 reasoner，失败时回退到 chat"""
+    if prefer_reasoner:
+        try:
+            return call_deepseek(messages, max_tokens=max_tokens, model="deepseek-reasoner")
+        except HTTPException:
+            pass  # 回退到 chat
+    return call_deepseek(messages, max_tokens=max_tokens, model="deepseek-chat")
+
+
+# --- API Routes ---
+
+
+class RunAnalysisRequest(BaseModel):
+    mode: Optional[str] = "full"  # "full" | "filter-only" | "whisper-missing" | "retry-failed" | "process-others"
+    limit: Optional[int] = None
+    dashboard_id: Optional[str] = "palantirtech"
+
+
+@app.post("/api/run-analysis")
+def run_analysis(request: RunAnalysisRequest, background_tasks: BackgroundTasks):
+    """
+    在后台运行分析脚本，前端通过轮询 status.json 获取实时进度
+    """
+    script = PROJECT_ROOT / "palantir_analyzer.py"
+    if not script.exists():
+        raise HTTPException(status_code=500, detail="palantir_analyzer.py 未找到")
+
+    mode = request.mode or "full"
+    limit = request.limit
+    dashboard_id = request.dashboard_id or "palantirtech"
+
+    app_config_path = DATA_BASE / "app_config.json"
+    auto_whisper = False
+    if app_config_path.exists():
+        try:
+            with open(app_config_path, encoding="utf-8") as f:
+                cfg = json.load(f)
+                auto_whisper = cfg.get("autoWhisperConvert", False)
+        except Exception:
+            pass
+
+    cmd = [sys.executable, str(script), "--dashboard", dashboard_id]
+    if mode == "filter-only":
+        cmd.append("--filter-only")
+    elif mode == "whisper-missing":
+        cmd.append("--whisper-missing")
+    elif mode == "retry-failed":
+        cmd.append("--retry-failed")
+    elif mode == "process-others":
+        cmd.append("--process-others")
+    if limit is not None and limit > 0:
+        cmd.extend(["--limit", str(limit)])
+    if mode == "full" and auto_whisper:
+        cmd.append("--auto-whisper")
+
+    def _run():
+        try:
+            subprocess.run(
+                cmd,
+                cwd=str(PROJECT_ROOT),
+                env={**os.environ, "PYTHONUNBUFFERED": "1"},
+                capture_output=False,
+            )
+        except Exception as e:
+            print(f"run_analysis error: {e}")
+
+    background_tasks.add_task(_run)
+    return {"ok": True, "message": "分析已启动，请查看进度条", "mode": mode}
+
+
+@app.get("/api/status")
+def get_status(dashboard_id: str = "palantirtech"):
+    """获取分析脚本的实时状态（供前端进度条使用）"""
+    path = get_data_dir(dashboard_id) / "status.json"
+    if not path.exists():
+        return {"current": 0, "total": 0, "status": "idle", "phase": "process", "failed_count": 0}
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"current": 0, "total": 0, "status": "idle", "phase": "process", "failed_count": 0}
+
+
+@app.get("/api/transcript/{video_id}")
+def get_transcript(video_id: str, dashboard_id: str = "palantirtech"):
+    """根据 video_id 获取字幕内容"""
+    index = load_transcript_index(dashboard_id)
+    filename = index.get(video_id)
+    if not filename:
+        raise HTTPException(status_code=404, detail="未找到该视频的字幕")
+    meta, transcript = read_transcript_content(filename, dashboard_id)
+    return {"metadata": meta, "transcript": transcript, "filename": filename}
+
+
+@app.get("/api/transcript/by-url")
+def get_transcript_by_url(url: str):
+    vid = get_video_id(url)
+    if not vid:
+        raise HTTPException(status_code=400, detail="无效的 URL")
+    return get_transcript(vid)
+
+
+class SummarizeRequest(BaseModel):
+    text: str
+
+
+class SaveVideoMetaRequest(BaseModel):
+    video_id: str
+    keywords: Optional[List[str]] = None
+    category: Optional[str] = None
+
+
+@app.post("/api/save-video-meta")
+def save_video_meta(request: SaveVideoMetaRequest, dashboard_id: str = "palantirtech"):
+    """保存视频元数据（关键词、分类）"""
+    path = get_data_dir(dashboard_id) / "video_meta.json"
+    meta = {}
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            meta = json.load(f)
+    vid = request.video_id
+    if vid not in meta:
+        meta[vid] = {}
+    if request.keywords is not None:
+        meta[vid]["keywords"] = request.keywords
+    if request.category is not None:
+        meta[vid]["category"] = request.category
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
+    return {"ok": True}
+
+
+@app.get("/api/video-meta")
+def get_video_meta(dashboard_id: str = "palantirtech"):
+    """获取全部视频元数据"""
+    path = get_data_dir(dashboard_id) / "video_meta.json"
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+@app.post("/api/summarize")
+def summarize(request: SummarizeRequest):
+    """对大段文字生成摘要，并提取关键词"""
+    text = (request.text or "").strip()
+    if not text or len(text) < 50:
+        return {"summary": "内容过短，无法生成有效摘要。", "keywords": []}
+    msg = f"""请对以下视频字幕内容：
+1. 生成简洁的中文摘要（约 150-300 字），突出核心观点和关键信息
+2. 提取 5-10 个英文关键词，用逗号分隔，便于检索
+3. 判断分类：若内容以产品/平台功能演示、教程、案例介绍为主，填「产品介绍」；否则填「非产品介绍」
+
+---
+{text[:12000]}
+---
+
+请按以下格式回复：
+【摘要】
+（摘要内容）
+
+【关键词】
+keyword1, keyword2, keyword3, ...
+
+【分类】
+产品介绍 或 非产品介绍
+"""
+    raw = call_deepseek([{"role": "user", "content": msg}], max_tokens=1000)
+    summary = ""
+    keywords = []
+    category = ""
+    if "【摘要】" in raw:
+        p1 = raw.split("【摘要】", 1)[1]
+        parts = p1.split("【关键词】", 1)
+        summary = parts[0].strip()
+        if len(parts) > 1:
+            p2 = parts[1].split("【分类】", 1)
+            kw_str = p2[0].strip()
+            keywords = [k.strip() for k in kw_str.replace("\n", ",").split(",") if k.strip()][:10]
+            if len(p2) > 1:
+                cat = p2[1].strip()
+                category = "产品介绍" if "产品介绍" in cat else "非产品介绍"
+    else:
+        summary = raw.strip()
+    return {"summary": summary, "keywords": keywords, "category": category or "非产品介绍"}
+
+
+class ChatRequest(BaseModel):
+    query: str
+    video_ids: Optional[List[str]] = None
+    scope: Optional[str] = None
+    category: Optional[str] = None
+    dashboard_id: Optional[str] = "palantirtech"
+
+
+@app.post("/api/chat")
+def chat(request: ChatRequest):
+    """对话：在选定范围内搜索相关内容并回答"""
+    query = (request.query or "").strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="请输入问题")
+
+    dashboard_id = request.dashboard_id or "palantirtech"
+    index = load_transcript_index(dashboard_id)
+    master = load_master_index(dashboard_id)
+
+    # 确定要搜索的视频
+    video_ids = set()
+    if request.video_ids and len(request.video_ids) > 0:
+        video_ids = set(request.video_ids)
+    elif request.scope == "all" or not request.scope:
+        video_ids = set(index.keys())
+    elif request.scope == "category" and request.category:
+        for row in master:
+            if row.get("Rank") == request.category and row.get("_video_id"):
+                video_ids.add(row["_video_id"])
+        if not video_ids:
+            video_ids = set(index.keys())
+    else:
+        video_ids = set(index.keys())
+
+    # 收集相关字幕（简单关键词匹配 + 全量兜底）
+    contexts = []
+    query_lower = query.lower()
+    for vid in list(video_ids)[:50]:  # 最多 50 个
+        fn = index.get(vid)
+        if not fn:
+            continue
+        _, text = read_transcript_content(fn, dashboard_id)
+        if not text or "NO TRANSCRIPT" in text[:200]:
+            continue
+        # 简单相关性：包含查询词则优先
+        score = sum(1 for w in query_lower.split() if len(w) > 2 and w in text.lower())
+        contexts.append((score, vid, text[:4000]))
+
+    contexts.sort(key=lambda x: -x[0])
+    if not contexts:
+        contexts = [(0, vid, read_transcript_content(index[vid], dashboard_id)[1][:4000]) for vid in list(index.keys())[:10] if index.get(vid)]
+
+    combined = "\n\n---\n\n".join([f"[视频 {c[1]}]\n{c[2]}" for c in contexts[:15]])
+
+    system = """你是 Palantir 视频内容的分析助手。基于提供的字幕摘录回答问题，回答要准确、简洁。若内容中无相关信息，请如实说明。"""
+    user = f"""参考以下视频字幕内容回答用户问题。若需要可结合你的知识补充，但请注明。
+
+【字幕摘录】
+{combined[:25000]}
+
+【用户问题】
+{query}
+"""
+    answer = call_deepseek([
+        {"role": "system", "content": system},
+        {"role": "user", "content": user}
+    ], max_tokens=2000)
+    return {"answer": answer.strip(), "sources_count": len(contexts)}
+
+
+# --- 扩展 API ---
+
+@app.get("/api/app-config")
+def get_app_config():
+    path = DATA_BASE / "app_config.json"
+    if not path.exists():
+        return {"autoWhisperConvert": True, "checkNewVideosSchedule": ["08:00", "20:00"]}
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if "autoWhisperConvert" not in data:
+        data["autoWhisperConvert"] = True
+    return data
+
+
+class AppConfigBody(BaseModel):
+    autoWhisperConvert: Optional[bool] = None
+    checkNewVideosSchedule: Optional[List[str]] = None
+
+
+@app.post("/api/app-config")
+def save_app_config(body: AppConfigBody):
+    path = DATA_BASE / "app_config.json"
+    data = {}
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    if body.autoWhisperConvert is not None:
+        data["autoWhisperConvert"] = body.autoWhisperConvert
+    if body.checkNewVideosSchedule is not None:
+        data["checkNewVideosSchedule"] = body.checkNewVideosSchedule
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    return {"ok": True}
+
+
+@app.get("/api/dashboards")
+def get_dashboards():
+    path = DATA_BASE / "dashboards.json"
+    if not path.exists():
+        return [{"id": "palantirtech", "name": "Palantir", "channelId": "palantirtech", "channelUrl": "https://www.youtube.com/@palantirtech", "isTemp": False}]
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+class DashboardBody(BaseModel):
+    id: str
+    name: str
+    channelId: Optional[str] = None
+    channelUrl: Optional[str] = None
+    isTemp: Optional[bool] = False
+
+
+@app.post("/api/dashboards")
+def add_dashboard(body: DashboardBody):
+    path = DATA_BASE / "dashboards.json"
+    boards = []
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            boards = json.load(f)
+    boards.append(body.model_dump())
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(boards, f, ensure_ascii=False, indent=2)
+    return {"ok": True}
+
+
+@app.get("/api/messages")
+def get_messages():
+    path = DATA_BASE / "messages.json"
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+@app.patch("/api/messages/{msg_id}")
+def dismiss_message(msg_id: str):
+    path = DATA_BASE / "messages.json"
+    if not path.exists():
+        return {"ok": True}
+    msgs = []
+    with open(path, encoding="utf-8") as f:
+        msgs = json.load(f)
+    msgs = [m for m in msgs if m.get("id") != msg_id]
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(msgs, f, ensure_ascii=False, indent=2)
+    return {"ok": True}
+
+
+class CheckNewVideosBody(BaseModel):
+    dashboard_id: str = "palantirtech"
+
+
+def _do_check_new_videos(dashboard_id: str) -> dict:
+    """检查频道是否有新视频，有则加入消息中心。返回 {ok, new_count, error?}"""
+    import yt_dlp
+    boards_path = DATA_BASE / "dashboards.json"
+    if not boards_path.exists():
+        return {"ok": True, "new_count": 0}
+    with open(boards_path, encoding="utf-8") as f:
+        boards = json.load(f)
+    board = next((b for b in boards if b.get("id") == dashboard_id), None)
+    if not board or board.get("isTemp"):
+        return {"ok": True, "new_count": 0}
+    channel_url = (board.get("channelUrl") or "").rstrip("/")
+    if not channel_url.endswith("/videos"):
+        channel_url = channel_url + "/videos"
+    existing = set()
+    master = load_master_index(dashboard_id)
+    for r in master:
+        vid = r.get("_video_id") or get_video_id(r.get("URL", ""))
+        if vid:
+            existing.add(vid)
+    try:
+        ydl = yt_dlp.YoutubeDL({"quiet": True, "extract_flat": "in_playlist"})
+        res = ydl.extract_info(channel_url, download=False)
+        new_ids = []
+        for e in (res.get("entries") or []):
+            if e and e.get("id") and e["id"] not in existing:
+                new_ids.append(e["id"])
+        if new_ids:
+            path = DATA_BASE / "messages.json"
+            msgs = []
+            if path.exists():
+                with open(path, encoding="utf-8") as f:
+                    msgs = json.load(f)
+            msgs.append({
+                "id": f"new_{dashboard_id}_{new_ids[0]}_{int(__import__('time').time())}",
+                "type": "new_videos",
+                "dashboard_id": dashboard_id,
+                "title": f"频道 {board.get('name', dashboard_id)} 有 {len(new_ids)} 个新视频",
+                "count": len(new_ids),
+                "createdAt": __import__("datetime").datetime.now().isoformat(),
+            })
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(msgs, f, ensure_ascii=False, indent=2)
+        return {"ok": True, "new_count": len(new_ids)}
+    except Exception as e:
+        return {"ok": False, "error": str(e), "new_count": 0}
+
+
+@app.post("/api/check-new-videos")
+def check_new_videos(body: CheckNewVideosBody):
+    """检查频道是否有新视频，有则加入消息中心"""
+    return _do_check_new_videos(body.dashboard_id or "palantirtech")
+
+
+@app.get("/api/status-history")
+def get_status_history(dashboard_id: str = "palantirtech"):
+    path = get_data_dir(dashboard_id) / "status_history.json"
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+class TranslateRequest(BaseModel):
+    text: str
+    target: str = "zh"  # zh | en
+
+
+@app.post("/api/translate")
+def translate_text(request: TranslateRequest):
+    """翻译文本，用于双语字幕"""
+    text = (request.text or "").strip()
+    if not text or len(text) < 10:
+        return {"translated": ""}
+    target = "中文" if request.target == "zh" else "English"
+    msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{text[:8000]}"
+    out = call_deepseek([{"role": "user", "content": msg}], max_tokens=2000)
+    return {"translated": out.strip()}
+
+
+class ConvertVideosRequest(BaseModel):
+    urls: List[str]
+
+
+@app.post("/api/convert-transcript/{video_id}")
+def convert_single_transcript(video_id: str, background_tasks: BackgroundTasks, dashboard_id: str = "palantirtech"):
+    """对单个无字幕视频执行 Whisper 转换"""
+    script = PROJECT_ROOT / "palantir_analyzer.py"
+    if not script.exists():
+        raise HTTPException(status_code=500, detail="palantir_analyzer.py 未找到")
+
+    def _run():
+        try:
+            subprocess.run(
+                [sys.executable, str(script), "--whisper-one", video_id, "--dashboard", dashboard_id],
+                cwd=str(PROJECT_ROOT),
+                env={**os.environ, "PYTHONUNBUFFERED": "1"},
+                capture_output=False,
+            )
+        except Exception as e:
+            print(f"convert_single error: {e}")
+
+    background_tasks.add_task(_run)
+    return {"ok": True, "message": "转换已启动", "video_id": video_id}
+
+
+@app.post("/api/convert-videos")
+def convert_temp_videos(request: ConvertVideosRequest, background_tasks: BackgroundTasks):
+    """临时转换 1-5 个视频链接（临时看板用），保存到 data/temp/"""
+    urls = [u.strip() for u in (request.urls or []) if u.strip()][:5]
+    if not urls:
+        raise HTTPException(status_code=400, detail="请提供 1-5 个 YouTube 视频链接")
+    vids = [get_video_id(u) for u in urls]
+    if any(not v for v in vids):
+        raise HTTPException(status_code=400, detail="包含无效的视频链接")
+    script = PROJECT_ROOT / "palantir_analyzer.py"
+    if not script.exists():
+        raise HTTPException(status_code=500, detail="palantir_analyzer.py 未找到")
+    vid_str = ",".join(vids)
+
+    def _run():
+        try:
+            subprocess.run(
+                [sys.executable, str(script), "--convert-urls", vid_str, "--dashboard", "temp"],
+                cwd=str(PROJECT_ROOT),
+                env={**os.environ, "PYTHONUNBUFFERED": "1"},
+                capture_output=False,
+            )
+        except Exception as e:
+            print(f"convert_videos error: {e}")
+
+    background_tasks.add_task(_run)
+    return {"ok": True, "message": f"已启动转换 {len(vids)} 个视频", "count": len(vids)}
+
+
+# --- 智能报告生成 ---
+
+REPORT_TEMPLATE = """# Palantir 视频分析智能报告
+
+## 一、报告概述
+- 筛选范围：视频数量、分类、等级、时间跨度、播放量区间
+- 报告主题与核心结论摘要（2-3 句）
+
+## 二、筛选范围说明
+- 纳入视频数量及筛选条件
+- 按等级/分类分布概览
+
+## 三、核心观点提炼
+- 基于字幕内容提炼 3-5 个关键观点
+- 每点简明扼要，注明主要来源视频
+
+## 四、产品/功能分析
+- 涉及 AIP、Foundry、Paragon 等产品的功能描述
+- 演示场景与用例总结
+
+## 五、客户案例洞察
+- 重点客户案例的核心信息
+- 业务价值与落地效果
+
+## 六、趋势与建议
+- 行业/产品趋势观察
+- 对竞品分析或学习重点的建议
+
+## 附录：参考视频列表
+- 按等级/日期排序的视频标题、链接、发布时间、播放量"""
+
+
+PRODUCT_KEYWORDS = ["AIPCon", "Foundrycon", "Paragon", "Pipeline", "AIP", "Foundry", "Gotham", "Apollo", "Demo", "Tutorial", "Workshop", "Case Study", "Bootcamp", "How to", "Guide"]
+
+
+def _apply_filters(master: List[dict], filters: dict, dashboard_id: str = "palantirtech") -> List[dict]:
+    """按筛选条件过滤视频，逻辑与前端 VideoList 一致。产品介绍=关键词匹配，非产品=全量-产品-其他"""
+    lst = list(master)
+    f = filters or {}
+    # 加载 video_meta 获取 Keywords
+    meta = {}
+    try:
+        meta_path = get_data_dir(dashboard_id) / "video_meta.json"
+        if meta_path.exists():
+            with open(meta_path, encoding="utf-8") as fp:
+                meta = json.load(fp)
+    except Exception:
+        pass
+    config_kw = {}
+    try:
+        cfg_path = get_data_dir(dashboard_id) / "config.json"
+        if cfg_path.exists():
+            with open(cfg_path, encoding="utf-8") as fp:
+                cfg = json.load(fp)
+                config_kw = cfg.get("keywords") or {}
+    except Exception:
+        pass
+    keywords = list(config_kw.keys()) if config_kw else PRODUCT_KEYWORDS
+
+    def _text(v):
+        kw_str = ""
+        if v.get("_video_id") and v["_video_id"] in meta:
+            kw = meta[v["_video_id"]].get("keywords")
+            if isinstance(kw, list):
+                kw_str = " ".join(str(k) for k in kw)
+            elif kw:
+                kw_str = str(kw)
+        return ((v.get("Title") or "") + " " + (v.get("Keywords") or kw_str)).lower()
+
+    def _is_product(v):
+        return any(kw.lower() in _text(v) for kw in keywords)
+
+    if f.get("search"):
+        q = f["search"].lower()
+        in_kw = f.get("searchInKeywords", False)
+        lst = [v for v in lst if (v.get("Title") or "").lower().find(q) >= 0 or
+               (in_kw and _text(v).find(q) >= 0)]
+    if f.get("rankFilter"):
+        lst = [v for v in lst if v.get("Rank") == f["rankFilter"]]
+    if f.get("rankFilterMulti"):
+        rfm = f["rankFilterMulti"]
+        if rfm == "S+":
+            lst = [v for v in lst if v.get("Rank") == "S"]
+        elif rfm == "A+":
+            lst = [v for v in lst if v.get("Rank") in ("S", "A")]
+        elif rfm == "B+":
+            lst = [v for v in lst if v.get("Rank") in ("S", "A", "B")]
+    if f.get("transcriptFilter"):
+        tf = f["transcriptFilter"]
+        if tf == "有":
+            lst = [v for v in lst if v.get("Transcript") == "有"]
+        elif tf == "无":
+            lst = [v for v in lst if v.get("Transcript") == "无"]
+        elif tf == "whisper":
+            lst = [v for v in lst if v.get("Transcript") == "有" and
+                   (v.get("TranscriptSource") or "").lower() == "whisper"]
+        elif tf == "youtube":
+            lst = [v for v in lst if v.get("Transcript") == "有" and
+                   (v.get("TranscriptSource") or "").lower() != "whisper"]
+    if f.get("categoryFilter"):
+        cf = f["categoryFilter"]
+        if cf == "产品介绍":
+            lst = [v for v in lst if _is_product(v)]
+        elif cf == "其他":
+            lst = [v for v in lst if (v.get("Category") or v.get("category") or "") == "其他"]
+        elif cf == "非产品介绍":
+            lst = [v for v in lst if not _is_product(v) and (v.get("Category") or v.get("category") or "") != "其他"]
+        else:
+            lst = [v for v in lst if (v.get("Category") or v.get("category") or "") == cf]
+    if f.get("dateFrom"):
+        lst = [v for v in lst if (v.get("Date") or "")[:7] >= (f["dateFrom"] or "")[:7]]
+    if f.get("dateTo"):
+        lst = [v for v in lst if (v.get("Date") or "")[:7] <= (f["dateTo"] or "")[:7]]
+    if f.get("viewsMin") and int(f.get("viewsMin") or 0) > 0:
+        lst = [v for v in lst if int(v.get("Views") or 0) >= int(f["viewsMin"])]
+    if f.get("viewsMax") and int(f.get("viewsMax") or 0) > 0:
+        lst = [v for v in lst if int(v.get("Views") or 0) <= int(f["viewsMax"])]
+    return lst
+
+
+def _rank_videos_by_query(videos: List[dict], query: str) -> List[dict]:
+    """按用户需求对视频做相关性预排序：关键词命中越多、等级越高、播放量越大，得分越高"""
+    q_lower = (query or "").lower().strip()
+    q_words = set(re.findall(r"[a-zA-Z0-9\u4e00-\u9fff]+", q_lower)) - {"的", "了", "在", "是", "和", "与", "或", "等", "a", "an", "the", "of", "in", "on"}
+    q_words = {w for w in q_words if len(w) > 1}
+    rank_score = {"S": 3, "A": 2, "B": 1}
+    scored = []
+    for v in videos:
+        title = (v.get("Title") or "").lower()
+        cat = (v.get("Category") or "").lower()
+        text = f"{title} {cat}"
+        hits = sum(1 for w in q_words if w in text)
+        rk = rank_score.get((v.get("Rank") or ""), 0)
+        views = int(v.get("Views") or 0)
+        score = hits * 100 + rk * 10 + min(views // 10000, 10)
+        scored.append((score, v))
+    scored.sort(key=lambda x: -x[0])
+    return [v for _, v in scored]
+
+
+def _load_transcripts_for_videos(video_ids: List[str], dashboard_id: str, max_chars_per_video: int = 4000) -> dict:
+    """加载视频字幕，每段截断以避免超出上下文"""
+    index = load_transcript_index(dashboard_id)
+    result = {}
+    for vid in video_ids:
+        fn = index.get(vid)
+        if not fn:
+            continue
+        _, text = read_transcript_content(fn, dashboard_id)
+        if text and "NO TRANSCRIPT" not in (text[:200] or ""):
+            result[vid] = (text or "")[:max_chars_per_video]
+    return result
+
+
+def _batch_summarize_transcripts(videos: List[dict], transcripts: dict, max_chars_per_video: int = 3000) -> dict:
+    """为多个视频的字幕批量生成摘要（150-300字/视频），减少传入报告模型的 token 量"""
+    items = []
+    for i, v in enumerate(videos[:25], 1):  # 最多 25 个
+        vid = v.get("_video_id")
+        txt = (transcripts.get(vid) or "")[:max_chars_per_video]
+        if not txt:
+            continue
+        title = v.get("Title", "")
+        items.append((i, vid, title, txt))
+    if not items:
+        return {}
+    # 构建批量摘要请求：每个视频用【视频N】分隔
+    parts = []
+    for i, vid, title, txt in items:
+        parts.append(f"【视频{i}】{title}\n{txt}")
+    combined = "\n\n---\n\n".join(parts)
+    # 单次调用生成所有摘要
+    msg = f"""以下是一组视频的字幕内容。请为每个视频生成简洁的中文摘要（150-300字），突出核心观点、关键信息、产品/案例要点。
+
+{combined[:60000]}
+
+请按以下格式回复，每个视频的摘要以【摘要N】开头：
+【摘要1】
+（视频1的摘要内容）
+
+【摘要2】
+（视频2的摘要内容）
+..."""
+    raw = call_deepseek([{"role": "user", "content": msg}], max_tokens=6000)
+    # 解析摘要
+    result = {}
+    for i, vid, _, _ in items:
+        pat = rf"【摘要{i}】\s*\n(.*?)(?=【摘要\d+】|$)"
+        m = re.search(pat, raw, re.DOTALL)
+        summary = (m.group(1).strip() if m else "")[:800]
+        if summary:
+            result[vid] = summary
+        else:
+            # 兜底：取该视频对应部分的简要描述
+            result[vid] = "（摘要解析失败，请参考标题）"
+    return result
+
+
+class ReportGenerateRequest(BaseModel):
+    mode: str  # "filter" | "nl"
+    dashboard_id: Optional[str] = "palantirtech"
+    filters: Optional[dict] = None
+    custom_prompt: Optional[str] = None  # 模式1：用户附加内容，1000字内
+    nl_query: Optional[str] = None  # 模式2：自然语言需求
+
+
+def _do_generate_report(report_id: str, dashboard_id: str, req: dict):
+    """后台执行报告生成"""
+    try:
+        _update_report(report_id, dashboard_id, {"status": "processing"})
+        master = load_master_index(dashboard_id)
+        if not master:
+            _update_report(report_id, dashboard_id, {"status": "failed", "error": "无视频数据"})
+            return
+        mode = req.get("mode", "filter")
+        selected_videos = []
+        if mode == "filter":
+            selected_videos = _apply_filters(master, req.get("filters") or {}, dashboard_id)
+        elif mode == "nl":
+            nlq = (req.get("nl_query") or "").strip()
+            if not nlq:
+                _update_report(report_id, dashboard_id, {"status": "failed", "error": "请输入自然语言需求"})
+                return
+            ranked = _rank_videos_by_query(master, nlq)
+            candidates = ranked[:120]
+            video_list_text = "\n".join([
+                f"- {r.get('_video_id')} | {r.get('Title', '')} | {r.get('Date', '')} | Rank:{r.get('Rank')} | Views:{r.get('Views')} | Category:{r.get('Category', '')}"
+                for r in candidates
+            ])
+            select_prompt = f"""你是一个视频分析助手。用户需求：{nlq}
+
+以下是按相关性预排序的视频列表（格式：video_id | 标题 | 日期 | 等级 | 播放量 | 分类），靠前的更相关：
+{video_list_text}
+
+请根据用户需求，选出最相关的若干视频（建议 10-20 个）。按相关性从高到低排序，每行一个 video_id，不要其他说明。"""
+            selected_ids_str = _call_deepseek_with_fallback(
+                [{"role": "user", "content": select_prompt}],
+                max_tokens=2000,
+                prefer_reasoner=True
+            )
+            selected_ids = re.findall(r"[a-zA-Z0-9_-]{11}", selected_ids_str)
+            master_by_id = {r.get("_video_id"): r for r in master if r.get("_video_id")}
+            selected_videos = [master_by_id[vid] for vid in selected_ids if vid in master_by_id]
+
+        if not selected_videos:
+            err = "未找到与需求匹配的视频" if mode == "nl" else "筛选后无匹配视频"
+            _update_report(report_id, dashboard_id, {"status": "failed", "error": err})
+            return
+
+        video_ids = [v.get("_video_id") for v in selected_videos if v.get("_video_id")]
+        transcripts = _load_transcripts_for_videos(video_ids, dashboard_id)
+        videos_with_transcript = [v for v in selected_videos if v.get("_video_id") in transcripts]
+        if not videos_with_transcript:
+            _update_report(report_id, dashboard_id, {"status": "failed", "error": "所选视频均无字幕"})
+            return
+
+        # 先对每个视频生成摘要，再传入报告模型，减少 token
+        summaries = _batch_summarize_transcripts(videos_with_transcript, transcripts)
+        materials = []
+        for v in videos_with_transcript[:30]:
+            vid = v.get("_video_id")
+            summary = summaries.get(vid) or transcripts.get(vid, "")[:500]  # 无摘要则截断原文兜底
+            materials.append(f"""
+### [{v.get('Title', '')}]
+- 日期: {v.get('Date', '')} | 等级: {v.get('Rank')} | 播放量: {v.get('Views')} | 分类: {v.get('Category', '')}
+- URL: {v.get('URL', '')}
+
+摘要：
+{summary}
+""")
+        combined = "\n---\n".join(materials)
+        custom = (req.get("custom_prompt") or "").strip()[:1000]
+        user_instruction = f"\n\n用户额外要求：{custom}" if custom else ""
+        prompt = f"""请基于以下 Palantir 频道视频的摘要与元信息，按照以下模版结构生成一份中文智能分析报告。
+{user_instruction}
+
+报告模版结构：
+{REPORT_TEMPLATE}
+
+---
+以下是选中视频的摘要与元信息（供你分析）：
+{combined[:30000]}
+
+请直接输出完整报告，使用 Markdown 格式。"""
+
+        report_text = call_deepseek([{"role": "user", "content": prompt}], max_tokens=8000)
+        report_text = report_text.strip()
+        titles = [v.get("Title", "") for v in videos_with_transcript[:20]]
+        title = (req.get("nl_query") or "").strip()[:80] if mode == "nl" else "筛选条件报告"
+        _update_report(report_id, dashboard_id, {
+            "status": "completed",
+            "report": report_text,
+            "selected_count": len(selected_videos),
+            "with_transcript_count": len(videos_with_transcript),
+            "video_titles": titles,
+            "title": title or "智能报告",
+        })
+    except Exception as e:
+        _update_report(report_id, dashboard_id, {"status": "failed", "error": str(e)[:200]})
+
+
+@app.post("/api/report/generate")
+def generate_report(request: ReportGenerateRequest, background_tasks: BackgroundTasks):
+    """智能报告生成：立即返回 id，后台异步生成。历史报告可查看状态。"""
+    dashboard_id = request.dashboard_id or "palantirtech"
+    master = load_master_index(dashboard_id)
+    if not master:
+        raise HTTPException(status_code=400, detail="无视频数据")
+
+    # 快速校验
+    if request.mode == "nl":
+        if not (request.nl_query or request.nl_query.strip()):
+            raise HTTPException(status_code=400, detail="请输入自然语言需求")
+    elif request.mode == "filter":
+        selected = _apply_filters(master, request.filters or {}, dashboard_id)
+        if not selected:
+            raise HTTPException(status_code=400, detail="筛选后无匹配视频，请放宽条件")
+        video_ids = [v.get("_video_id") for v in selected if v.get("_video_id")]
+        transcripts = _load_transcripts_for_videos(video_ids, dashboard_id)
+        if not any(v.get("_video_id") in transcripts for v in selected):
+            raise HTTPException(status_code=400, detail="所选视频均无字幕，无法生成报告")
+
+    title = (request.nl_query or "").strip()[:80] if request.mode == "nl" else "筛选条件报告"
+    payload = {
+        "status": "pending",
+        "title": title or "智能报告",
+        "mode": request.mode,
+        "dashboard_id": dashboard_id,
+        "selected_count": 0,
+    }
+    report_id = _save_report(dashboard_id, payload)
+    req = {
+        "mode": request.mode,
+        "filters": request.filters,
+        "nl_query": request.nl_query,
+        "custom_prompt": request.custom_prompt,
+    }
+    background_tasks.add_task(_do_generate_report, report_id, dashboard_id, req)
+    saved = _get_report(report_id, dashboard_id)
+    return {
+        "id": report_id,
+        "status": "pending",
+        "title": payload["title"],
+        "created_at": saved.get("created_at", ""),
+    }
+
+
+@app.get("/api/report/history")
+def list_reports(dashboard_id: str = "palantirtech"):
+    """报告历史列表"""
+    return _list_reports(dashboard_id)
+
+
+@app.get("/api/report/{report_id}")
+def get_report(report_id: str, dashboard_id: str = "palantirtech"):
+    """获取单个报告详情"""
+    r = _get_report(report_id, dashboard_id)
+    if not r:
+        raise HTTPException(status_code=404, detail="报告不存在")
+    return r
+
+
+@app.delete("/api/report/{report_id}")
+def delete_report(report_id: str, dashboard_id: str = "palantirtech"):
+    """删除报告"""
+    if not _delete_report(report_id, dashboard_id):
+        raise HTTPException(status_code=404, detail="报告不存在")
+    return {"ok": True}
+
+
+@app.on_event("startup")
+def startup():
+    """启动时注册定时任务：每天 8:00 和 20:00 检查新视频"""
+    import threading
+    import time
+    import datetime as dt
+
+    def _loop():
+        last_run = {}
+        while True:
+            try:
+                now = dt.datetime.now()
+                h, m = now.hour, now.minute
+                key = f"{now.date()}_{h}"
+                if h in (8, 20) and m < 30 and last_run.get(key) is None:
+                    try:
+                        r = _do_check_new_videos("palantirtech")
+                        if r.get("new_count", 0) > 0:
+                            print(f"[Scheduler] 发现 {r['new_count']} 个新视频，已加入消息中心")
+                    except Exception as e:
+                        print(f"[Scheduler] check_new_videos: {e}")
+                    last_run[key] = True
+            except Exception:
+                pass
+            time.sleep(900)  # 每 15 分钟检查一次
+
+    t = threading.Thread(target=_loop, daemon=True)
+    t.start()
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

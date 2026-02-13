@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palantir 视频分析系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; }
+        .video-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; cursor: pointer; }
+        .video-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .rank-badge { padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+        .rank-S { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .rank-A { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .rank-B { background: linear-gradient(135deg, #4b556c 0%, #6b7583 100%); color: white; }
+        .chat-container { height: calc(100vh - 80px); overflow-y: auto; }
+        .message-bubble { max-width: 80%; padding: 16px; border-radius: 12px; }
+        .message-user { background: #e0e7ff; margin-left: auto; }
+        .message-ai { background: white; border: 1px solid #e5e7eb; margin-right: auto; }
+        .loading { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div id="root" class="min-h-screen flex">
+        <!-- 左侧视频列表 -->
+        <div class="w-1/3 bg-gray-800 p-4 overflow-y-auto" style="height: calc(100vh - 32px)">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold text-white mb-4">📺 Palantir 视频分析</h2>
+
+                <!-- 等级和字幕筛选 -->
+                <div class="flex gap-2 mb-4">
+                    <div class="flex gap-1">
+                        <label class="text-white text-sm mb-1">等级:</label>
+                        <select id="rankFilter" class="px-3 py-2 bg-gray-700 text-white rounded-lg">
+                            <option value="all">全部</option>
+                            <option value="S">S级</option>
+                            <option value="A">A级</option>
+                            <option value="B">B级</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-1">
+                        <label class="text-white text-sm mb-1">字幕:</label>
+                        <select id="transcriptFilter" class="px-3 py-2 bg-gray-700 text-white rounded-lg">
+                            <option value="all">全部</option>
+                            <option value="with">有字幕</option>
+                            <option value="without">无字幕</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 批量操作按钮 -->
+                <div class="flex gap-2 mb-4">
+                    <button onclick="batchTranscribe()" class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold">
+                        <i class="fas fa-closed-captioning mr-2"></i>
+                        批量转录无字幕视频
+                    </button>
+                    <button onclick="batchSummarize()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
+                        <i class="fas fa-sparkles mr-2"></i>
+                        批量生成 AI 总结
+                    </button>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="bg-gray-700 rounded-lg p-3 mb-4 text-sm text-gray-300">
+                    <div class="grid grid-cols-4 gap-2">
+                        <span>S级: <strong id="countS">0</strong></span>
+                        <span>A级: <strong id="countA">0</strong></span>
+                        <span>B级: <strong id="countB">0</strong></span>
+                        <span>总计: <strong id="countTotal">0</strong></span>
+                    </div>
+                <div class="bg-gray-700 rounded-lg p-3 mb-4 text-sm text-gray-300">
+                    <div class="grid grid-cols-2 gap-2">
+                        <span>📺 播放 20K+: <strong id="count20K">0</strong></span>
+                        <span>📅 2024年1月+: <strong id="count2024">0</strong></span>
+                        <span>🔑 关键词: <strong id="countKeywords">0</strong></span>
+                    </div>
+                    <div class="bg-gray-700 rounded-lg p-3 text-sm text-gray-300">
+                        <span>无字幕: <strong id="countNoTranscript">0</strong></span>
+                    </div>
+                </div>
+
+                <!-- 视频列表容器 -->
+                <div id="videoList" class="space-y-3"></div>
+            </div>
+
+            <!-- 右侧内容区域 -->
+            <div id="rightPanel" class="flex-1 bg-white">
+                <!-- 未选择视频时的占位符 -->
+                <div id="placeholder" class="h-full flex items-center justify-center">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-video text-6xl mb-4"></i>
+                        <p class="text-xl mb-2">请从左侧选择一个视频</p>
+                        <p class="text-sm">点击视频卡片查看详情和字幕</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ==================== 状态管理 ====================
+            let videos = [];
+            let selectedVideo = null;
+            let selectedVideos = [];
+            let chatMessages = [];
+            let isLoadingChat = false;
+            let isTranscribing = {};
+            let isSummarizing = {};
+            let batchTranscribing = false;
+            let filterRank = 'all';
+            let filterTranscript = 'all';
+
+            // ==================== API 配置 ====================
+            const API_BASE = 'http://localhost:5178/api';
+
+            // ==================== 工具函数 ====================
+            function getRankColor(rank) {
+                const colors = { 'S': 'rank-S', 'A': 'rank-A', 'B': 'rank-B' };
+                return colors[rank] || 'rank-B';
+            }
+
+            function getRankLabel(rank) {
+                const labels = { 'S': '战略级', 'A': '高价值', 'B': '基础级' };
+                return labels[rank] || '基础级';
+            }
+
+            // ==================== 数据加载 ====================
+            async function fetchVideos() {
+                try {
+                    const response = await fetch(`${API_BASE}/videos`);
+                    const data = await response.json();
+                    videos = data;
+                    updateVideoList();
+                    updateStats();
+                } catch (error) {
+                    console.error('Failed to fetch videos:', error);
+                    alert('加载视频列表失败: ' + error.message);
+                }
+            }
+
+            function updateVideoList() {
+                const container = document.getElementById('videoList');
+                container.innerHTML = '';
+
+                const filteredVideos = videos.filter(video => {
+                    const rankMatch = filterRank === 'all' || video.rank === filterRank;
+                    const transcriptMatch = filterTranscript === 'all' ||
+                        (filterTranscript === 'with' && video.transcript) ||
+                        (filterTranscript === 'without' && !video.transcript);
+                    return rankMatch && transcriptMatch;
+                });
+
+                filteredVideos.forEach(video => {
+                    const hasTranscriptClass = video.transcript ? 'text-green-600' : 'text-gray-500';
+
+                    container.innerHTML += `
+                        <div onclick="selectVideo('${video.video_id}')" class="video-card p-4 cursor-pointer">
+                            <div class="rank-badge ${getRankColor(video.rank)} mb-3">
+                                ${video.rank} - ${getRankLabel(video.rank)}
+                            </div>
+                            <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                                ${video.title}
+                            </h3>
+                            <div class="text-sm text-gray-600 mb-3 flex gap-3">
+                                <span>📅 ${video.published}</span>
+                                <span>👁 ${video.view_count.toLocaleString()}</span>
+                                ${video.transcript ?
+                                    `<span class="${hasTranscriptClass}">✓ 有字幕</span>` :
+                                    `<button onclick="event.stopPropagation(); transcribeSingle('${video.video_id}')" class="ml-3 px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 text-sm">
+                                        ${isTranscribing[video.video_id] ? '转录中...' : '🎙️ 转录'}
+                                    </button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            function updateStats() {
+                const rankCounts = { S: 0, A: 0, B: 0 };
+                const transcriptCounts = { with: 0, without: 0 };
+
+                videos.forEach(video => {
+                    rankCounts[video.rank]++;
+                    if (video.transcript) transcriptCounts.with++;
+                    else transcriptCounts.without++;
+                });
+
+                document.getElementById('countS').textContent = rankCounts.S;
+                document.getElementById('countA').textContent = rankCounts.A;
+                document.getElementById('countB').textContent = rankCounts.B;
+                document.getElementById('countTotal').textContent = videos.length;
+                document.getElementById('countNoTranscript').textContent = transcriptCounts.without;
+            }
+
+            // ==================== 视频选择 ====================
+            async function selectVideo(videoId) {
+                const response = await fetch(`${API_BASE}/video/${videoId}`);
+                const data = await response.json();
+                selectedVideo = data;
+
+                renderRightPanel();
+            }
+
+            // ==================== 转录功能 ====================
+            async function transcribeSingle(videoId) {
+                if (isTranscribing[videoId]) return;
+
+                isTranscribing[videoId] = true;
+                selectVideo(videoId);
+
+                try {
+                    const response = await fetch(`${API_BASE}/transcribe/${videoId}`, {
+                        method: 'POST'
+                    });
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        await fetchVideos();
+                        const updatedVideo = videos.find(v => v.video_id === videoId);
+                        if (updatedVideo && updatedVideo.transcript) {
+                            selectedVideo = updatedVideo;
+                            renderRightPanel();
+                            alert(`✅ 转录完成！字幕已保存。`);
+                        }
+                    } else {
+                        alert(`转录失败: ${result.transcript || 'Unknown error'}`);
+                    }
+                } catch (error) {
+                    console.error('Transcription error:', error);
+                    alert(`转录失败: ${error.message}`);
+                } finally {
+                    delete isTranscribing[videoId];
+                }
+            }
+
+            async function batchTranscribe() {
+                const noTranscriptVideos = videos.filter(v =>
+                    !v.transcript && (filterRank === 'all' || v.rank === filterRank)
+                );
+
+                if (noTranscriptVideos.length === 0) {
+                    alert('没有需要转录的视频！当前筛选下所有视频都有字幕。');
+                    return;
+                }
+
+                const videoIds = noTranscriptVideos.map(v => v.video_id);
+                batchTranscribing = true;
+
+                try {
+                    const response = await fetch(`${API_BASE}/batch-transcribe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            video_ids: videoIds,
+                            mode: 'no_transcript'
+                        })
+                    });
+                    const result = await response.json();
+
+                    alert(`批量转录完成！\\n成功: ${result.completed}\\n失败: ${result.failed}`);
+
+                    await fetchVideos();
+                    renderRightPanel();
+                } catch (error) {
+                    console.error('Batch transcribe error:', error);
+                    alert(`批量转录失败: ${error.message}`);
+                } finally {
+                    batchTranscribing = false;
+                }
+            }
+
+            async function batchSummarize() {
+                const videosWithTranscript = videos.filter(v => v.transcript);
+
+                if (videosWithTranscript.length === 0) {
+                    alert('没有可总结的视频！所有视频都没有字幕。');
+                    return;
+                }
+
+                const videoIds = videosWithTranscript.map(v => v.video_id);
+                isSummarizing = { ...isSummarizing };
+
+                // 为每个视频设置加载状态
+                videosWithTranscript.forEach(v => {
+                    isSummarizing[v.video_id] = true;
+                });
+
+                try {
+                    const response = await fetch(`${API_BASE}/summarize`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            video_ids: videoIds,
+                            mode: 'single'
+                        })
+                    });
+                    const result = await response.json();
+
+                    alert(`批量总结完成！\\n成功: ${result.summarized}\\n总计: ${result.total}`);
+
+                    await fetchVideos();
+                } catch (error) {
+                    console.error('Batch summarize error:', error);
+                    alert(`批量总结失败: ${error.message}`);
+                } finally {
+                    Object.keys(isSummarizing).forEach(key => delete isSummarizing[key]);
+                }
+            }
+
+            // ==================== 右侧面板渲染 ====================
+            function renderRightPanel() {
+                const panel = document.getElementById('rightPanel');
+                const placeholder = document.getElementById('placeholder');
+
+                if (!selectedVideo) {
+                    panel.style.display = 'block';
+                    placeholder.style.display = 'flex';
+                    return;
+                }
+
+                panel.style.display = 'block';
+                placeholder.style.display = 'none';
+
+                // 构建右侧内容
+                let contentHTML = `
+                    <div class="h-full flex flex-col">
+                        <!-- 顶部信息栏 -->
+                        <div class="bg-gray-50 p-4 border-b">
+                            <div class="flex justify-between items-center mb-2">
+                                <div>
+                                    <h2 class="text-lg font-bold text-gray-900">
+                                                ${selectedVideo.title}
+                                            </h2>
+                                    <div class="text-sm text-gray-600">
+                                                <span class="px-2 py-1 rounded ${getRankColor(selectedVideo.rank)} text-white mr-2">
+                                                    ${selectedVideo.rank}级
+                                                </span>
+                                                <span>评分: ${selectedVideo.score}</span>
+                                                <span>发布: ${selectedVideo.published}</span>
+                                                <span>👁 ${selectedVideo.view_count.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <button onclick="closePanel()" class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-times text-xl"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 匹配条件 -->
+                                <div class="flex gap-2 flex-wrap mb-2">
+                                    ${selectedVideo.matched_criteria?.['20k_views'] ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">20K+播放</span>' : ''}
+                                    ${selectedVideo.matched_criteria?.['since_2024'] ? '<span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">2024+</span>' : ''}
+                                    ${selectedVideo.matched_criteria?.['keywords']?.length > 0 ? '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">关键词: ${selectedVideo.matched_criteria.keywords.join(', ')}</span>' : ''}
+                                </div>
+                        </div>
+
+                        <!-- 内容滚动区域 -->
+                        <div class="flex-1 overflow-y-auto p-4" style="height: calc(100vh - 200px)">
+                `;
+
+                // AI 总结
+                if (selectedVideo.summary) {
+                    contentHTML += `
+                        <div class="mb-4 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
+                                    <div class="flex items-center mb-2">
+                                                <i class="fas fa-sparkles text-purple-600 mr-2"></i>
+                                                <h3 class="font-semibold text-purple-900">AI 总结</h3>
+                                            </div>
+                                            <p class="text-gray-800 leading-relaxed">
+                                                ${selectedVideo.summary}
+                                            </p>
+                                        </div>
+                                    `;
+                }
+
+                // 字幕内容
+                if (selectedVideo.transcript) {
+                    contentHTML += `
+                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                    <h3 class="font-semibold text-gray-900 mb-2">
+                                                <i class="fas fa-closed-captioning text-blue-600 mr-2"></i>
+                                                完整字幕
+                                            </h3>
+                                            <p class="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+                                                ${selectedVideo.transcript}
+                                            </p>
+                                        </div>
+                                    `;
+                }
+
+                // 无字幕提示
+                if (!selectedVideo.transcript && !selectedVideo.summary) {
+                    contentHTML += `
+                        <div class="flex items-center justify-center h-full">
+                                                    <div class="text-center text-gray-500">
+                                                                <i class="fas fa-closed-captioning text-6xl mb-4"></i>
+                                                                <p class="text-lg mb-2">此视频暂无字幕</p>
+                                                                <div class="text-sm mt-4">点击「🎙️ 转录」按钮使用 Whisper 自动生成字幕</div>
+                                                            </div>
+                                                        </div>
+                                    `;
+                }
+
+                // 聊天消息区域
+                if (chatMessages.length > 0) {
+                    contentHTML += `
+                        <div class="space-y-4">
+                                    ${chatMessages.map(msg => `
+                                        <div class="message-bubble ${msg.role === 'user' ? 'message-user ml-auto' : 'message-ai mr-auto'}">
+                                                            <div class="text-sm">
+                                                                ${msg.role === 'user' ? `
+                                                                                    <strong>您:</strong> ${msg.content}
+                                                                                ` : `
+                                                                                    <div class="font-semibold mb-1">AI 回答</div>
+                                                                                    <div class="text-gray-800 whitespace-pre-wrap">${msg.content}</div>
+                                                                                `}
+                                                            </div>
+                                                        </div>
+                                                    `).join('')}
+                                    </div>
+                        `;
+                }
+
+                // 底部输入区域
+                contentHTML += `
+                                <div class="border-t p-4 bg-gray-50">
+                                    <div class="flex">
+                                        <input
+                                            type="text"
+                                            id="questionInput"
+                                            value="${chatMessages.length > 0 ? chatMessages[chatMessages.length - 1].content : ''}"
+                                            onkeypress="if (event.key === 'Enter' && !isLoadingChat) { handleSendQuestion(); }"
+                                            placeholder="针对当前视频提问..."
+                                            disabled="${isLoadingChat}"
+                                            class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                                        />
+                                        <button onclick="handleSendQuestion()" disabled="${isLoadingChat || !document.getElementById('questionInput').value.trim()}" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 font-semibold">
+                                            ${isLoadingChat ?
+                                                '<span class="loading inline-block">●</span>' :
+                                                '<i class="fas fa-paper-plane mr-2"></i> 发送'
+                                            }
+                                        </button>
+                                    </div>
+                                </div>
+                        `;
+                }
+
+                contentHTML += `
+                            </div>
+                        </div>
+                    `;
+
+                panel.innerHTML = contentHTML;
+
+                // 自动滚动到底部
+                const chatContainer = panel.querySelector('.overflow-y-auto');
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            }
+
+            function closePanel() {
+                selectedVideo = null;
+                renderRightPanel();
+            }
+
+            // ==================== 聊天功能 ====================
+            async function handleSendQuestion() {
+                const input = document.getElementById('questionInput');
+                const question = input.value.trim();
+
+                if (!question) return;
+
+                isLoadingChat = true;
+
+                const userMessage = {
+                    id: Date.now(),
+                    role: 'user',
+                    content: question
+                };
+
+                let newMessages = [...chatMessages, userMessage];
+                setChatMessages(newMessages);
+
+                try {
+                    const response = await fetch(`${API_BASE}/question`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            video_id: selectedVideo?.video_id || '',
+                            question: question,
+                            context_mode: 'single'
+                        })
+                    });
+                    const result = await response.json();
+
+                    newMessages.push({
+                        id: Date.now() + 1,
+                        role: 'ai',
+                        content: result.answer || result.error || '请求失败',
+                        isError: !!result.error
+                    });
+
+                    setChatMessages(newMessages);
+                    input.value = '';
+
+                    // 自动滚动到底部
+                    setTimeout(() => {
+                        const chatContainer = document.querySelector('.overflow-y-auto');
+                        if (chatContainer) {
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        }
+                    }, 100);
+                } catch (error) {
+                    console.error('Question error:', error);
+                    newMessages.push({
+                        id: Date.now() + 1,
+                        role: 'ai',
+                        content: `错误: ${error.message}`,
+                        isError: true
+                    });
+                    setChatMessages(newMessages);
+                } finally {
+                    isLoadingChat = false;
+                }
+            }
+
+            // ==================== 筛选功能 ====================
+            function applyFilters() {
+                filterRank = document.getElementById('rankFilter').value;
+                filterTranscript = document.getElementById('transcriptFilter').value;
+                updateVideoList();
+                updateStats();
+            }
+
+            // ==================== 初始化 ====================
+            document.getElementById('rankFilter').addEventListener('change', applyFilters);
+            document.getElementById('transcriptFilter').addEventListener('change', applyFilters);
+
+            // 首次加载
+            fetchVideos();
+        </script>
+    </body>
+</html>

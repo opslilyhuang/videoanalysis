@@ -1,0 +1,417 @@
+================================================================================
+METADATA
+================================================================================
+Title: From 9/11 to AI: Mike Gallagher on How American Workers Will Win the 21st Century
+URL: https://www.youtube.com/watch?v=gakCerVqzSY
+Published: 2025-09-12
+View Count: 2,007
+Duration: 2267 seconds
+Score: 58.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+[Music] Welcome to the Working Intelligence Podcast, 
+part of Working Intelligence, the AI Optimism Project. I'm Jordan Hirsch, and I'm honored to 
+be joined by my friend and fellow Palunteerian, Mike Gallagher. Mike spent seven years in Congress 
+representing the 8th district of Wisconsin, served in the Marine Corps as an intelligence officer 
+with two deployments in Iraq and holds a PhD from Georgetown. We're recording this podcast on 
+the eve of the 24th anniversary of September 11th, a hinge point in our history and proving really 
+that our fight was not over after the end of the Cold War. It demanded the grit and ingenuity 
+of the American people to adapt and overcome. And today we stand on another hinge point facing 
+new challenges from powers like China which demands every ounce of that grid and ingenuity 
+supercharged by artificial intelligence. We're going to talk to Mike today about that evolution. 
+Mike's really somebody who's lived that evolution from the start of the postcold war period until 
+this point and talk about how American workers rose to meet the challenge of that era and how 
+AI can empower them to meet the challenges that we face today. So Mike, really glad to have you 
+here for this podcast and an important moment for us to to reckon with the history of 911 and 
+couldn't think of anyone better to do it with. So on that note, why don't you just start by asking 
+you on the 24th anniversary, what did 911 mean to you in your career? I assume it was somewhat 
+formative and and perhaps the reason for your various forms of of public service, but would love 
+if you could reflect a little bit on your decision to serve in the Marines and to run for Congress 
+and what effect 911 had on those decisions. Well, first of all, Jordan, it's an honor to be with 
+you and it's an honor to be called your friend in addition to your colleague. I've long admired your 
+work and we've c before we worked together here at Palanteer, we crossed paths in various, you know, 
+efforts to improve American national security. So, it's always fun to be with you. Um, I would say, 
+well, first of all, it's it's crazy to think that it's 24 years ago. It does seem less far removed 
+than that in my own mind. I was a senior in high school when 9/11 happened. I remember vividly, 
+this was, you know, data. I'm now like old, particularly at a company like Palunteer, like, 
+you know, 41 basically means you're both. Um, but this we had just like gotten big projector screens 
+in the classroom which was a massive like deal uh in terms of e education technology at the time. 
+And so I remember what the the plane hit the first tower while I was still at home cuz I was on the 
+west coast and then when I got to zero period the second plane it hit but then I watched the towers 
+crash to the ground. um in my American government class at the time, AP American Government. Um and 
+I I mean obviously it was instantly palpable and clear that this was a sort of a historyaltering 
+event and a incredibly somber and tragic event. That being said, it wasn't as if I immediately 
+knew, oh my gosh, I have to rush out, find a Marine Corps recruiting station, put on a uniform. 
+I mean, it's still I was lucky enough not to have anyone in my immediate family directly affected by 
+it. Although, my brother-in-law, who was not yet engaged to my sister, was working in the Twin 
+Towers on a floor above where the plane hits, but happened to sleep in that day, crazy enough. 
+And there's, you know, thousands of stories like this. Um, but it still seemed like I didn't 
+immediately connect the dots in terms of what was my part in the response. Obviously, it took some 
+time for our country to work out um the response. It wasn't until I went to college the next year 
+um and we got more wholesomely engaged in the Middle East, particularly after the invasion of 
+Iraq, uh that I started to think about, okay, what are we doing? Like, what is this problem 
+we're grappling with in terms of Salafi jihadists that want to kill us and destroy our way of life? 
+That seems odd because we're America. We're great. We have no enemies. History had ended, etc. Um, 
+and the more and I actually got so interested in that I changed my major. Uh, and I started 
+studying Arabic and the Middle East. And the more I pulled that string intellectually and the 
+more I learned about the region and I wrote a, um, a senior thesis examining uh, terrorist uh, 
+groups and their involvement with civil society organizations, I just became fascinated by the 
+Middle East. the more I started to think about, okay, maybe practically uh maybe this is an 
+opportunity to use these skills and put them to use for the country and that that would be better 
+for me and for the country than going to Wall Street and just like shifting numbers around on a 
+spreadsheet. No offense to all my friends who did that. Uh and then secondly, you know, the country 
+was at war. I didn't come from a military family, but I felt like I had had I'd been pretty lucky um 
+to grow up in a you know with a lot of advantages um attend some great schools um and then I 
+felt like I had a debt I needed to repay to the country and I knew I would kind of look back 
+and regret it if I didn't step up and serve. Uh I'm also kind of a bit of a contrarian by 
+nature and so at the time it was not fashionable if you were at an Ivy League school to join the 
+military in general. Particularly by the time I went to officer candidate school this was really 
+when the war started going badly uh with the Samar Mos bombing was in 2005 2006 the bottom fell 
+out of the country. This was like you know the the anti-Iraq war fever started to reach a fever 
+pitch. So it was kind of a contrarian move. There hadn't been we had an ROC program at Princeton, 
+but nobody had joined the Marine Corps, I think, for a couple years. So I just I was intrigued by 
+doing something totally different. Uh and everyone was like, "What are you doing? What why are you 
+joining the Marine Corps?" I also wasn't, you know, this may shock you to learn Jordan. I wasn't 
+like an athletic stud or anything, you know, I was very much a bookish nerd my whole life. And 
+so it took a lot of time for me to develop like literally develop the muscles necessary to join 
+the Marine Corps. And so I don't know that there was like this circuitous path would be the short 
+answer to this question from 9/11 to my own like small small small small role in fighting uh what 
+became the global war on terrorism and and being a small small small part of our country's response. 
+And I'm I'm happy to unpack that further. But the final thing I'd say is like it was absolutely, you 
+know, besides marrying my wife, the best decision I've ever made in my life. It was just the Marine 
+Corps, particularly for someone who didn't know anything about the military, wasn't an ROTC. The 
+way the Marine Corps has officer can candidate school structured like it is a it gives you this 
+opportunity to kind of figure out if you want to do it. And then like there I I really thought 
+about there there's no other domain in life where as a 21-year-old right out of college I could be 
+in charge of 40 people and be thrust into this super demanding challenging uh environment. And I 
+wanted that combination of like a physical test, an intellectual test, a moral test. And it was 
+awesome. I loved it. I absolutely I love the point. I think the weirdest thing for people to 
+understand like you know at that age when you're young you think you're invincible. And so like 
+you have no you're not encumbered by anything like I wanted to deploy like I like volunteered 
+for deployment so I'll shut up there. I've talked too much. No no it's I I'm wondering I mean you 
+you pointed to when you joined the Marine Corps which was really as things were breaking down 
+in Iraq and the strategy that we came to Iraq with was not the strategy that we needed to to to 
+succeed and and ultimately be able to to disengage from the height of the war. And I'm wondering 
+you and we we might all be familiar with how that conversation played out in Washington, but you 
+were really on the front lines of the ingenuity that was required to solve for that problem. And 
+I'm wondering what it was like for you to deploy in the middle of this crisis as things were really 
+breaking down and be a part of the the shift in the American strategy toward a more successful 
+strategy that allowed us to stabilize the country and and save a lot of lives. How did that happen 
+from from your perspective being in the Marines? Well, I would say two big things. One, well, one, 
+prior to deploying, I kind of had this naive, quicksotic, or even arrogant idea that 
+because I spoke the language and I like, you know, was a good student that I was going 
+to be like a modern-day TE Lawrence and like, you know, uniquely bridge the gap between the 
+Marine Corps and like Onbari tribal shakes and things like that. Uh, I was quickly disabused at 
+that notion. Um and I think I think there was I had a very like simplistic understanding of the 
+region and even the the we the Marines were trying to educate themselves at the time the you know 
+the commun reading list started to include all these books about counterinsurgency even included 
+T. Lawrence's memoir um seven pillars of wisdom and some of these books like the Arab mind which 
+now in retrospect seem totally ridiculous and like didn't really teach me anything about like the 
+specific micro geography of the specific part of Iraq that I went to which was totally different 
+than what was happening in Baghdad and let alone in like northern or southern Iraq. Uh so I had to 
+do a lot of learning on the ground but I also got to see it firsthand. And I got to actually see our 
+strategy succeed because I did two back-to-back deployments. And in the early part of one of my 
+deployments, you know, the the the surge kind of happened in Western Iraq and Ambar Province where 
+the Marine Corps was prior to it happening in the rest of the country. And so we went from 
+at the beginning of one of my deployments, a group of al-Qaeda and Iraq operatives crossing 
+the Syrian border dressed in stolen Iraqi army uniforms and slaughtering like 50 people in the 
+local village and creating a ton of mayhem to by the end of my deployment, we were, you know, we 
+were mostly focused on economic issues and we were targeting oil smugglers and we were, you know, we 
+felt very comfortable walking around the streets uh in some cases without personal protective 
+equipment. And it was just a remarkable change. I mean, absolutely remarkable change. And 
+so I kind of got to see the the fruits of our counterinsurgency strategy, particularly as it 
+was perfected by General Petraeus and a few others play out firsthand and kind of see all these 
+fence sitters in the local tribal hierarchy, you know, in the Al Mahalawi tribe, the 
+Kbouli tribe, etc. go from like, you know, either straddling the fence or actively working 
+against us to realizing that America was the strong horse. They should bet on us and help 
+us decimate or actually completely destroy the lingering al-Qaeda and Iraq network. Now, that's 
+not to say we completely destroyed it, but it was I mean the the success of our counterterrorism 
+operations and our counterinsurgency operations was something to behold. Now, I will say I think 
+in retrospect it does seem clear that all of that did was buy us time or the opportunity for 
+Iraqi political figures and power players to forge a durable political uh consensus. And it 
+was somewhat bizarre to me when the Syrian civil war emerged a few years later. At one point, I 
+think there was like Syrian airplanes bombing the town that I was deployed to, al-Qaeda, 
+because there was terrorists there. I'm like, what is going on? I mean, it's just like such 
+a fragile uh equilibrium. Um, but uh it was absolutely fascinating. And um I will say like 
+the obvious things were true. I mean, you know, you really have to understand the local dynamics. 
+You have to be present for deployed. You have to get out of the base. You have to interact with 
+the local officials. That was kind of my job. I was a commander of a human intelligence 
+exploitation team. And our job was to gather information from human sources in order to get bad 
+guys and keep Marines safe. And so, I don't know, it was absolutely fascinating to see the strategy 
+kind of work um over the course of one deployment to the next deployment. One of the one of the 
+pitfalls in retrospect is that we focus so much on counterinsurgency as a result of Iraq that we 
+were a little bit asleep at the wheel as another challenger rose across another part of the world 
+in China and that the type of fighting that we needed to do in Iraq made it difficult to focus 
+on the re-industrialization that we had kind of given up on in the wake of the cold war and trying 
+to reap the the peace dividend in the wake of the cold war. Um, can you talk a little bit about 
+what was China doing in the meantime while we were focused in in Iraq and doing the kinds of 
+things that you were doing and how did we get to the place where we are today where we seem to be 
+behind in in key metrics like ship building or or running a pace with them when you know 20 years 
+ago that would have been a very far-fetched idea that America was running a pace of anybody. Well, 
+first let me confess how odd it is that people now think I know something about China because I 
+chaired the China committee in Congress because most of my career I was an Arabist. I mean I 
+that was my that was my background my training and and to kind of like tie it to your question 
+your your this question to the previous one the first day of my second deployment I arrived in 
+country in route to al-Qaeda which is a town near the Syrian border in Albar province and I met 
+uh a Marine who was leaving uh this my first one I remember um and his name was Matt Pinger and 
+Matt Pinger had was in my same military occup occupation specialty was the commanding officer 
+of what was called HET one the unit I took over uh near the Syrian border and just fascinating 
+brilliant guy former journalist you know he had to get an age waiver to join the Marine Corps amazing 
+story but I remember talking to him and like even on the his he was leaving country and usually like 
+you know when you're about to leave country you're pretty exhausted but Matt still had his like 
+boyish grin and enthusiasm for everything but he told me his life story and he was a Mandarin 
+linguist, a China specialist. He spent a decade in China. And I remember thinking at the time 
+like why like why would someone why would an a an ambitious national security professional 
+spend their time focusing on China? Like right China's not here. Exactly. This is where it 
+is. Yeah. Yeah. It's it's all the Middle East for time in memorial. We're fighting terrorists, 
+you know, like what an idiot. I learned Arabic. I'm smart. Uh but it turns out Matt was right. 
+Uh, and I'm not I'm not I wasn't wrong, per se, but uh he saw something I didn't. And you know, 
+even when I was a Senate staffer and increasingly um paying attention more to what China was 
+doing, Matt was really the source of most of my education. And when I got elected to 
+Congress, I made a point of how we had a monthly meeting where, you know, I just I kind of 
+went to the Pinger grad school on China. I was an security adviser on the Walker campaign. And then 
+I remember Matt would send me these very detailed memos where really he laid out the pattern of of 
+facts and and the corresponding strategy response in a way that became the intellectual foundation 
+for the Trump administration's approach to China in the first administration. But suffice it 
+to say and to directly answer your question, um, you know, while they were that while they 
+were sort of publicly while we were inviting China into the global economic order in the hopes 
+that it would moderate their political behavior, uh, they were pocketing those concessions, growing 
+more repressive internally, aggressive externally, and um, and really with no intent to ever abide 
+by the rules-based global order in general or their specific promises that they made as part of 
+the session to the WTO in particular. By the way, those aren't the musings of like some Republican 
+hawk. I think Rush Doshi would agree with that assessment if you read his book. Uh the long game, 
+you know, was always the strategy of, you know, hide your ambitions, b your time. Um and you 
+know, this this latent ambition to not only be the dominant country in the Indopacific region, but 
+really the dominant country uh in the world. Uh, in fact, you know, while historians will quibble 
+over when the new cold war with communist China began, as they continue to to quibble over when 
+the old Cold War with the Soviet Union began, you know, a lot of the initial aggressive island 
+building efforts and corresponding territorial claims even predated Xiinping. Um, and so I 
+think uh I I I think what we're seeing now is an expression or a continuation of a concerted 
+strategy that the Chinese Communist Party has had for decades. Uh, and it is a strategy to destroy 
+the US-led global order, to displace our position of preeminence, um, and to become the dominant 
+country in the world and and along the way sever all our alliances. Yeah. So now that we're in 
+2025, this is the this is the big challenge that we confront. How do you think we can close the 
+gap with China and the places where we've lost ground and retake the lead? And and specifically, 
+what can AI do for our defense industrial base if properly harnessed and implemented? And and I 
+guess the the key question here is like why is it so important for humans to be amplified and 
+not replaced by artificial intelligence? Well, in order and and maybe in in simplest terms, 
+how I think about this is um at a minimum like the pass fail grade for US grand strategy is we 
+should not be funding our own destruction. Right? If there's one thing we've learned like in 
+the last three decades, it's that, you know, the problem isn't that we didn't engage hard 
+enough with China or that we didn't like give them enough access to the global economy. It's 
+not like we open one more theme park or have, you know, more American movies in China or another 
+American business. Suddenly the commies are going to wake up and think, you know what, we got 
+America wrong. Let's change our whole approach. like we should not be allowing US capital and 
+intellectual property to flow to China in order to fuel their destructive ambitions, their genocidal 
+ambitions internally and their ravantist ambitions externally. uh it is long past time for us to 
+put controls on outbound capital flows to China to put sensible limits on their access and and 
+on their access to our own intellectual property their presence at American universities and also 
+to reestablish some semblance of deterrence in cyerspace so that the greatest transfer of 
+human wealth of wealth in human history i.e intellectual property theft from China does not 
+continue. Um so that's point one. Uh point two, because we were complacent uh for decades, you're 
+right to suggest that the American industrial base uh and defense industrial base in particular has 
+become hollowed out. It's become brittle. Um we've gone from having a lot of companies in that space 
+to it being concentrated in five defense primes. Increasingly, we're starting to see that change 
+due to the efforts here at Palanteer to revitalize ecosystem uh and the the new administration's 
+push for a nontraditional defense tech. But still, we're not moving fast enough. So, we have to find 
+a way to revitalize American manufacturing. And that's where I think AI has so much promise, 
+right? Far from being a threat to American workers, I actually think AI is going to be 
+the Iron Man suit that we're able to wrap around every American worker who wants to work, 
+bust their butt, allow them to make more money, be incredibly more productive. And the 
+fact is, we just, as a matter of strategy, we're not going to beat China if we just try and 
+throw more human beings and money at this problem. We have to find a way to fight smarter. And it's 
+that American innovative ecosystem leveraging AI software uh cutting edge technology pairing it 
+with legacy industries that I think is going to be our opportunity to to um reduce our dependency 
+on China in critical areas revitalize our American manufacturing industrial base and also ensure 
+that they can't control the commanding heights of critical technology whether it's AI whether 
+it's quantum whether it's synthetic biotech take your pick. Because what we've learned in 
+recent years is that given dominance in those areas, they will weaponize that dominance, 
+right? They're using their dominance in rare earth manufacturing and processing right now to uh 
+uh to kind of hold us over the barrel in certain diplomatic negotiations. Um they threatened to cut 
+off the export of APIs during the uh coronavirus pandemic to plunge us into a sea of coronairus. 
+Imagine if we got into a confrontation over Taiwan with China and they cut off access to critical, 
+you know, micro electronics or rare earths or, you know, ingredients for life-saving drugs. Or 
+imagine if they weaponized the access that they now have to American crit critical infrastructure 
+after the vault and salt typhoon attack. So, I guess all this is a long way of me saying while 
+we've paid lip service to the idea that we have an existential competitor in the form of the CCP, and 
+while some are willing increasingly to say we're in the early stages of a new cold war, we still 
+haven't attacked this problem with the requisite sense of urgency that it demands, as if it were 
+an existential threat. And every time I even would say that that this is an existential threat, 
+I would get the crap kicked out of me by the Washington Post and all sorts of commentators 
+on TV and I'd be called a neoccarthy. But all you have to do is just read what Xiinping says, 
+particularly when he's talking to party audiences. Like he has no reservations. when he's not talking 
+to the Davos crowd, when he's talking internally, about talking about America as evil, about talking 
+about the inevitable decline and demise of the capitalistled order led by America, about saying, 
+"I will take Taiwan by force if necessary," he is preparing his country for war, and we still are 
+not meeting the moment in order to deter a war. Yeah. On that happy note, I'll stop. Yeah. 
+On that happy note, well, actually, well, maybe we'll try to turn to a happy note. through 
+your through your work at Palanteer, you've been able to see where the industrial base is picking 
+up AI to to sort of speed along and supercharge what it's doing. I'm curious if you can share some 
+examples in some of the spaces where where you're active through Palunteer or where workers are 
+using AI to free themselves from drudgery so they can build better and faster and get back to the 
+thing that they really actually want to be doing, which is building the things that America needs 
+to stay strong and to win this fight. Well, where I'm most excited about this, um, and perhaps it's 
+because I represented a ship building district, or perhaps it's because, you know, I'm a Marine 
+Corps officer, which means I'm a naval officer, which means, you know, I think the Navy Marine 
+Corps team is, you know, the most important team that we have. Um, but I think we have a massive 
+opportunity to revitalize American ship building right now. The Trump administration has rightly 
+placed this as one of their highest priorities. And uh in our work at Paler, we've already started 
+to see some of the positive effects that applying actual commercial technology AI enabled software 
+to manufacturing can have the transformative effect it can have. For example, at Anderoll, it's 
+already delivered a 200fold increase in supply chain responsiveness. That's now accelerating the 
+production of unmanned service vessels, which are critical to Indopacific deterrence against China. 
+Um, engineers now operate with full situational awareness, when they're sequencing tasks, uh, uh, 
+when they're resolving procurement friction, uh, when they're adapting designs in real time. At 
+Seronic, another great customer of ours that's helping build a foundation for a fully digitized 
+shipyard. So, you're going to have procurement, design, manufacturing unified into a single hyper 
+intelligent system where every input is tracked, every decision is contextualized, every risk 
+is anticipated. Um, and I think what's going to emerge on the other side of that is an 
+industrial shipyard machine with the agility of a startup and the precision of a defense prime. 
+And this model, um, powered by Palanter software is already scaling among America's allies. 
+So on the Korean Peninsula, for example, HD Hyundai's flagship shipyard is operating at 
+a tempo and scale that the United States hasn't matched in decades. South Korea now builds nearly 
+30% of the world ships and Chandai alone commands 17% of global output. One yard there delivers 
+nearly five times more commercial vessels than the entire US ship building base combined. So 
+I think ship ship building for me is just this perfect example of legacy manufacturing that's 
+critical to US national security where the the new administration clearly sees it as a priority 
+where you're starting to see the non-traditionals and foreign innovators do some some really 
+interesting things and if we can just apply that to American shipyards I think we can we 
+can produce a quantum leap. One final story to illustrate how absurd the the current situation 
+is visav China. I remember going to um a master ship repair yard in Southern California um in 
+my first term when I was a freshman member of Congress and they were just talking about how 
+they had just built a dry dock, right? Dry dock, big structure you need to repair ships and they 
+were telling me and I'm like so where did where did you build it? Like how how did it work? And 
+like well we built it in China. So you think about it like we're building dry docks on the west coast 
+so that we have more ships to confront China, but we have to we need China to build the things 
+necessary to repair those ships. And in order to get it from the Pacific back to the West Coast, 
+you have to cut it into three pieces, ship it, weld it back together. And they were like, "Oh 
+yeah, we almost couldn't weld it back together because local politics were such that people were 
+worried about underwater welders forcing the fish to go deaf in the harbor." And I'm like, "Come 
+on, America. we got to get our crap together like this. This is totally absurd. So, you're 
+starting to see that change. I think we have an opportunity right now. There's a big way in which 
+and I'm curious uh if you've found this in meeting with shipyard workers when you when you've gone 
+to visit these sites, there's a big way in which there's so much that we're doing to get in our 
+own way. And I find when we when we've been doing these stories for working intelligence, you find 
+so many people who just really want to do the work that they signed up for, whether that's treating 
+patients or building a product in a factory. And what's happened over the last 25 to 30 years 
+is these barnacles of administration and data and emails and spreadsheets just suck the soul out of 
+the work. And the real useful applications of AI are taking that stuff off the plate of the humans 
+that they can be their fully realized creative selves and and produce at their fullest and and 
+really derive pleasure and meaning from their work as opposed to being bogged down in all of this 
+all the barnacles that have kind of glombmed on to their jobs. I don't know if you found that in 
+the shipyards as well. 100%. Right. Some estimates we've seen is that at at various shipyards, 
+people are doing productive work less than 20% of the time. Not through any fault of their 
+own, but they're like complying. And I'm sure this is a consequence also of being government 
+contractors, right? You have to dealt often with like webs of regulation and bureaucracy, but 
+the the consequence is that, you know, people are spending 80% of their day doing mind-numbing, 
+soulcrushing work, and nobody wants to be doing that, right? So what AI has the potential to do 
+is liberate people from the soul crushing work and allow them to focus on meaningful productive 
+work. Um I you know it's interesting I this had just occurred to me now so bear with me. I 
+reserve the right to resend the statement. There is a way if you read like what Xiinping is 
+talking about, right? He he his spirit animal is Stalin and he talks about like engineering souls, 
+right? Like this is sort of the Marxist Leninist ideology that like the party can like engineer the 
+souls of all the party members. Like we're sort of at Palunteer doing the exact opposite, right? 
+like we're liberating souls from soul crushing work so they can realize their highest potential. 
+That's true in ship building. It's true in legacy manufacturing. It's true in any industry that's 
+collected the barnacles that you've talked about. And once you do that, I think you're also going 
+to start to solve I think the workforce challenges get get much easier to solve. So, for example, one 
+thing I I confronted when I was in politics was people paying a lot of lip service to this idea 
+that, well, not everybody needs to go to college, right? Let's go into the trades. You can be 
+a welder at a shipyard or you can, you know, do XYZ and make money and you can be making 85 
+grand a year right out of college and not have college debt. And like, it's all it's all right. 
+It's all true. And everybody like was saying the right things. But then I would ask parents saying 
+this, I'd say, "Well, what about your kids?" and they'd say like, "Well, I mean, my kids are 
+going to go to a four-year college, you know, because there was still this stigma associated 
+with the trades." Um, there was still like this people were still playing the status game of 
+of four-year colleges. And so I actually think the more that manufacturing and the trades adopt 
+cutting edge technology, the sexier it becomes for that 17-year-old or 18-year-old who's weighing, 
+okay, I'm interested in working at a shipyard or working in agriculture, but I still feel 
+this pressure to go get a four-year degree. Or maybe like my perception of that industry 
+is that it's dirty, old school. My dad did it, my grandpa did it. Like I don't know like I what 
+what's when you get into these companies that have adopted Palenteer software other cutting 
+edge commercial technology it's really exciting to see what like one worker uh can do and I think 
+that's going to be attractive to a new generation for whom the value proposition of higher ed is 
+changing. You're probably better qualified to opine on that than I am. But I just think at some 
+point like if your four-year degree is not getting you like a return on the investment, like you're 
+going to look for alternatives. And if we can make it culturally attractive to go into the trades 
+because it's technologically advanced, then I think you start to cook with gas. Um because 
+every industry I represent in Wisconsin, it really didn't matter. Their biggest challenge for 
+really my eight years in Congress was workforce. They just couldn't find enough people to do jobs. 
+Like, so if you're willing to work hard out there, like the world is your oyster. Like, there is 
+no there is no near-term possibility that AI is going to put you out of a job if you're willing to 
+bust your ass because like there is plenty of work to be done. Yeah. I think one of the frustrating 
+things about the messaging around AI is that it's going to take everything away from you. You won't 
+have to do hard work. And actually, what we found at Palanteer when we've worked with our customers, 
+it's actually really high agency enabling, right? It actually takes the most hardworking 
+people and gives them all of the autonomy that they would want. And if you're a 17-year-old kid 
+and you want to have a major impact, come to a company that's using AI natively and just see your 
+star rise, right? Like you can do so much more and not be burdened with all of the administrative 
+tasks and not be buried under bureaucracy. It really allows the best ideas to win because 
+it allows them to scale at a in a way that we've not seen before quite frankly because you can take 
+all that knowledge, combine it with other people's knowledge, and as you said, you're cooking with 
+gas. I guess that's a great place to leave it, you know, for for for a last question. You you 
+represented a a district in in Congress for seven years. What would you say to the your your former 
+constituents or or or anyone else about um workers in in your district who are afraid of losing their 
+jobs to AI? Why are you optimistic about American workers leading in AI innovation to strengthen 
+our defense and and more broadly to lead in AI in a in a commercial sense as well? Well, I would 
+say the only people who should be worried about AI taking their jobs um are people who refuse 
+or don't want to learn how to incorporate it into their day-to-day routines. Um and I think the 
+great news is that there's a surge of enthusiasm about incorporating AI into into day-to-day 
+workflows, particularly in the manufacturing space. When it comes to the trades, as I said 
+before, we have a huge shortage of workers. I think we're something like 300,000 welders short 
+in the maritime industrial base. 300,000. Like that's a massive amount. That's twice as big as 
+the Marine Corps. Uh so we need to recruit more kids to go into the trades. Um so again, if you 
+are you willing to work hard and learn new skills, um then I think the world is your oyster. And to 
+the point you made, Jordan, yeah, the work could be as hard, if not harder, but it's going to be 
+more meaningful, more rewarding intellectually and ultimately financially, allowing people to provide 
+for their family, which matters a great deal. Um, I further say that, you know, AI is becoming a 
+selling point for manufacturers looking to recruit students into the workforce. Um, I actually think 
+like the next generation is going to discover use cases for AI and traditional industry that we 
+can't even imagine right now. I even started to see it like, you know, in the district 
+I represented is a huge dairy uh district, right? We there are some counties where there are 
+more cows than than human beings. Um, you know, I think like your your traditional conception of 
+the dairy industry is like, well, okay, you know, a mom and pop dairy, 50 cows, like eat a lot 
+of manual labor, like, well, actually, you go on some of these farms and you start to discover 
+it's highly automated. It's highly technologically advanced. I mean, there's like robotic milking. 
+There's drones that they use to like test the soil. If you care, you know, if you're a 
+conservationist, there's all sorts of ways you can use digesttors and dewatering to, you know, 
+deal with uh nutrients that come from cows and things like that. So, it actually ends up being a 
+pretty technologically advanced industry. Uh even, you know, milk and cows can be exciting for the 
+next generation. So, I don't know. This is why I I'm an optimist. I guess the the other reason 
+I'm an optimist is um well, two other reasons. want to, you know, working at Palanteer, um, you 
+know, as as maybe you and I are the only liberal arts majors at this company, you're surrounded 
+by these geniuses from all over the country, super young, and like it keeps me on my toes every 
+single day. I think, you know, I was a young I was the one of the youngest members of Congress when I 
+got elected, so like I kind of thought I was smart relative to my old peers. Now I just have to like 
+keep up every day and to see the problems that are being solved by our engineers, not not by them on 
+their own, by the way, but working in partnership with customers in the manufacturing space. I mean, 
+it's like magic when you see it happen. Like when you pair a 22-year-old genius computer science 
+major from Stanford with like a third generation ship builder in Northeast Wisconsin with all the 
+tribal knowledge, like it is like lightning in a bottle. That makes me an optimist. And you 
+know, finally thing I'd say at the risk of being corn corny is like America has demonstrated 
+a remarkable capacity for for course correction, for reinvention, for innovation. So as much as I 
+spent the last, you know, near decade in Congress warning about the China threat, I still would 
+bet on America 10 times out of 10. You know, I think we have all the advantages and we have 
+a righteous cause. I mean, we're the good guys and we're facing off against the bad guys. And I 
+think, you know, you're seeing a wave of companies which previously wouldn't be willing to work with 
+the government and the defense department because they had some moral equivalence after Palanteer 
+rushed into the breach and said, you know, we are unabashedly want to help the American war 
+fighter. We're seeing a sea change in that in that department. And the more we have America's best 
+and brightest who would otherwise be optimizing algorithms for like, you know, social media 
+applying their talents to national security, the more optimistic I become. Yeah. I no better note 
+to end on. And the only thing I'll add to that in addition to being around the magic of Palunteer is 
+being around the magic of the people that we work with and seeing past the headlines on AI which 
+are often very depressing or assuming that we're going to either get killed or have our jobs be 
+killed away and seeing people who have been in the trades for 20, 30, 40 years in some cases, people 
+who work on factory plants just ignore the noise and use a new tool that's available to them and 
+achieve something they never thought was possible. So it's a it's an exciting time. Hopefully we can 
+have people focus on on the good and and drive in that direction. And Mike, really thank you for 
+joining us. Really glad to have you on working intelligence and and thank you for the work that 
+you're doing to bring AI to the American worker. Much appreciated. It's an honor. I've never been 
+accused of being intelligent, but nonetheless, you got half the Yeah, I like working even if 
+I'm not intelligent. There we go. Thanks a lot. [Music]

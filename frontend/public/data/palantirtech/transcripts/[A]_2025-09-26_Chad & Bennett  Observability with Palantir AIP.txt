@@ -1,0 +1,201 @@
+================================================================================
+METADATA
+================================================================================
+Title: Chad & Bennett | Observability with Palantir AIP
+URL: https://www.youtube.com/watch?v=9IgYLjxxesw
+Published: 2025-09-26
+View Count: 3,698
+Duration: 1074 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Hi, I'm Chad Walquist. I'm an architect at 
+Palunteer. Today I have Bennett who leads a lot of our work on observability especially in the 
+AI space which requires kind of new tool sets. So thanks for joining me Bennett. Thanks for having 
+me. So observability and kind of AI and what does that mean to you? Like maybe just give us a 
+little bit of a peek into your world. Sure. So, if I'm building a complex workflow on top of 
+myontology and my LLMs, um, it's going to cut across many different resources that I build on 
+top of my ontology. Uh, and I'm going to want to see tracing and request history and logging 
+across all these different products. Um, and I'm gonna want a bird's eye view. And I'm gonna want 
+to drill down and see specific execution, specific logs, specific error messages, and drill down to 
+see what is going on in my complex workflows. Uh, either if I'm the one triggering them or if an 
+automation or an agent is the one triggering them. Um, and so, um, every invocation, every 
+log line, um, I want to have visibility into what is going on in my complex system. Yeah. 
+So, as we talk about these stochastic agents, it's it's very hard when agents are calling agents 
+and you're like, "What the heck's happening?" And I think that's really where you're focused in on 
+is um really driving that observability into these agentic and human flows all together and how do 
+I do this in a highly auditable environment. So, that's it's pretty cool. So, I know we got a 
+demo today to look at. Do we want to jump right in the demo? Uh let's do it. All right. Sweet. 
+So here I have um an enterprisegrade application uh monitoring Onyx Incorporated. Um and as 
+you can see there's many different aspects and layers to this application. Um and so what I 
+first want to do is just peek open behind the scenes and see the complexity um of my workflow. 
+Um you can see the many layers of workshop apps. You can see the many layers of language models 
+being used. AP logic functions myon ontology um all powering this application and it's it's 
+you want to ask first like um how can I get into a specific invocation of this workflow and see like 
+under the covers what exactly is going on and so I I can search for a specific uh function here 
+I can go to let's do Titan inventory relocation model and let me just pop on open the run history 
+uh for this function I can see okay this is being called by an automation um I can go down and 
+see exactly when these invocations are happening um I can see the run times and then I can go 
+into a specific invocation and and see an actual uh trace for uh the function invocation and 
+so here I can see the request being made um specific details in terms of the request status 
+the result the arguments uh being made in this function invocation um my specific interactions 
+with the ontology that I'm using um and then I can hop on over um and and see any log lines created 
+by either uh the high trust services orchestrating uh my workflows or the uh code that I'm writing 
+um within Foundry. I think this is this is like a great example of things going well. Uh there's 
+also going to be times when my functions are not working as that like as expected. And so here's 
+an example of a Titan vision image prop function that is being used to orchestrate some of these 
+workflows. And I'm I'm seeing failures. I can go in to these log details um see the failures 
+happening uh click in investigate and and get like very granular um information on okay this 
+was a permission denied error uh interacting with my language models and get really granular 
+information right to me um and I can action on it, fix this and build on top of that. Um and so the 
+the vision here is um in this complex workflow, how can I go and search for certain executables, 
+see their run histories, see traces of these executions and then see logs associated with and 
+kind of dig in to what is going on with my complex system. Yeah. So you have like a massive complex 
+application, ton of ontology objects, AI agents running all over the place, like humans calling 
+functions, like all of it. And so now whether I want to investigate it or I want to there's 
+a problem or an error, like it's not just how they connect together in the functions, it's like 
+the individual invocations are in here. So like I think that's the important piece is to be able to 
+get down to the individ individual like auditable logs and calls about who did it from where when 
+did they do it right? I think that's a huge deal. Yeah, I totally agree. Um and you're not always 
+going to have just one simple function uh calling um the ontology. There could be like a complex 
+chain of an automate calling an action calling five different functions. Um, and you're going 
+to want to see the kind of crosscutting nature of this observability and and and see how it goes 
+through the seams. Um, and how Foundry kind of integrates all that for you. Yeah. And I think 
+that's the it's part of the value chain here is when you're developing and and like working on new 
+workflows or I introduced a new model, how is that actually functioning? So, as things are living and 
+breathing over time, being able to actually have a view in at the granular level to understand what's 
+going on, I think is pretty important. Yep. And from there we can go on over to let's say I want 
+to investigate my uh AAP logic functions and and I know they interact with uh a bunch of different 
+models and and here I can see exactly like the model usage done by these specific um AAP logic 
+functions get the token count um and see the cost um and so it's not only showing you the granular 
+logs and the traces but giving you metrics on top of your workflows to see like where your resources 
+are being spent um is also very important here. Yeah, that's pretty neat, especially when trying 
+to understand uh the LM usage across workflows. This is huge. Let's also dig back into um a 
+specific AAP logic function um getting triggered by an automation. So we can go into uh the 
+details, see the trace, see that it's a AAP logic effect executing via automate, get the granular uh 
+tags on what exactly the monitor like the monitor ID that was triggered, the version, the RID, and 
+then go specifically down um into granular spans over the AIP logic function. You can see it was 
+an anttology edit. Um, and so this was writing back into myontology and then go all the way down 
+into the model being called, uh, the duration. Uh, see the action being executed. Um, and then pop 
+on over and and see token usage, see the requests being made to my language model and go deep into 
+this automated system and get granular visibility that you need as a builder. Yeah, that's pretty 
+cool. That that stack trace view is killer to be able to kind of understand the order of operations 
+of these agentic flows. Um cuz you know sometimes they'll loop around. I call the model a bunch of 
+times to reason across something. But having the visibility here to be able to understand you know 
+the order of execution and what it's calling and get to that level of like actually I want to go 
+see this actual like call that's uh that's pretty cool to be able to debug things here. I definitely 
+agree. Um and only getting started in terms of the amount of resources that we'll be emitting into 
+this view and the telemetry getting emitted. Um and so it's it's really exciting. Yeah. Yeah, and 
+I think that the, you know, this is one of the things like this, this type of observability is 
+key to really scale this. It's like it's nuanced if you do it on one agent here, but let's say you 
+have 70 or 100 agents working across a workflow, like how do you debug those things? Um, when it 
+gets big like that, I think that is where this is absolutely crucial to be able to understand what's 
+going on 100%. Um, and not only are we Foundry going to be an AIP going to be emitting a lot of 
+telemetry automatically for you, uh, but there's also a lot of investment in allowing builders 
+to customize the telemetry they are emitting, um, and using open and standard libraries to emit 
+that telemetry. And so that's something I'd love to talk about next. Yeah, let's let's take a look 
+at that. Sweet. So, uh, here's an example of a TypeScript v2 function uh, called high priority 
+tickets. Um, and as you can see, I went over uh into my libraries and I installed the open 
+telemetry API um along with the uh API logs uh libraries and these have millions of installs 
+on npm and used um vastly across the developer TypeScript community. Um, and here I can get 
+my tracer and I can start a custom span. I'm calling my AIP logic function which um here I'm 
+filtering for open support tickets uh which is a very standard type of uh query um if I want to 
+learn more about my enterprise and and then I'm asking my AIP logic function to go and summarize 
+uh the most important ones and kind of and give me like a response as um a user like what are the 
+most important tickets for uh me to prioritize. And so if we go on over um um I have all my 
+run history uh for my high priority tickets function. I can go into the log details and I can 
+see my custom spans getting emitted. Um a nice benefit of TSV2 is we um auto instrument every 
+outbound network request. So here we can see um us interacting with the API gateway um instrumented 
+directly for us. And so it's the mix of custom spans from me as a developer along with the auto 
+instrumentation that AIP provides out of the box um that we're really hoping will um encourage 
+builders to have a lot more visibility and um and trust in their systems. Yeah. And especially 
+in a heterogeneous kind of enterprise architecture to be able to have these logs next to the rest 
+of your stuff is is pretty useful or alerting or other things that you're wanting to have. So 
+that's very cool that we can customize all that. I want to give massive shout out to the AP logic 
+team. They are building um very amazing debugger views in their product. And so if we want to take 
+a look at this preview run um we can see in real time uh traces getting emitted seeing in real 
+time a debugger um and if I can see the granular real-time steps of my business logic I just have 
+much more confidence and visibility into these systems and um it's amazing work here um and the 
+broader vision of getting telemetry across AIP and into users hands as fast and easily as possible 
+is the major focus. of um the broader group. Yeah, this is neat. This is probably one of 
+my favorite things to demo, especially a really complex logic function. This one's pretty 
+simple here, but like showing like a very complex uh chain of thought reasoning in the stack trace 
+happening in real time, being able to debug, understand where the long pole is. Um it's cool. 
+Like it's super helpful as you're building these things of trying to debug what model, how am I 
+tweaking the prompt, what's happening. There's so many different uh variables. So to be able to see 
+it kind of in that view is like really neat. Yeah, I I couldn't agree more. So now taking a look at 
+maybe a more complex workflow. Um I have a car recommendation automation. Um where I'm receiving 
+a new car and I want to process it. Um you can see five or six different actions being executed 
+going into uh four or five different functions. can see the user code, the function calls all the 
+way down to my models. And if we want to see like what's actually being called from these models, 
+we we can see like you are an assistant meant to summarize car maintenance reports and predict 
+a likelihood of reoccurrence. Um, and we and we can see exactly the data that was sent to our 
+LLMs and and audit this work. And we can also integrate this with our custom logging, seeing 
+what recommendations we're making for our unique ids, seeing all the LLM requests, the token 
+usage, the successful executions, going back to our trace view and seeing where the time is being 
+spent. Um, and forward looking, seeing how we can optimize this complex chain of invocations. Yeah. 
+So like this is to just kind of take it up a level like thinking about it as a business process 
+flow whether it's like order to cash I get an order in as a manufacturer and I have to figure 
+out do I have enough inventory do I have enough raw materials and production capacity that entire 
+business process flow you could actually look at it this way and understand through here the entire 
+flow of how that actual process is happening with logs associated across it and how long it takes 
+not only at a high level uh like we have tools like machinery to look at more of kind of the 
+the the flow of that, but it's this is at the actual instance of an object being created, which 
+is pretty wild to think about like, oh, I have a trouble order. I want to go diagnose something. 
+You could literally see every single detail about the entire thing in one one place. And on top 
+of that uh when I write back to my system and I want to automate further, I get a full history 
+of this whole chain and I can get insight not from just today but yesterday and last week and get a 
+more holistic understanding of the system. Yeah, cuz normally like this would be across a ton of 
+different systems. Sometimes you try to throw it in some sort of log aggregator and then query 
+across it and that's not business friendly or in like trying to figure out what is this doing or 
+I'm going to join a bunch of tables together to try to understand the business process. But here 
+having all of that lineage tracked as the process is actually happening with the nitty-gritty 
+details like it's that's pretty neat. All right, that's that's pretty cool. There's a lot there to 
+be able to like view into the system of systems you're building. So how are our customers using 
+this? Sure. So one example is Gallatin AI. They build very complex ODK third party application 
+on top of Foundry. Um and in production they were able to get visibility into all their complex um 
+ontology loading um and function calls and action calls and were able to optimize a lot of their 
+workflows once they had the observability into the system. um and in instead of needing to kind 
+of guess uh they were able to see with real data, real telemetry where they needed to improve their 
+system um we were able to help them do that and so that was very exciting. Um, additionally, a second 
+part of this work is we want to provide an amazing inplatform experience, but we also want to let 
+power builders export their logs to streaming data sets, third-party systems. And so, it's been very 
+exciting to see a lot of for deployed engineers use the streaming data set to build very complex 
+um analytical uh workshops and other monitoring views on on top of this data. Um, and that kind of 
+twofold approach has been really exciting. That's pretty neat. So you're saying I have I'm emitting 
+my logs to a stream and I'm able to take that stream and ontologize it and build apps on top of 
+the ontology of the monitoring and alerting of my other apps I built that are maybe consumerf facing 
+or customerf facing. Exactly. And so you can also write you write back to your ontology in terms of 
+a connected enterprise but then you also want the telemetry of your systems that you're using this 
+um back into your ontology. And so it's almost like a second right back um to get the feedback 
+loop spinning. Yeah. Uh that's pretty cool cuz I I could totally see how then you could even take 
+that a next step further and use AFTTE and start to actually look at the code behind some of these 
+alerts and other things. There could be a whole a whole virtuous loop here now that you have open 
+access to all the the logs. That's pretty cool. So what do you see kind of coming? Like what are 
+you working on that's maybe a couple months out that uh would be fun to share? Yeah. So I would 
+say the first thing I'm most excited about is in platform metrics and monitoring for these AIP 
+workflows. Um I have my actions, my functions, my automates. I want to get paged and alerted 
+when things go south. Um and I want to have confidence that I have a fully monitored system. 
+Um and I'm I'm really excited for the investments and and the metrics and um telemetry getting 
+emitted um and the integrations with monitoring um happening. Additionally, um I'm very excited 
+about our push to make the streaming data set an otelkon compliant uh format that uh power 
+builders can export to a third party systems and use how they like. We want amazing defaults. 
+We want a great inplatform experience, but we also want to be the home of interoperability and we 
+want power builders to be able to do what they want with their telemetry. And then lastly, 
+I would say I'm really excited that we have um an AIP uh telemetry kind of data store now 
+across different platforms, products, teams um all emitting to a central place. And now the question 
+is how do we get it into users hands as easily as possible across the platform? I have an error. 
+How do I have a one-click way to see my trace, see my logs? And it's really exciting to see 
+all like the developers kind of hone in and come um wanting to work on this um now that it's 
+finally real. Uh which is really exciting. It's in workflow builder. It's going to be more places 
+very soon. And that is what I'm I'm very excited about. Yeah, that'll be neat to be able to just 
+one click and see kind of everywhere it is just like we do with data, but now we're talking about 
+the not only the data, the logic and the actions, the ontology objects, all these different 
+components. So, I love that we've expanded beyond just the data piece to really get these, you know, 
+the observability across everything. So, awesome. Well, thanks Bennett for joining me today. I 
+really appreciate the time. Thanks for having me.

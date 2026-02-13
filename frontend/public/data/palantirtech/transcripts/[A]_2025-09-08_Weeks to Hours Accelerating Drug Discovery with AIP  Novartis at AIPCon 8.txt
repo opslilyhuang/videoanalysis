@@ -1,0 +1,107 @@
+================================================================================
+METADATA
+================================================================================
+Title: Weeks to Hours: Accelerating Drug Discovery with AIP | Novartis at AIPCon 8
+URL: https://www.youtube.com/watch?v=dQ8KeyVmfUM
+Published: 2025-09-08
+View Count: 4,334
+Duration: 720 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome head of data 42 at 
+Noartis, Burgett Sherbold. [Music] Good morning. Now we're switching gears. My name 
+is Burg Shouba, head of data 42 at Novartis. Novartis is a leading global medicines company 
+and we focus on science and innovation. I'm really excited to be here today to share with you how 
+we re-imag the way we discover novel lifesaving medicines with the power of data and AIP. So as 
+many probably know the pharmaceutical company uh pharmaceutical industry faces a big challenge. 
+Currently it takes us about 12 years on average and three billion dollars to develop a novel 
+medicine. This is largely driven by a low probability of success with an odds ratio of 1 in 
+10,000 um for one of our discovery stage molecules synthesized by chemists early on to ever reach 
+regulatory approval. So this is not a problem we can solve with vibe coding alone. So at Novartis 
+we believe that the probability that improving the probability of success requires three uh 
+critical elements. So one is a democratized access to contextenriched integrated data across 
+discovery preclinical clinical and real world data. worldclass scientific talent and on top of 
+that in intelligent tools including predictive and generative models that support our scientists 
+in making breakthrough discoveries going way beyond the classical productivity tools. So 
+for our scientists and for me honestly it's not the goal to go home 30 minutes earlier 
+to walk my dog. It's really I want to improve this odds ratio and help our patients who are 
+waiting um for a new med life-saving treatment. With Palunteer as our partner, we're building a 
+framework that allows us to use AI agents with scientific depth anchored in our data. So let me 
+share today two examples. So we started working with Palunteer um relatively early on in 2019 
+to develop the technology behind data 42. Some of you might wonder why 42 and I guess I have the 
+coolest job title probably here in the room. Uh we are inspired by the hitchhiker's guide to the 
+galaxy. So in order to find the answer to life, the universe and everything, data 42's mission is 
+to leverage and unlock the value of Novartis' data in a secure and well-governed way. This includes 
+proprietary compound data, pre-clinical efficacy and safety data, clinical data including lab data 
+and biomarket data as well as real world data. For example, health uh electronic health records. You 
+can see that some of the data especially biomarket data can be quite sensitive but also highly 
+complex. And in order to really fully understand our clinical data, it is essential that we're able 
+to link the structured data to unstructured data in our clinical trial protocols or scientific 
+reports. So by leveraging the ontology and AIP, data 42 has been able to combine tens of billions 
+of rows of data from over 700 um million patient lives from real world data as well as from our 
+3,000 clinical trials encompassing about a million patients. So this data is now instantly available 
+and all within the secure and well-governed environment. So we have encoded um our rich domain 
+knowledge into the ontology by building agents that can extract and connect data across multiple 
+um data domains and metadata captured in our documents. In this way, you can easily explore AIP 
+generated links that connect a single compound as you can see here in yellow with our clinical trial 
+data shown in red, biomarker data in green and preclinical data. So now let's take a first uh uh 
+look at the one example of how data explorers can easily query and visualize real world data from 
+this massive enriched ontology using one of our AIP and augmented tools that is now in production 
+and used across Novartis. It's called Chat RWE. Let's say you're a clinical scientist supporting a 
+project team that is planning a new clinical trial in breast cancer maybe. So the first question 
+is can I enroll patients? Do I find the patients given certain inclusion and exclusion criteria? Uh 
+the answer is quite complex using real world data. you typically need to ask a data scientist 
+because you probably don't know how to write SQL queries and so it takes time and maybe you 
+just uh move on but now with uh chat RWE that uh democratizes the access to data with rapid 
+decision making and allows us to run um these cohort feasibility assessments really quickly. So 
+in the chat RW tool, the immense complexity of the data traversal, the synonym retrieval and output 
+uh generation is hidden behind a very intuitive uh user interface. You can see there's a chat and 
+a set of curated visualizations that empower our scientists to understand whether a generated 
+cohort is a good foundation for their research questions. So these visualizations are designed 
+to provide the data explorer with the necessary context on the underlying data such as for 
+example the distribution of age, the coorbidities, clinical labs, lines of prior treatments etc for 
+the uh patient population of interest. Yet for our data scientists that's really where their work 
+starts and uh having access to the multimodal data available on data 42 they can now go uh 
+do their work in a familiar procode environment such as Jupyter notebook uh to build for example 
+new ML or AI models. So now let's take a look at the second example that is uh in production. We 
+call it closing the loop. um you will see why. It's an application that we use in all of our uh 
+early discovery project teams where we are making hundreds or thousands of uh compounds to predict 
+the anticipated human dose. So if you think about uh taking out risk, it's critical to understand 
+and predict what might happen in human. And here we can now uh predict the anticipated human dose 
+for all of our discovery molecules, learn and uh compare with our clinical data at scale and 
+using this automated workflow uh and AI agents as I will show you in a little bit. Our goal here 
+was to enable one translational modeler to do something that actually they were not really able 
+to do before. And if done for all projects um at scale basically it would take a much bigger team. 
+So you can see that closing the loop is yes it's about gaining efficiencies but it also is will 
+improve and improves our prediction quality and leads to novel insights. So predicting the right 
+dose from animal experiments is a very complex kinetic modeling process with multiple options. So 
+what we've done with Palunteer's AIP agents is to automate the creation of all possible scenarios. 
+This is what wasn't possible before allowing the modeler to test um the impact of different input 
+data and scaling methods. If you do this manually, it just explodes and takes a lot of time. valuable 
+pieces of decision rationale and scientific context are captured back into the ontology 
+to create a true knowledge base that supports improved predictions downstream. So capitalizing 
+on that, we've constructed AIP agents that combine the insights from historical clinical studies that 
+have been integrated into the data 42 ontology as well as organizational and industry best practices 
+um to provide recommendations uh on modeling decisions. So with every prediction and every 
+scientific piece of context that we capture um as lab nodes, this ontology is enriched and will 
+inform our future predictions. The AI agent it not only works through the layers of the workflow 
+but is also able to transparently justify its recommendations to the modeler while the ontology 
+allowing for a true human AI partnership. So at the end of this workflow, all modeling decisions, 
+all generated charts charts and all data utilized um from the ontology are transformed into an 
+electronic lab notebook entry with traceable sources and transparent artifacts to guarantee 
+rep reproducibility. So in summary, I hope you can see that through this combination of agentic 
+automated and ad hoc decision making support with full decision traceability, we've been able to 
+reduce the time one of our translational modelers usually spends on the human dose prediction per 
+compound by approximately 90 98% from one week down to two hours. Today, almost 100% of our small 
+molecule projects use closing the loop to help us increase our consistency, reproducibility, and to 
+derisk projects much earlier and thus increases our probability of success. So to summarize, if 
+you comprehensive data, brilliant scientists, and truly intelligent tools, you can fundamentally 
+change the process of drug discovery. So imagine being able to sub supercharge also your data 
+scientist with best-in-class access to data, efficient tools, and increasingly autonomous 
+and contextrich agents. Thank you. [Applause]

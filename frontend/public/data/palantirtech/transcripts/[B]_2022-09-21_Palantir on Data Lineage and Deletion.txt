@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir on Data Lineage and Deletion
+URL: https://www.youtube.com/watch?v=_oF_H3cxSSA
+Published: 2022-09-21
+View Count: 6,571
+Duration: 225 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+At Palantir, we have always believed that the right to privacy is a fundamental human right. And our technology helps organizations protect the privacy rights of individuals while enabling their most important missions. This includes providing the tools for organizations to fully manage as well as delete their data as needed. My name is Meher and I am the Engineering Lead and Product Architect for the Privacy and Civil Liberties Team at Palantir. I'm Harry and I'm a Technical Lead in Pantez UK Health Work. During the pandemic, nations faced one of the toughest privacy challenges in recent history. In order to respond to the pandemic, governments need to gather and analyze an immense amount of data. For example, for PPE distribution and vaccine rollouts. At the time, governments deemed this necessary and proportional to the health care crisis at hand. Emergency regulations were issued and used as the legal basis for the expansion of powers. In the UK, for example, these emergency powers included the control of patient information notice, while in the US it was the public health and emergency declarations. Both of these regulations gave the respective governments the expanded authority to collect and retain sensitive health care data. As governments around the world begin to gain the upper hand in the fight against COVID-19 for the time being, the need to keep this emergency data, regardless of how it's protected, will win. And when governments decide to revoke these emergency powers, corresponding health care data will have to be deleted. This deletion is not a trivial challenge. Huge amounts of data were collected, combined, transformed, shared and repurposed, often quite rapidly. In many cases, government institutions collaborated across many disparate partners and platforms to advance their response efforts. There's a complex history of different types and versions of data that were pulled into a variety of tools and systems. And this means that deleting this data is not a simple as just dragging and dropping a few files into a virtual trash bin. We have to account for the lineage of each piece of data that we need to delete. In complete data deletion could create new sources of risk and without a powerful and systematic solution for data tracking and deletion, sensitive data could continue to linger. We've built Palantir Foundry to address this exact problem, to make data deletions safe and reliable for our government and commercial partners. Foundry comes out of the box with data lineage tracking capabilities that account for every transformation of a piece of data. This means that no matter what happens to a piece of data, Foundry can help institutions comprehensively perform deletions throughout the system. Protecting data rights, whether in a healthcare emergency or in any other context, has been critical to our mission since our founding in 2003. This is why Palantir created one of the first privacy and civil liberties engineering teams more than a decade ago. We believe that Palantir Foundry's Data Governance Foundation, including powerful deletion and data lineage capabilities, can help critical institutions preserve the data rights of individuals.

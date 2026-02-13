@@ -1,0 +1,25 @@
+================================================================================
+METADATA
+================================================================================
+Title: Powering Predictive Operations | Jacobs + Palantir
+URL: https://www.youtube.com/watch?v=BpZ6QF3-s-U
+Published: 2022-10-31
+View Count: 8,601
+Duration: 941 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: NOT AVAILABLE
+Category: 其他
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+NO TRANSCRIPT AVAILABLE
+
+This video does not have captions or subtitles available on YouTube.
+To obtain the transcript, you would need to:
+1. Use a speech-to-text service (e.g., OpenAI Whisper) on the downloaded audio
+2. Manually transcribe the content
+
+Video URL: https://www.youtube.com/watch?v=BpZ6QF3-s-U

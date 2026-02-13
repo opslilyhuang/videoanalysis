@@ -1,0 +1,146 @@
+================================================================================
+METADATA
+================================================================================
+Title: Unleashing Digital Potential with Next-Generation Telecom | Lumen at AIPCon 8
+URL: https://www.youtube.com/watch?v=3c4ekdck0kg
+Published: 2025-09-08
+View Count: 3,126
+Duration: 857 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+[Music] Please welcome Chief Technology and 
+Product Officer at Lumen, Dave Ward. [Music] Hey everyone, I am the last speaker before launch 
+and my name is Dave Ward and as you just heard I'm the chief technology and product officer 
+at Lumen. Um what that means after we've seen peaked through the keyhole of so many industries 
+is that I'm going to show you uh what's going on in the world of telecommunications uh lumin as a 
+service provider and I admit I'm a bit flinger I uh I think about passing packets and photons 
+there has to be somebody that does that. So so that's me. So, Lumen, we call ourselves and refer 
+to ourselves as the trusted network for AI. And what's really fascinating for me thinking about 
+the connectivity portion of what we heard this morning for an AI strategy, you obviously need 
+to choose an AR partner. We're at a palenture conference. We have something in common. Um, mo 
+almost all the use cases were getting access to lock data and understanding the relationships 
+of that data. So for an AI strategy, you need uh to choose an AI partner, you need to have a 
+cloud strategy, but frequently what's not talked about at all is that connectivity and moving that 
+data to feed the platform, to feed the LLMs. And on average, what we're seeing from our enterprise 
+customers is on the order of 36 different data sources. Our company's no different. Your 
+company's probably uh very similar. The data is locked on prem. The data is in data centers. 
+The data is in hyperscalers. The data is in SAS platforms. To get to unlock that data, you have 
+to be able to connect it all together. And so the transformation going on in the service provider 
+world is around of course this AI revolution. Many things that um perhaps you've been reading in 
+the in the industry are around the growth of data centers and the gigawatt data centers that are 
+being built as was said earlier today for an AI for AI infrastructure you have to have the power 
+infrastructure you have to have the water the real estate and also you have to have the connectivity 
+infrastructure so to put it into perspective there we have about 240 million square feet of data 
+centers in the US today By the end of 2028, we're going to have about a billion square feet 
+of data center space. And so just the fundamental amount of money going into AI and going to these 
+data centers leads me to to describe one of our one of our first businesses, which is backbone 
+business. Uh Lumen um has the largest amount of conduit, the largest amount of fiber in the lower 
+48. And we recently announced $8.5 uh billion dollars of new contracts with hyperscalers and 
+data centers to interconnect the new AI regions. And so we're focusing a lot of our business on 
+building that backbone for for for AI. Also, we are an enterprise services company. And so as 
+I've heard so many of the talks today, it's and and what I'm going to show in my presentation in 
+the examples, the fundamental question is how can enterprises join the AI economy? How can they get 
+access to that data? How can they rebuild the comm the telecommunication services that are necessary 
+to transform their own companies to to be relevant and to take advantage of the AI economy? So we 
+build metro fiber, inner city fiber, connection to data centers, connection to the hyperscalers. 
+We're the uh largest by means of traffic internet service provider in America and the world in fact 
+and so bigger and better internet. But there's a couple things just talking about history and 
+the transformation. Took about 30 years to get from some of the early concepts of the internet 
+to widely deployed about 25 years ago. It took about 15 years to get to cloud 1.0. And that's 
+the cloud economy that we know today. But what I just mentioned is that with basically four times 
+the amount of AI data centers being built in the next three years, it's a fundamentally different 
+transformation speed that has to happen for all of us in this room and certainly for me in our 
+company. So cloud scale and what I mean by scale to to really simplify this it takes over a 100 
+gig link about a day to move a pabyte. Okay, puts it in perspective. So therefore a lot 
+feeding the data for LLMs is frequently talked about in exabytes. That's a thousand pabytes. 
+Unacceptable to use that level of speed. So, we're building a new network as I just mentioned 
+and really bringing in new on-ramps to the cloud, new on-ramps to data centers and moving from 100 
+gig to 400 gig to 800 gig to 1.6 terab as a basic connectivity directly to enterprises and of course 
+um as new on-ramps and hyperscalers and and data centers. So, that's the physical aspect of it. The 
+next aspect is we're transforming the traditional tele uh telecommunications business as we've 
+heard from so many companies today from being paperdriven to being a digital experience. I want 
+to connect from X to Y. I want to hit a button. I want to go now or I want to use APIs to get that 
+done. And so that digital layer is a fundamental transformation of the customer experience that 
+we want to bring uh into the market. What you can see in this map is what I deal with every day. 
+And what I mean by that is a telephone network. Many folks know they see the big windowless brick 
+buildings in their metropolitan area. Telephones uh central office that was built over the last 
+120 years or so of every single copper line for every telephone brought to a central location. 
+Perhaps there's some wiring centers, often tens if not hundreds in each metropolitan area. How 
+does the copper lines or the legacy network that was built over the last 30 years be relevant 
+in the AI economy? It's really not. Um, we're highly regulated industry. We have to handle 911 
+services. We're a critical infrastructure for the nation and for all of the industries here. So I 
+I'm working to transform not only my industry but enable enterprises to be able to transform their c 
+their companies by changing the access technology and the speed that has been the foundation of how 
+companies have gotten to where they are today. So that leads me to uh my first example. We partner 
+deeply with Palunteer because Lumen historically although you may not necessarily recognize the 
+name you may recognize that we are an accumulation of acquisitions. You may know Centry Link, Level 
+3, Quest, Savis, TWW Telecom, Wiltel etc. These all form the company that is Lumen. I've been 
+there about a year and a half and brought in not only to change the network architecture but 
+to change the backend architecture because as I arrived like many companies here who are created 
+through acquisition nothing gets turned off all the data silos exist all the inventory systems 
+exist and it's that unlocking the data and forming a relationship that really is my first example of 
+how we take out our legacy equipment and take out our legacy architecture And to do that we needed 
+to not only transform that network architecture but in particular transform the workflows in the 
+operational environment to get that done. It was driven by paper. You know that you see the the 
+people driving around in trucks and doing telecom work and things like that. Telecommunications was 
+a completely ticketdriven industry. And so what what you're highlighting what I'm is highlighting 
+in here in this in this uh in this demo video was what it looks like in a metropolitan area 
+for a central office and then the wiring centers around it and how the connectivity 
+of enterprises is connected there. And so we needed to be able to go into those inventory 
+systems fully deconstruct customer line devices connected to in which wiring center and deploy 
+technicians to be able to take that equipment out like and transform how that network is going 
+to be built. Like a lot of enterprises here, that transformation particularly of a physical 
+uh of physical assets based company like we are and so many that presented earlier than me, we 
+actually have to transform the hardware. I mean, we're talking about the copper lines going down 
+the poles. We're talking about the fiber in the ground. We're talking about those buildings and 
+what's in them. And of course, like like everyone in a transformation, we're setting targets for how 
+much cost can we take out? And for me the the cost we want to take out is of the legacy equipment and 
+the legacy systems and architecture that uh is one old but two preventing enterprises and customers 
+from getting into the AI economy. So to do that we partnered with Palunteer deeply understand the 
+inventory of our legacy network deeply understand the workflows that our technicians have to and 
+the activities they have to do to transform that piece but also using the ontology be able to 
+understand which order of operations we can go through to transform our network and transform our 
+business. And so it was a very very deep exercise um across all the data silos, across all of the 
+workflows, across all of the acquisitions we've made to be able to pull this together. And 
+so using the AI part of AIP, we were able to then have that operational optimization and be 
+able to predict the cost takeout and equipment takeout that we could do over time and set our 
+goals as a company for that transformation. Additionally, as you can see from from just how 
+some of the data is organized, really what becomes critical for us in this journey is transform 
+the architecture, transform the experience, transform how our customers are connecting 
+while we're still flying the airplane. And so that is a is a really big issue when you 
+have to deliver things like 911 and also all the critical data that enterprises like in this 
+room uh need to run their business. And so this has been incredibly successful for us. But to 
+transform our product offerings and our enterprise customers to be relevant to the AI economy, we 
+had to link inventory to systems to buildings. But then also to what products have they 
+been have they consumed from us? What is that era of what is that era of product? What is 
+the new product that we would like to bring to market? How much money is that going to 
+actually save the company by transforming? What's the revenue risk and revenue retention 
+issues that we have around that? But then also are they able to use the digital experience? Are 
+they getting the speeds that they need? And how are we going to deliver that? So we were able to 
+dissect down into the workflow and into our fiber and into our copper the capabilities of that 
+inventory as we went. And so as we as we step forward really what we're taking a look at is how 
+we automate these workflows. And that's it's it's fully automated now for us to be able to dispatch 
+technicians to be able to do this and to be able to have them move the customer with zero packet 
+loss. But additionally, as we step forward, we can have the testing of the automation of the live 
+circuit brought back into that automation flow. As we take a look at the next example, this is the 
+one at how we've taken our physical inventory, matched the product inventory to customers, and 
+created a migration path for our customers and for our portfolio. of how fast we can move from 
+traditional things like VPNs over traditional uh dedicated private lines and T1s and these are 
+some typical telecommunications products to one in which we can create that fabric that is necessary 
+to access 36 different data sources and to move along that product journey. So Palunteer has been 
+on both of these steps. one on understanding our network, two understanding our customers and three 
+setting up our transformation journey that we can take our customers through and make sure that um 
+they can take advantage of the other part of our business that backbone business which is building 
+connectivity into the major AI data centers and hyperscalers. And so for for a telecommunications 
+company and a service provider, the most complex thing we can do is to change is change the way it 
+was always done. Telecom's been around forever. Service providers been around for a very long 
+time. and changing the foundation of our revenue source into the new model that we want to work 
+towards and the new model that's being demanded from the market required extreme precision, 
+extreme depth into our data and the Palunteer AI platform has fundamentally helped us achieve those 
+goals. So, thank you very much. [Applause] [Music]

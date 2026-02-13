@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: FoundryCon US 2023 Highlights
+URL: https://www.youtube.com/watch?v=JtriwzXYqqs
+Published: 2023-02-14
+View Count: 3,952
+Duration: 140 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+We're so honored to have an entirely new set of stories here today, customers from all walks of life, from all industries. We want to grow with our partners and we believe that in good times and bad times you can really win big. You have to adapt, find things that work and build something really new and disruptive. We've been involved in supplying software to the US Special Forces and US Army and Allies for the last 15 years. With bad data, people could die. Like that's how severe it is. Data allows us to see the individuals at risk, but more importantly, it defines the epidemic that you have, not the epidemic you want to have. No one ever said that the solution to these problems was upgrading their ERP, their CRM, their whatever platform to the latest version. To solve these problems, you need an ontology. And Foundry's core ontology allows you to model the semantics, the kinetics, and the dynamics of your business. The beautiful thing about the ontology for those of you that have not tried is that you build this data representation of the object level. We've got to set all these data streams up, but we've got to be able to integrate them overnight. But we went from that simple sheet to a comprehensive data analysis with data streams from every state, every hospital, every laboratory, within a matter of weeks. We're taking hardware assets that were disconnected from the grid and were IP connecting them. We're building this massive network of networks. What we understand is the connectivity, the exposure, at the speed of the machines and at the scale of machines. And that's what we're starting to expose together with volunteer. And in the old platform, we got to the end and we were ready to call the project a failure. And then we gave it one more shot with Foundry. And so what we were able to do was we built this model in 24 hours. It complete delivered application. It's currently the largest investment we've made outside of physical infrastructure. But in the end, we've always believed that in order to be the best, you have to partner with the best.

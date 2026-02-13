@@ -1,0 +1,18 @@
+================================================================================
+METADATA
+================================================================================
+Title: Evolving Beyond Linear CI/CD with Palantir Apollo
+URL: https://www.youtube.com/watch?v=Y9IHXu9NB9Y
+Published: 2022-08-01
+View Count: 7,525
+Duration: 117 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The Data software deployment tooling is holding businesses back from growing and engineering teams from innovating at their fullest potential Evolution to platform architectures, Kubernetes, continuous deployment and a fragmenting infrastructure in cloud world have introduced a new level of complexity The linear nature of traditional CICD has left engineers in an inefficient nightmare of manually tacking on new deployment environments and policies to every pipeline Navigating complex into service dependencies and platform configurations and weathering the crippling effects of pipeline skill Apollo solves this by eliminating linear pipelines and defining everything ones at the service environment and platform level Developers can declare services API dependencies the rollout strategy to use during upgrades and SLOs for release promotion evaluation next to the code itself Environments can be configured with maintenance windows and compliance requirements Then Apollo takes both sets of inputs and ensures continuous and autonomous updates and rollback to the environments without causing unexpected impact to availability Then there are release channels Customized will software rollout paths defined by product teams that model unique wrist tolerances and rollout strategies New environments can subscribe to a given release channel that defined when they will get new product releases for each installed service Apollo is the central brain that auto enforces the specific controls and requirements tied to every unique environment No matter if there's one production environment or thousands all with a fully auditable history The modern approach to software deployment that maximizes flexibility efficiency and control It resolves mounting complexity and scales alongside your business. It's software of tomorrow delivered today

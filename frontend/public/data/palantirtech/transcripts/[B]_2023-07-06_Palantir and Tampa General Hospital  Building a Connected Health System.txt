@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir and Tampa General Hospital | Building a Connected Health System
+URL: https://www.youtube.com/watch?v=SHzGi3b1WGA
+Published: 2023-07-06
+View Count: 12,938
+Duration: 184 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The Campus General Hospital is really striving to be the safest, most innovative healthcare system in the country. We have a vision of infusing data everywhere to create a connected health system. Foundry is at the core of that strategy. We really don't have the opportunity to waste time and money anymore, the way healthcare is being disrupted. So this is our way to really work toward getting it right the right time. There's a ton of data in the healthcare space that we have access to, but it's really hard for clinical teams to access these data points in a meaningful way in their work spaces in real time. We're integrating data sources into the Foundry ontology and building applications and predictive models to forecast patient placements while keeping patient privacy and information governance a top priority. We've seen a 28% reduction in our patient hold time and we've reduced the time the nurse managers spend managing patient placement by 83%. So patients are moving into care faster and they're getting the treatment that they need faster. As soon as I come into the hospital, I'm able to bring foundry up and within seconds understand where our staffing are. It enables us to gather that live data, reallocate those resources as needed and be very proactive with our staffing. The PECU is our post anesthesia care unit. It's where our patient temporarily recovers from their surgery. And we're leveraging Foundry in order to deploy AI models and recommendation engines in order to optimize how we plan for patients leaving the PECU and entering into our hospital in patient units. Currently, our predictive models are at over 95% accuracy. We're now able to plan hours, days and sometimes even weeks in advance in order to make sure that there's a bed for our patients as soon as they're done with their surgeries. What we've done with Foundry is really built pathways for our patients. We do know what they need but keeping track of that is very, very difficult in a complex health system like ours. So Foundry allows us to see if a patient is really fallen off that pathway and we can act immediately to make sure they get what they need and stay on track to recover. Foundry has allowed us to be able to centralize all of our data assets so that we have one common operational layer. Everyone is connected to one health system. It's incredibly flexible and serves as an operating system for all of our data assets, getting patients into care faster and moving from a reactive to proactive planning. If we can leverage Foundry in a way that'll actually save lives, that really connects our analytic vision to infused data in all aspects of the care continuum. Our analytics team are now equipped to fully lean in and build towards our vision of a connected hospital. I feel empowered to be able to help more people more efficiently each day. It's a great feeling to know we're caring for patients and the best, most efficiently possible.

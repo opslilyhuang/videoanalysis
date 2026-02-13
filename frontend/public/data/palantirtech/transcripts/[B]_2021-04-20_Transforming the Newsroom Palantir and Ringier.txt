@@ -1,0 +1,18 @@
+================================================================================
+METADATA
+================================================================================
+Title: Transforming the Newsroom: Palantir and Ringier
+URL: https://www.youtube.com/watch?v=HyivBXfuIF8
+Published: 2021-04-20
+View Count: 20,257
+Duration: 178 seconds
+Score: 63.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The Ringier is a family owned media company with a big tradition. The 180 years old based in Switzerland we're doing about 130 media brands in 20 countries. Our commitment is to provide premium journalism to the citizen. We have shifted of course like all other media companies from an offline, newspapers and magazines into digital media. The challenge we have for any digital media company on this planet is always the same how do we provide our users with the right content? Where is the perfect match? How can we offer better content to our users? And there of course data comes into play. When I started as editor in chief for Blick.ch four years ago we had in our newsroom over 270 data reports. So there were really a lot of data but nobody really looked at it. So we knew that something had to change. So together with Palantir we were able to be developed a newsroom tool where all data comes together. Our objectives were that it should be easy to use accessible for all journalists and that all data from all sources is accessible in one place. What happened was that all journalists really embraced data and we see that 85% of all journalists look at foundry every day. At any given time I can log on to the platform and monitor how my articles are performing. I can set targets for myself and my team and keep track on them. Our KPIs that we set are like unique users per day, page use sessions and also time spent. I can weigh this against other Blick media objectives and make decisions around the content. Because we see all data in one place we are able to better serve and to inform our readers. We have reached more readers and because of our increase in which we also were able to increase our revenue which is very important for funding of equality journalism that Blick.ch offers every day. Foundry has helped us to increase our traffic on the mentally it has helped us to improve our relationship to our readers and with that it's not only a technical progress that we could do with them but it's also a business success. I'm extremely happy to see our work going forward with Palantir because it helps journalists but more important than that it helps the users to get better content.

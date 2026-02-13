@@ -1,0 +1,13 @@
+# 数据分析后端依赖
+fastapi>=0.104.1
+uvicorn>=0.24.0
+python-multipart>=0.0.0
+openai>=1.12.0
+requests>=2.31.0
+
+# 原有依赖
+yt-dlp>=2024.0.0
+youtube-transcript-api>=0.6.2
+python-dotenv>=1.0.0
+pandas>=2.0.0
+webvtt-py>=0.5.0

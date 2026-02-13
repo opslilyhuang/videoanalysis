@@ -1,0 +1,136 @@
+================================================================================
+METADATA
+================================================================================
+Title: Solving Societal Issues with Agentic Decision Making | Fujitsu at AIPCon 8
+URL: https://www.youtube.com/watch?v=A47Nuav7X-4
+Published: 2025-09-08
+View Count: 2,480
+Duration: 802 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome corporate executive 
+officer, corporate vice president, COO in charge of solution services and head of 
+global solutions at Fujitsu, Yoshinami Takahashi. [Music] Uh hi everyone. Uh my name is Takashi 
+from Fujitsu. Um basically I want to talk about what we do with Palantia um in Japan. not only in 
+Japan but also like um across the globe we work with trying to uh provide transformation to all 
+the industry countries. So Fujitsu is a Japanese one of the largest tech company. We focus we built 
+like a supercomputer a quantum computing not not air conditioning by the way. Um we're known we're 
+like a big one of the largest system integrator. We focus on the mission critical either it 
+may be healthcare like a finance but this is very important. So uh through our global brand 
+called Fujitsu Yubas, we're committed to kind of solve the society issues and again turning 
+data in AI into better decisions and real world outcomes. This is very important. So again with 
+Palantia we focus on the mission critical again very critical to Japanese competitiveness. So we 
+focus again in like uh enterprise customers but like a manufacturing, automotive, energy and also 
+like uh healthcare and these are really important. So this uh many of these sectors do face a lot of 
+change challenges not only unique to Japan but I'm sure all these multinational companies outside of 
+Japan do face similar kind of um problems like in Japan by 2045 there's like a reduction of labor 
+force by almost 30 30%. That's a big number. So we're going to face shortage of labor as you know 
+we have an earthquake in Japan. So that's pretty immense what's happening in the earthquake all 
+the geopolitical issues that's happening across the globe that's another issue. So in this kind of 
+uncertainty we are leveraging Palantius technology and also Fujitsu's technology to kind of mitigate 
+all the risk. Uh since um how to say uh also one more point this is very important uh we've been 
+using palantia for almost five years. So we have like a 60 siloed system in Fujitsu. So we all 
+integrated the data through ontology making sure we can make a right decision a global deci making 
+a right decision for business. So this type of practice internal practice we take to our customer 
+as a firsthand experience. This is very important. So last year in 2024 AIPCON my colleague has 
+talked about like the supply chain. So this year we have moved this dynamic supply chain 
+management oper operating system using embedded AI more into like advanced level. So what I want 
+to show you today is a live demonstration of what we have right now and also what is coming up with 
+the new uh AI agents. So this is kind of a typical uh example of like a Japanese global manufacturer. 
+They have like a 3,000 suppliers, 18 factories, scattered system around 20. So they have obviously 
+issue around data fragmentation 200,000 SKU. So basically the company was struggling with the 
+inventory management. So what we did is basically um in two weeks with Panantia without shutting 
+down the existing uh system we built this global supply chain system and also made the data into uh 
+visi visible so that the company can engage into the transformation. So now they almost manage two 
+million parts simultaneously with Palantia Foundry with our AI platform Kosichi again auto machine 
+learning we built a connected supply chain system with 30 integrated application across inventory 
+forecasting and production and planning. So in just two months kosuchi is again auto machine 
+learning the we built like a 300 demand prediction for 300 SKUs. Because of this the company was able 
+to reduce the labor force by 50%. And now they have this annual cost saving of over $10 million. 
+So how is this basically possible is again uh this we did not base it on a single application 
+not a dashboard but also like this is like a truly integrated dynam dynamic supply chain management 
+operating system. Again we think um uh solving this kind of a impact in societ um in resolving 
+this social issues but also business issue is very important. So let me kind of show you how this 
+is in placed in action. So when we talk about the dynamic supply chain management operating system, 
+we do not mean just like a visibility. It's about how much the company can take quick actions 
+making or like a taking every um decisions in a right timing. Address the risk before it happens 
+across like a production, logistics and customer and consumers. Again the inventory control many of 
+the large Japanese companies still use spreadsheet which is again an issue. So with this uh operating 
+system the entire process is automated all the supply chain data flows into one connected 
+environment optimizing operations cutting cost and also maintaining resilience. This is kind 
+of very important and today this automation is evolving further with AI agents. When a shortage 
+risk appears, specialized agent for procurement, inventory and sales each will be proposing a 
+solution. An orchestration a agent will kind of select the best option and an evaluator agent will 
+validate the option. Then the human beings upon necessity they will make decision collaboratory 
+with the AI agent. So again we think dynamic supply chain like a 90 more than 95% of the task 
+should be automated. So this is not really in theory but it's in practice right now with this 
+Japanese large companies right now in Japan. Uh this capability and speed are only possible 
+because it's not a single application but a fabric of over 30 interconnected applications 
+built on the same business ontology. Once the ontology allows every new 
+application to reinforce for the others, accelerating development and creating a shared 
+foundation where AI agents and human operators collaborate seamlessly and result is not uh 
+just efficiency but also the resilience. So as you as I kind of may maybe mentioned before 
+like Japan is like a country of earthquake. So when not earthquake hit u uh in January of 2024 
+this company was able to kind of uh mitigate the all the risks associated with supply chain. So 
+within like one day they were able to kind of define what is the possible impact and they they 
+made a decision to reroot kind of change supply on the spot. Usually it took like almost like a 
+four to like seven days. But through this kind of ontology data integration and and leveraging 
+the AI they were able to do to to do this type of um um crisis management. So again the true 
+supply chain we think it's like it's it needs to be like a connected intelligent and ready 
+for both daily decisions and crisis response. So building on that same foundation, we are 
+now taking it to the next level, embedding AI agents directly into disaster response. The 
+real the reality is that this operating system operating system not only works in the business 
+as usual, this is not enough. So in the modern uh global supply chain, we believe it needs to 
+withstand variety of shocks. So again earthquakes or like a tsunami or like a supplier failure or 
+even like a geopolitical dis disruption that can break all the continuity with the business. So 
+together with palantia we developed this agents to handle these complex scenarios. For example a 
+disaster response agent for large scale earthquake earthquakes in Japan where like a magnitude 8 is 
+expected in next few decades. we have to be kind of prepared for this type of uh uh incidents. 
+So this agent will be managing uh disruption, simulating potential facility damage, assessing 
+inventory impact and also highlighting weak points across the supply chain. So again supporting 
+not the day-to-day usage only but when at the time of crisis how fast we can respond to this 
+type of um uh incidents. This is very important. Uh another point is again um because our ontology 
+AIP and AI agents are unified on one platform. The agent not only explains why they have made 
+that options but also turns this into the live execution moving operators from insight to actions 
+instantly with confidence. This is very important. So again uh one example around this is the like a 
+principle applies not only across like a a single task but like a procurement production sales and 
+intercon connected of connect connectivity of AI agents embedded directly into the operation. 
+So as I as I have mentioned the AI agent will be developed and it's going to learn what how to 
+mitigate more risk in a more clever way. We think this is uh very important moving forward. So then 
+the next step is going to be how do we train and evolve the AI agents. So this is kind of a very 
+famous icon that we have made. So we have this uh very domain specific agents working across 
+multiple task. So the uh rapid development of a AI agent not is possible but practical practical at 
+scale. This is very important. So each time that uh the agents face a disruption or unusual case 
+they learn from the feedback from human beings and then based on their proposal the human beings 
+will be feeding back was that the right decision was that effective decision and also validation 
+agent will be teaching all the uh co u domain specific agent you could have maybe made a 
+different decision or option. So I think this type of enterprise feedback loop with the data and 
+interaction between human beings that will be kind of educating all the agents again auto machine 
+learning this type of technology will also support the agents learn quickly about the uh incidents. 
+So more and more we think the agent itself is going to be automated as we kind of leverage 
+this type of agents across multiple cases. So one of the key element is that the AI agent 
+is going to be is going is going to grow like a newborn to a very skilled professionals over time. 
+So again they do not learn like a task by the explicit rules but also by subtle decision making 
+that is unique to each company and because this uh capability is embedded in the operating 
+system. It scales allowing organization to continuously advance the dynamic supply 
+chain shared by their own expertise. So um this type of like u the agent learning 
+from each other being educated as a skilled worker we think there's going to be a 
+rapid development of AI agents in this uh segment. Uh our vision with palante goes beyond 
+this single case. We think this AI agent is going to reside in a single usage for a moment like 
+within a company. But over time the agent will talk to each other with a cross company and 
+that will kind of give more impact resolving many of the society issues. Again imagine one of 
+the manufacturers of all the suppliers sharing data they can uh they can all basically manage 
+the disruption in a more managed way. Imagine this agent is talking into cross industry 
+for like a energy company. How to kind of um ensure that the electricity is u provided to 
+the needed factory. So when the data is shared we think we can provide much more biggest 
+resilience to the society itself. So our vision is to kind of leverage technology again 
+palantia and fujitsu coming together to kind of u to make sure we have a very robust uh system in 
+the Japan society. But we basically want to kind of provide this type of solution across the uh not 
+only in Japan but also across the global market. So that is uh my presentation today and thank you 
+very much for the attention. Thank you so much.

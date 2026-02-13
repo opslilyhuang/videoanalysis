@@ -1,0 +1,9 @@
+{
+  "current": 8,
+  "total": 60,
+  "status": "processing",
+  "phase": "whisper",
+  "failed_count": 0,
+  "channel": "palantirtech",
+  "updatedAt": "2026-02-13T20:48:40.723670Z"
+}

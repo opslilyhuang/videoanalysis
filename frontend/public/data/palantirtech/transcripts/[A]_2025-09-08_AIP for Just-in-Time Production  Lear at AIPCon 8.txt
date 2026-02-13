@@ -1,0 +1,96 @@
+================================================================================
+METADATA
+================================================================================
+Title: AIP for Just-in-Time Production | Lear at AIPCon 8
+URL: https://www.youtube.com/watch?v=-DPdyQR1bG4
+Published: 2025-09-08
+View Count: 4,845
+Duration: 535 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome vice president global advanced 
+manufacturing at Lear, Jennifer Johnson. [Music] All right, good morning. My name is Jennifer 
+Johnson and I am here to share a glimpse into the journey of Palanteer Foundry at Lear 
+Corporation. Lear is a global leader in automotive seating and e systems. Our team of 
+more than 173,000 employees across 37 countries designs, manufactures, and delivers advanced 
+technologies to the world's leading automakers. With over 100 years of heritage, Lear is 
+the largest US-based automotive supplier, proudly headquartered in Michigan. Guided by our 
+commitment to innovation, operational excellence, and sustainability, Lear's global team 
+is shaping the future of mobility with solutions that enhance comfort, safety, and 
+efficiency. The automotive industry dynamics and resulting operational complexities are 
+endless. To assist our team in navigating through the realities of today's marketplace, 
+we are working to support our employees and our customers through our Palanteer Foundry 
+platform. And we haven't looked back. Never underestimate the ability of a small group 
+of dedicated people to change the world. Isn't that how the saying goes? And a couple of years 
+ago at Lear, it was exactly that. a small group of dedicated people who built our first use case 
+with Palunteer. It's easy for me to stand here and summarize the road that we've traveled since 
+that initial use case. And depending on where you are in your journey with Foundry, you already know 
+it's no joke. It's not an out-of-the-box solution. It's not a flip the switch project. Value through 
+Foundry is extracted through a deep relationship with the Palunteer team and a long-term investment 
+of time and resources from within an organization. So back to that initial use case, it built the 
+foundation of manufacturing production support at Lear. And from that initial use case, we built 
+more involving our manufacturing execution system integration and further monitoring applications. 
+Next, we built into our supply chain and that positions us to our current ambition, dynamic 
+decision-making in support of just in time seat assembly. So, let's turn our attention to JIT 
+operations to understand more about what I'm referring to for automakers to offer a broad range 
+of options for customers like you and me. Their models are designed to accommodate thousands 
+of end item vehicle versions. So, as a tier one supplier, Lear's processes must be optimized 
+to meet very tight requirements. So, I'm talking about product complexity delivered just in time 
+with the highest quality and of course the lowest cost. Lear only has a 4-hour broadcast window from 
+the time a fixed customer order is placed to the time a seat must be present at the seat install 
+point within an automaker's assembly plant. There are on average 350 unique part numbers that 
+are picked and staged that are components within a seat. After assembly, seed is all seats are 
+inspected and tested for fit and function. They are then readied for a sequenced delivery 
+to our customer assembly plant. The point I'm trying to make here is that a just in time 
+seat operation is a very intense environment. We're shipping seeds at 60 jobs an hour, 24 hours 
+a day, 5 days a week. Considering Lear's global scale of over 175 just in time plants, thousands 
+of decisions are made daily to po to both secure ontime delivery and also optimize our processes. 
+So, sounds like a great opportunity for an AIP powered Foundry application, don't you think? 
+Well, we thought so. So, let's take a closer look and join the team in Flint, Michigan to see what's 
+going on today. Welcome to the JIT control tower, where operations teams start their day. The 
+control tower is a real time bird's eye view of Lear's operation. On the left, we see the 
+production line status. It's a continuous influx of orders and deliveries. And on the map we see 
+a highle routing of incoming material from tier 2 suppliers located across North America. These 
+are components and subsystems and route from other leer sites or other thirdparty suppliers. 
+So how do we do it? How do we orchestrate the convergence of a continuous flow of customer 
+customer demand with the right material and the right resources on hand exactly at the right time. 
+We do this through dynamic production scheduling. To optimize production scheduling, we combine 
+the expertise of our operations team and our engineering team with Foundar's AIP horsepower. In 
+this view, we're experiencing the conbound board. This is a pipeline of activities and actions that 
+together execute to a schedule that our teams monitor. During a shift, dynamic line scheduling 
+is informed through the integration of multiple applications. If you remember those use cases I 
+mentioned earlier, these applications reconcile things like inbound material availability, 
+real time production throughput, and finished good inventory capacity. At the most left is our 
+exceptions board and our planners spend their time there interfacing, triaging and closing concerns 
+in material availability or production alerts, anything that may impact our most time-sensitive 
+deliveries. And our teams are trained to react to exceptions. At times, our customer demand 
+is within that 4hour window that they set. This means customers are asking us to break 
+that schedule that we planned and expedite what we all call a hot job. AIP alerts us now 
+of a hot job and our ops team engages to assess the best alternatives within the schedule 
+to deliver. Planners run the AI agent, our scheduling agent and its power to assess our bill 
+of materials and standard labor content involved. The scheduling agent offers options to allocate 
+the job during the shift. The resulting impact to the schedule and inventories on hand is 
+considered. So I point out a hot job as an example. It's a perfect example of how AIP and 
+the Lear turn team up on the production floor. Foundry delivers the decision layer while 
+the plant operations team brings practical product and supply chain and manufacturing 
+know-how. Engineering assesses complexity through simulation while foundry ingests inputs, 
+finds the best slot, and makes a proposal. Last, operations reviews the plan, considers the next 
+best alternative, and approves or escalates if needed. When ready, the job is placed and written 
+back to Lear's MEES system. As we build the JIT control tower and new AI agents, we have our 
+global manufacturing team in mind. We just reviewed one line and one plant. Multiply that by 
+hundreds of plants and as many operations teams making those thousands and thousands of decisions 
+daily. I find the most rewarding part of deploying Foundry applications are the aha moments. And 
+we all have them. It's the moment a production planner realizes he no longer must spend hours 
+each day pouring over Excel spreadsheets and on conference calls reconciling and onhand inventory 
+with his uh Mexican counterparts. And it's the moment the plant manager realizes she now has 
+a digital assistant supporting her ability to execute more effectively in her 24-hour a day, 
+5day a week operating rhythm. In conclusion, Foundry allows us to focus on what matters, 
+keeping our plants running smoothly and delivering the highest quality product to our customer. And 
+many thanks to the Palunteer team for supporting us along the way as we solve for our greatest 
+opportunities. Thank you so much. [Music]

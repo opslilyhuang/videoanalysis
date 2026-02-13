@@ -1,0 +1,18 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir Gotham: Europa
+URL: https://www.youtube.com/watch?v=tZVx3BTkLlI
+Published: 2022-05-20
+View Count: 28,674
+Duration: 174 seconds
+Score: 63.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+We live in a different world now than we did at the start of this year. Continue to confine cyber criminals are going to the next level. The Gotham Europa release is built to deal with the chaotic nature of the modern threat landscape. This is the state of the art operating system for modern intelligence and law enforcement agencies. As always, Palantir raises the bar to define how analysts can collaborate securely. Europa's newest collaboration features are chat and slides. With chat, analysts can now connect directly with colleagues in their own organizations and approve partner agencies in real time. Secure collaboration on the information being discussed is just a drag and drop away. Slides can save analysts countless hours spent building reports and presentations. And thanks to slides, presentations on our data aware and security aware, ushering in a new generation of transparency for people making some of the toughest decisions in the world. Europa's sophisticated machine learning capabilities enable users to test machine learning models, supporting those decisions before they are deployed, ensuring effective, responsible, operational use of AI in highly volatile environments. Europa also comes integrated with Metaconstellation, which redefines how analysts can work with and tap into the entire commercial space industry. Metaconstellation and many other applications are possible because under the hood, Europa is powered by a new data integration engine and platform architecture. These give our customers own data engineers working behind the scenes the most powerful suite of capabilities ever. And as always, multilayered privacy and security help to ensure that our customers keep granular control over their data and decisions every step of the way. For over a decade, Palantir has worked leading analysts and investigators around the world. Europa encodes all of this experience in a most significant update yet to revolutionize how institutions collaborate and build intelligence.

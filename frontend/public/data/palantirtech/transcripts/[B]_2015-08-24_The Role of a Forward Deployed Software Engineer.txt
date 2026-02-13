@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: The Role of a Forward Deployed Software Engineer
+URL: https://www.youtube.com/watch?v=5OYy_UtINo4
+Published: 2015-08-24
+View Count: 80,335
+Duration: 217 seconds
+Score: 53.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+What problems are we trying to solve? What are the pieces missing that will help us solve this issue? How on earth can I make this thing work when I'm on a plane with no internet? As a forward deployed engineer, you spend a lot of your time writing code. Coding though is a means to an end. If you don't actually understand the underlying problem, you end up spending all of your time and effort on things that aren't truly valuable. Our work touches so many important industries. Defense, intelligence, healthcare, insurance, finance, energy. Our clients are drowning in data. It really is important to go inside with a client because that's the only way for you to see how the user data. By understanding the problem they're trying to solve, we can help them answer the questions they want to ask. Like a person can see a pattern in 100 things, but it's very hard for them to see a pattern in a million. Humans are incredible at insight. It's just surfacing the right information for them to see. We also spend a lot of time thinking through how to make things better. We have no constraints tearing all of the support and building it again fresh tomorrow. We build a lot on open source. We use DraftWizard, TypeScript, Python, Apache Spark, AngularJS. Cassandra and Postgres for data stores. Elasticsearch to store giant data sets. If I were to kind of take the mean perfect day, it's maybe 40 to 50% coding, another 20% random technical things. And the remaining time digging through data, trying to understand the problem. The work you do makes impact on people's lives, which is the missing piece in a lot of other engineering companies. We're tackling so many different classes of problems, whether it's fighting ISIS, stopping human trafficking, supporting money laundering investigations. Dealing with server crime, insider trading, working with the special forces, law enforcement, the DOD. I remember one time with the customer, we had just resolved this huge 70 million road thing down to six or seven million. We pulled up our clients data and started doing the live interactive demo right in front of their faces. One of our customers was just like, holy shit. One of my favorite projects was helping the district attorney fight gang activity. We were tracking a situation where there were a number of violent crimes and they were trying to identify who did this, why they didn't, are they related to a gang. So getting a chance to help them with that problem was really motivating and exciting for our team. The culture here is designed for self-starters. The person that succeeds in the volunteer is very highly motivated. Someone who thrives in an environment where they have to make decisions. The best FDEs are people who will take their technical skill and expand it into tangible impacts. As a further blood engineer, I get to travel, to experience the world and I get to solve a lot of important problems along the way. I don't think the technology can solve any problem, but technology can enable people to solve almost any problem. I can't imagine anything better than that.

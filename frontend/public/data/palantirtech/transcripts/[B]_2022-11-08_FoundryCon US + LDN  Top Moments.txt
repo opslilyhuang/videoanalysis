@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: FoundryCon US + LDN | Top Moments
+URL: https://www.youtube.com/watch?v=LumD0jo_tBw
+Published: 2022-11-08
+View Count: 3,499
+Duration: 128 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+When you build software products, you try to build them based on the way the world is and the way to transform the world into a better place. And I don't think that's optimism or pessimism. I think that's transforminism. That's how do we take the business and move it from here to here in a very short period of time. By the way, time, take the timelines, cut them in half, or divide them by five. And like you want transformation goals that fail, but at a high level. So it's like, oh, you need two years to this. Great. I want to see it done in two months. This will serve us all the problems. And you see one of the reasons special operators or special operators is because the timelines are tight, the budgets are actually thinner. You know, special operations communities operate with less money and less time and more constraints and then compare the output. Once we implemented pushing recommendations to the field staff, we dropped 20% at this particular site. It's a small plant, 20%, still $300,000 in our budget. That's direct money for us. So this is tremendous. Generated a lot of interest in the companies you can imagine because we have 300 sites. You can do the math. Our value here is that we've had about 20 different projects. We've created over $200 million in value savings. That's a big deal, right? This has all been in two years. That's hard to beat. That's really hard to beat. The time to analyze, we basically drastically reduce that time. Factor seeks. Fast to learning. We could fly more often. We could learn faster. Is this fearlessness about data? We often talk ourselves out of things in terms of why we can't deliver this. Why it's going to take too long? Why it's prohibitive? But Palantir brought, I would say, a refreshing fearlessness to that part of the discussion. A third of the company is now active user of the Foundry. We started with use cases. Like a real problem that has a huge impact on the company. And we had several very good successors together, Palantir.
