@@ -20,12 +20,12 @@
       "Gaia",
       "secure collaboration",
       "joint force",
-      "command and control",
       "data integration",
+      "command and control",
       "real-time briefing",
+      "access control",
       "audit trail",
-      "interoperability",
-      "mobile access"
+      "interoperability"
     ],
     "category": "产品介绍"
   },
@@ -142,6 +142,35 @@
       "risk assessment",
       "decision support",
       "visualization"
+    ],
+    "category": "产品介绍"
+  },
+  "W5_rSPG3A84": {
+    "keywords": [
+      "Palantir",
+      "AIP",
+      "ontology",
+      "S&P 500",
+      "AI platform",
+      "government contracts",
+      "commercial growth",
+      "election security",
+      "AI regulation"
+    ],
+    "category": "产品介绍"
+  },
+  "ntvZlLRjYTI": {
+    "keywords": [
+      "Obsidian CLI",
+      "command line interface",
+      "AI agent",
+      "daily notes",
+      "task management",
+      "file operations",
+      "vault analysis",
+      "backlinks",
+      "cloud code",
+      "automation"
     ],
     "category": "产品介绍"
   }

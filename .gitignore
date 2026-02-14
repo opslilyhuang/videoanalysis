@@ -52,3 +52,7 @@ frontend/.env
 *.m4a
 *.webm
 *.mp3
+
+# Data files (transcripts are large and can be regenerated)
+frontend/public/data/*/transcripts/
+frontend/public/data/*/reports/

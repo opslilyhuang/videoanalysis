@@ -1,6 +1,8 @@
 import { getAuthToken } from '../context/AuthContext';
 
 const AUTH_KEY = 'vedioanalysis_auth';
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 500;
 
 /** API 基础 URL，解决代理不可用时的 404。在 .env 中设置 VITE_API_BASE=http://localhost:8000 */
 export function getApiBase() {
@@ -17,10 +19,28 @@ export async function apiFetch(url, options = {}) {
   if (token) {
     headers['X-Auth-Token'] = token;
   }
-  const res = await fetch(fullUrl, { ...options, headers });
-  if (res.status === 401) {
-    localStorage.removeItem(AUTH_KEY);
-    window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+  let lastError;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(fullUrl, { ...options, headers });
+      if (res.status === 401) {
+        localStorage.removeItem(AUTH_KEY);
+        window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      }
+      const isRetryable = res.status >= 500 || res.status === 408;
+      if (isRetryable && attempt < MAX_RETRIES) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * (attempt + 1)));
+        continue;
+      }
+      return res;
+    } catch (e) {
+      lastError = e;
+      if (attempt < MAX_RETRIES) {
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * (attempt + 1)));
+      } else {
+        throw lastError;
+      }
+    }
   }
-  return res;
+  throw lastError;
 }

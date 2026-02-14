@@ -34,9 +34,10 @@ const parseCSV = (text) => {
 export function useData(baseUrl = '') {
   const [dashboards, setDashboards] = useState([
     { id: 'palantirtech', name: 'Palantir', isTemp: false },
-    { id: 'temp', name: '临时看板', isTemp: true },
+    { id: 'temp', name: '临时上传', isTemp: true },
   ]);
   const [channelId, setChannelId] = useState('palantirtech');  // 即 dashboardId
+  const [videosChannelId, setVideosChannelId] = useState(null);  // 当前 videos 所属看板，避免切到临时上传时短暂显示其他看板列表
   const [videos, setVideos] = useState([]);
   const [config, setConfig] = useState(null);
   const [status, setStatus] = useState(null);
@@ -60,7 +61,7 @@ export function useData(baseUrl = '') {
     } catch (e) {
       setDashboards([
         { id: 'palantirtech', name: 'Palantir', isTemp: false },
-        { id: 'temp', name: '临时看板', isTemp: true },
+        { id: 'temp', name: '临时上传', isTemp: true },
       ]);
     }
   }, [baseUrl]);
@@ -68,7 +69,11 @@ export function useData(baseUrl = '') {
   const fetchVideos = useCallback(async (id) => {
     try {
       const csvRes = await fetch(dataUrl(`${id}/master_index.csv?t=${Date.now()}`), { cache: 'no-store' });
-      if (!csvRes.ok) return setVideos([]);
+      if (!csvRes.ok) {
+        setVideos([]);
+        setVideosChannelId(id);
+        return;
+      }
       const text = await csvRes.text();
       const rows = parseCSV(text);
       let meta = {};
@@ -87,9 +92,11 @@ export function useData(baseUrl = '') {
           _id: i,
         };
       }));
+      setVideosChannelId(id);
       setError(null);
     } catch (e) {
       setVideos([]);
+      setVideosChannelId(id);
       setError(e.message);
     }
   }, [baseUrl]);
@@ -222,6 +229,7 @@ export function useData(baseUrl = '') {
 
   useEffect(() => {
     setVideos([]);
+    setVideosChannelId(channelId);
     refresh();
   }, [channelId]);
   useEffect(() => {
@@ -236,6 +244,7 @@ export function useData(baseUrl = '') {
     dashboards,
     channelId,
     setChannelId,
+    videosChannelId,
     videos,
     config,
     appConfig,

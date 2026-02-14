@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, ExternalLink, FileText, FileQuestion, Mic, X } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, ExternalLink, FileText, FileQuestion, Mic, X, Star, Trash2, RotateCcw, Download } from 'lucide-react';
 import { t, getViewsOptions } from '../i18n';
 import { useFilters } from '../context/FilterContext';
 import { useLayout } from '../context/LayoutContext';
@@ -16,26 +16,27 @@ function extractVideoId(url) {
 
 const PRODUCT_KEYWORDS = ['AIPCon', 'Foundrycon', 'Paragon', 'Pipeline', 'AIP', 'Foundry', 'Gotham', 'Apollo', 'Demo', 'Tutorial', 'Workshop', 'Case Study', 'Bootcamp', 'How to', 'Guide'];
 
-export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang = 'zh', dashboardId, onConvertSuccess, config, scrollToVideoId, onScrolledToVideo, isEmptyTemp, onTranscriptConverted }) {
+export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang = 'zh', dashboardId, onConvertSuccess, config, scrollToVideoId, onScrolledToVideo, isEmptyTemp, onTranscriptConverted, viewMode = 'main', onViewModeChange, favoritesCount = 0, recycleCount = 0, showFavoritesRecycle = false, onTempDelete, onFavorite, onRecycle, onRestore, onRemoveFromRecycle, isFavorite, isRecycled }) {
   const { setFilters } = useFilters();
   const { leftPct } = useLayout();
   const keywords = config?.keywords && Object.keys(config.keywords).length > 0 ? Object.keys(config.keywords) : PRODUCT_KEYWORDS;
   const [search, setSearch] = useState('');
   const [searchInKeywords, setSearchInKeywords] = useState(false);
-  const [rankFilter, setRankFilter] = useState('');
   const [transcriptFilter, setTranscriptFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [viewsMin, setViewsMin] = useState(0);
   const [viewsMax, setViewsMax] = useState(0);
-  const [rankFilterMulti, setRankFilterMulti] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [sortAsc, setSortAsc] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [overlayVideo, setOverlayVideo] = useState(null); // { videoId, title } 仅点击视频时显示
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
+  const isTempWithDelete = dashboardId === 'temp' && onTempDelete;
 
   const filtered = useMemo(() => {
     let list = [...videos];
@@ -48,12 +49,6 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
           return (v.Keywords || '').toLowerCase().includes(q);
         return matchTitle;
       });
-    }
-    if (rankFilter) list = list.filter((v) => v.Rank === rankFilter);
-    if (rankFilterMulti) {
-      if (rankFilterMulti === 'S+') list = list.filter((v) => v.Rank === 'S');
-      else if (rankFilterMulti === 'A+') list = list.filter((v) => ['S', 'A'].includes(v.Rank));
-      else if (rankFilterMulti === 'B+') list = list.filter((v) => ['S', 'A', 'B'].includes(v.Rank));
     }
     if (transcriptFilter === '有') list = list.filter((v) => v.Transcript === '有');
     else if (transcriptFilter === '无') list = list.filter((v) => v.Transcript === '无');
@@ -77,8 +72,20 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
         list = list.filter((v) => (v.Category || v.category || '') === categoryFilter);
       }
     }
-    if (dateFrom) list = list.filter((v) => (v.Date || '').slice(0, 7) >= dateFrom.slice(0, 7));
-    if (dateTo) list = list.filter((v) => (v.Date || '').slice(0, 7) <= dateTo.slice(0, 7));
+    if (dateFrom) {
+      const from = dateFrom.slice(0, 10);
+      list = list.filter((v) => {
+        const d = (v.Date || '').slice(0, 10) || (v.Date || '').slice(0, 7);
+        return d && d !== 'Unknown' && d >= from;
+      });
+    }
+    if (dateTo) {
+      const to = dateTo.slice(0, 10);
+      list = list.filter((v) => {
+        const d = (v.Date || '').slice(0, 10) || (v.Date || '').slice(0, 7);
+        return d && d !== 'Unknown' && d <= to;
+      });
+    }
     if (viewsMin && Number(viewsMin) > 0) list = list.filter((v) => Number(v.Views || 0) >= Number(viewsMin));
     if (viewsMax && Number(viewsMax) > 0) list = list.filter((v) => Number(v.Views || 0) <= Number(viewsMax));
     list.sort((a, b) => {
@@ -96,7 +103,7 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
       return sortAsc ? cmp : -cmp;
     });
     return list;
-  }, [videos, search, searchInKeywords, rankFilter, rankFilterMulti, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, sortBy, sortAsc, keywords]);
+  }, [videos, search, searchInKeywords, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, sortBy, sortAsc, keywords]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paginated = useMemo(() => {
@@ -107,7 +114,7 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
 
   useEffect(() => {
     setPage(1);
-  }, [search, rankFilter, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, pageSize]);
+  }, [search, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, pageSize]);
 
   useEffect(() => {
     if (!scrollToVideoId || !onScrolledToVideo) return;
@@ -136,8 +143,6 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
     setFilters({
       search,
       searchInKeywords,
-      rankFilter,
-      rankFilterMulti,
       transcriptFilter,
       categoryFilter,
       dateFrom,
@@ -145,7 +150,7 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
       viewsMin,
       viewsMax,
     });
-  }, [search, searchInKeywords, rankFilter, rankFilterMulti, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, setFilters]);
+  }, [search, searchInKeywords, transcriptFilter, categoryFilter, dateFrom, dateTo, viewsMin, viewsMax, setFilters]);
 
   const toggleSort = (key) => {
     if (sortBy === key) setSortAsc((a) => !a);
@@ -168,61 +173,80 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" size={18} />
-          <input
-            type="text"
-            placeholder={t(lang, 'searchPlaceholder')}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-          />
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" size={18} />
+            <input
+              type="text"
+              placeholder={t(lang, 'searchPlaceholder')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm text-[var(--muted)] whitespace-nowrap">
+            <input type="checkbox" checked={searchInKeywords} onChange={(e) => setSearchInKeywords(e.target.checked)} />
+            {t(lang, 'searchInKeywords')}
+          </label>
+          <select value={transcriptFilter} onChange={(e) => setTranscriptFilter(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
+            <option value="">{t(lang, 'transcriptAll')}</option>
+            <option value="有">{t(lang, 'transcriptHas')}</option>
+            <option value="youtube">{t(lang, 'transcriptNative')}</option>
+            <option value="whisper">{t(lang, 'transcriptWhisperFilter')}</option>
+            <option value="无">{t(lang, 'transcriptNo')}</option>
+          </select>
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
+            <option value="">{t(lang, 'categoryAll')}</option>
+            <option value="产品介绍">{t(lang, 'categoryProduct')}</option>
+            <option value="非产品介绍">{t(lang, 'categoryNonProduct')}</option>
+            <option value="其他">{t(lang, 'categoryOther')}</option>
+          </select>
         </div>
-        <label className="flex items-center gap-2 text-sm text-[var(--muted)] whitespace-nowrap">
-          <input type="checkbox" checked={searchInKeywords} onChange={(e) => setSearchInKeywords(e.target.checked)} />
-          {t(lang, 'searchInKeywords')}
-        </label>
-        <select value={transcriptFilter} onChange={(e) => setTranscriptFilter(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
-          <option value="">{t(lang, 'transcriptAll')}</option>
-          <option value="有">{t(lang, 'transcriptHas')}</option>
-          <option value="youtube">{t(lang, 'transcriptNative')}</option>
-          <option value="whisper">{t(lang, 'transcriptWhisperFilter')}</option>
-          <option value="无">{t(lang, 'transcriptNo')}</option>
-        </select>
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
-          <option value="">{t(lang, 'categoryAll')}</option>
-          <option value="产品介绍">{t(lang, 'categoryProduct')}</option>
-          <option value="非产品介绍">{t(lang, 'categoryNonProduct')}</option>
-          <option value="其他">{t(lang, 'categoryOther')}</option>
-        </select>
-        <select value={rankFilter} onChange={(e) => setRankFilter(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
-          <option value="">{t(lang, 'rankAll')}</option>
-          <option value="S">S</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-        </select>
-        <select value={rankFilterMulti} onChange={(e) => setRankFilterMulti(e.target.value)} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm">
-          <option value="">{t(lang, 'rankFilter')}</option>
-          <option value="S+">{t(lang, 'rankSOnly')}</option>
-          <option value="A+">{t(lang, 'rankAAbove')}</option>
-          <option value="B+">{t(lang, 'rankBAbove')}</option>
-        </select>
-        <input type="month" placeholder={t(lang, 'dateFrom')} value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="px-2 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-32" />
-        <span className="text-[var(--muted)]">-</span>
-        <input type="month" placeholder={t(lang, 'dateTo')} value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="px-2 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-32" />
-        <span className="text-sm text-[var(--muted)]">{t(lang, 'viewsMin')}</span>
-        <select value={viewsMin} onChange={(e) => setViewsMin(Number(e.target.value))} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-24">
-          {getViewsOptions(lang).map(([val, lbl]) => (
-            <option key={`min-${val}`} value={val}>{val === 0 ? t(lang, 'viewsAny') : lbl}</option>
-          ))}
-        </select>
-        <span className="text-sm text-[var(--muted)]">{t(lang, 'viewsMax')}</span>
-        <select value={viewsMax} onChange={(e) => setViewsMax(Number(e.target.value))} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-24">
-          {getViewsOptions(lang).map(([val, lbl]) => (
-            <option key={`max-${val}`} value={val}>{val === 0 ? t(lang, 'viewsAny') : lbl}</option>
-          ))}
-        </select>
+        <div className="flex flex-wrap gap-3 items-center">
+          <span className="text-sm text-[var(--muted)]">{t(lang, 'dateRange')}</span>
+          <div className="flex items-center gap-1 flex-wrap">
+            {[
+              { days: 7, key: 'dateRange1w' },
+              { days: 30, key: 'dateRange1m' },
+              { days: 90, key: 'dateRange3m' },
+              { days: 365, key: 'dateRange1y' },
+            ].map(({ days, key }) => {
+              const to = new Date();
+              const from = new Date(to);
+              from.setDate(from.getDate() - days);
+              const fromStr = from.toISOString().slice(0, 10);
+              const toStr = to.toISOString().slice(0, 10);
+              const active = dateFrom === fromStr && dateTo === toStr;
+              return (
+                <button
+                  key={key}
+                  onClick={() => { setDateFrom(fromStr); setDateTo(toStr); }}
+                  className={`px-2 py-1.5 text-xs rounded ${active ? 'bg-[var(--accent)] text-white' : 'bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]'}`}
+                >
+                  {t(lang, key)}
+                </button>
+              );
+            })}
+          </div>
+          <input type="date" placeholder={t(lang, 'dateFrom')} value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="px-2 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-36" />
+          <span className="text-[var(--muted)]">-</span>
+          <input type="date" placeholder={t(lang, 'dateTo')} value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="px-2 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-36" />
+        </div>
+        <div className="flex flex-wrap gap-3 items-center">
+          <span className="text-sm text-[var(--muted)]">{t(lang, 'viewsMin')}</span>
+          <select value={viewsMin} onChange={(e) => setViewsMin(Number(e.target.value))} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-24">
+            {getViewsOptions(lang).map(([val, lbl]) => (
+              <option key={`min-${val}`} value={val}>{val === 0 ? t(lang, 'viewsAny') : lbl}</option>
+            ))}
+          </select>
+          <span className="text-sm text-[var(--muted)]">{t(lang, 'viewsMax')}</span>
+          <select value={viewsMax} onChange={(e) => setViewsMax(Number(e.target.value))} className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-sm w-24">
+            {getViewsOptions(lang).map(([val, lbl]) => (
+              <option key={`max-${val}`} value={val}>{val === 0 ? t(lang, 'viewsAny') : lbl}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="flex flex-wrap gap-3 items-center">
         <div className="flex gap-1">
@@ -230,7 +254,6 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
             { key: 'date', labelKey: 'sortDate' },
             { key: 'score', labelKey: 'sortScore' },
             { key: 'views', labelKey: 'sortViews' },
-            { key: 'rank', labelKey: 'sortRank' },
           ].map(({ key, labelKey }) => (
             <button
               key={key}
@@ -246,7 +269,89 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
             </button>
           ))}
         </div>
-        <span className="text-sm text-[var(--muted)] ml-auto">{t(lang, 'perPage')}</span>
+        {isTempWithDelete && (
+          <div className="flex items-center gap-2 mr-2">
+            <button
+              onClick={() => setSelectedIds(new Set(paginated.map((v) => extractVideoId(v.URL)).filter(Boolean)))}
+              className="px-2 py-1 text-xs rounded border border-[var(--border)] hover:border-[var(--accent)]"
+            >
+              {t(lang, 'selectAll')}
+            </button>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="px-2 py-1 text-xs rounded border border-[var(--border)] hover:border-[var(--accent)]"
+            >
+              {t(lang, 'clearSelection')}
+            </button>
+            <button
+              onClick={async () => {
+                if (selectedIds.size === 0 || !window.confirm(t(lang, 'tempBatchDeleteConfirm', { n: selectedIds.size }))) return;
+                const { apiFetch } = await import('../utils/api');
+                const r = await apiFetch('/api/temp-delete-videos', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ video_ids: [...selectedIds] }),
+                });
+                if (r.ok) {
+                  setSelectedIds(new Set());
+                  onConvertSuccess?.();
+                }
+              }}
+              disabled={selectedIds.size === 0}
+              className="px-2 py-1 text-xs rounded bg-red-500/20 text-red-500 hover:bg-red-500/30 disabled:opacity-50"
+            >
+              {t(lang, 'tempBatchDelete', { n: selectedIds.size })}
+            </button>
+            <button
+              onClick={() => {
+                const headers = ['Rank', 'Score', 'Title', 'Date', 'Views', 'Transcript', 'Category', 'URL'];
+                const row = (v) => headers.map((h) => `"${String(v[h] || '').replace(/"/g, '""')}"`).join(',');
+                const csv = [headers.join(','), ...filtered.map(row)].join('\n');
+                const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'temp_upload_list.csv';
+                a.click();
+                URL.revokeObjectURL(a.href);
+              }}
+              className="flex items-center gap-1 px-2 py-1 text-xs rounded border border-[var(--border)] hover:border-[var(--accent)]"
+            >
+              <Download size={12} />
+              {t(lang, 'tempExportCsv')}
+            </button>
+          </div>
+        )}
+        {showFavoritesRecycle && (
+          <div className="flex items-center gap-2 ml-auto mr-2">
+            <button
+              onClick={() => onViewModeChange?.(viewMode === 'favorites' ? 'main' : 'favorites')}
+              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors flex items-center gap-1 ${
+                viewMode === 'favorites'
+                  ? 'bg-amber-500/20 text-amber-600 border-amber-500/50'
+                  : 'bg-[var(--surface)] border-[var(--border)] hover:border-amber-500/50'
+              }`}
+              title={t(lang, 'favorites')}
+            >
+              <Star size={14} fill={viewMode === 'favorites' ? 'currentColor' : 'none'} />
+              {t(lang, 'favorites')}
+              {favoritesCount > 0 && <span className="text-xs opacity-75">({favoritesCount})</span>}
+            </button>
+            <button
+              onClick={() => onViewModeChange?.(viewMode === 'recycle' ? 'main' : 'recycle')}
+              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors flex items-center gap-1 ${
+                viewMode === 'recycle'
+                  ? 'bg-red-500/20 text-red-500 border-red-500/50'
+                  : 'bg-[var(--surface)] border-[var(--border)] hover:border-red-500/50'
+              }`}
+              title={t(lang, 'recycleBin')}
+            >
+              <Trash2 size={14} />
+              {t(lang, 'recycleBin')}
+              {recycleCount > 0 && <span className="text-xs opacity-75">({recycleCount})</span>}
+            </button>
+          </div>
+        )}
+        <span className={`text-sm text-[var(--muted)] ${showFavoritesRecycle ? '' : 'ml-auto'}`}>{t(lang, 'perPage')}</span>
         <select value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }} className="px-2 py-1 bg-[var(--surface)] border border-[var(--border)] rounded text-sm">
           {PAGE_SIZES.map((s) => (
             <option key={s} value={s}>{s}</option>
@@ -269,6 +374,22 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
             dashboardId={dashboardId}
             onConvertSuccess={onConvertSuccess}
             onTranscriptConverted={onTranscriptConverted}
+            viewMode={viewMode}
+            onTempDelete={onTempDelete}
+            isTempWithDelete={isTempWithDelete}
+            selectedIds={selectedIds}
+            onToggleSelect={(vid) => setSelectedIds((s) => {
+              const next = new Set(s);
+              if (next.has(vid)) next.delete(vid);
+              else next.add(vid);
+              return next;
+            })}
+            onFavorite={onFavorite}
+            onRecycle={onRecycle}
+            onRestore={onRestore}
+            onRemoveFromRecycle={onRemoveFromRecycle}
+            isFavorite={isFavorite}
+            isRecycled={isRecycled}
           />
           </div>
         ))}
@@ -314,10 +435,13 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
 const CONVERT_POLL_INTERVAL = 5000;
 const CONVERT_POLL_MAX = 120;
 
-function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect, onVideoClick, dashboardId, onConvertSuccess, onTranscriptConverted }) {
+function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect, onVideoClick, dashboardId, onConvertSuccess, onTranscriptConverted, viewMode = 'main', onTempDelete, isTempWithDelete, selectedIds, onToggleSelect, onFavorite, onRecycle, onRestore, onRemoveFromRecycle, isFavorite, isRecycled }) {
   const rankColor = RANK_COLORS[video.Rank] || 'var(--muted)';
   const vid = extractVideoId(video.URL);
   const [converting, setConverting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const showFavRecycle = dashboardId && dashboardId !== 'temp' && (onFavorite || onRecycle || onRestore || onRemoveFromRecycle);
+  const showTempDelete = dashboardId === 'temp' && onTempDelete;
 
   const handleConvert = async (e) => {
     e.stopPropagation();
@@ -353,8 +477,17 @@ function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect
         onClick={() => { onToggle(); onSelect?.(); }}
         className="w-full text-left px-4 py-3 flex items-center gap-4 hover:bg-white/5"
       >
+        {isTempWithDelete && vid && (
+          <input
+            type="checkbox"
+            checked={selectedIds?.has(vid) || false}
+            onChange={(e) => { e.stopPropagation(); onToggleSelect?.(vid); }}
+            onClick={(e) => e.stopPropagation()}
+            className="shrink-0"
+          />
+        )}
         <span
-          className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm text-black"
+          className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm text-black shrink-0"
           style={{ backgroundColor: rankColor }}
         >
           {video.Rank}
@@ -390,6 +523,65 @@ function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect
             </span>
           </div>
         </div>
+        {showTempDelete && (
+          <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={async () => {
+                if (!vid || deleting || !window.confirm(t(lang, 'tempDeleteConfirm'))) return;
+                setDeleting(true);
+                try {
+                  await onTempDelete?.(vid);
+                } finally {
+                  setDeleting(false);
+                }
+              }}
+              disabled={deleting}
+              className="p-1.5 rounded hover:bg-red-500/20 text-red-500 disabled:opacity-50"
+              title={t(lang, 'tempDeleteFromList')}
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        )}
+        {showFavRecycle && (
+          <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+            {viewMode === 'recycle' ? (
+              <>
+                <button
+                  onClick={() => onRestore?.(dashboardId, vid)}
+                  className="p-1.5 rounded hover:bg-emerald-500/20 text-emerald-500"
+                  title={t(lang, 'restoreFromRecycle')}
+                >
+                  <RotateCcw size={16} />
+                </button>
+                <button
+                  onClick={() => window.confirm(lang === 'zh' ? '确定彻底删除？' : 'Delete permanently?') && onRemoveFromRecycle?.(dashboardId, vid)}
+                  className="p-1.5 rounded hover:bg-red-500/20 text-red-500"
+                  title={t(lang, 'removeFromRecycle')}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => onFavorite?.(dashboardId, vid)}
+                  className={`p-1.5 rounded hover:bg-amber-500/20 ${(isFavorite && isFavorite(dashboardId, vid)) ? 'text-amber-500' : 'text-[var(--muted)]'}`}
+                  title={(isFavorite && isFavorite(dashboardId, vid)) ? t(lang, 'favoriteRemove') : t(lang, 'favoriteAdd')}
+                >
+                  <Star size={16} fill={(isFavorite && isFavorite(dashboardId, vid)) ? 'currentColor' : 'none'} />
+                </button>
+                <button
+                  onClick={() => onRecycle?.(dashboardId, vid)}
+                  className="p-1.5 rounded hover:bg-red-500/20 text-[var(--muted)] hover:text-red-500"
+                  title={t(lang, 'moveToRecycle')}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
         {expanded ? (
           <ChevronUp size={20} className="text-[var(--muted)] shrink-0" />
         ) : (

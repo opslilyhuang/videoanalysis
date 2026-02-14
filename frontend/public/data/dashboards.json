@@ -8,7 +8,7 @@
   },
   {
     "id": "temp",
-    "name": "临时看板",
+    "name": "临时上传",
     "channelId": null,
     "channelUrl": null,
     "isTemp": true

@@ -741,6 +741,30 @@ def translate_text(request: TranslateRequest):
     return {"translated": out.strip()}
 
 
+class TranslateParagraphsRequest(BaseModel):
+    paragraphs: List[str]
+
+
+@app.post("/api/translate-paragraphs")
+def translate_paragraphs(request: TranslateParagraphsRequest):
+    """按段落翻译，用于双语字幕的段落级对应展示。逐段调用翻译确保一一对应。"""
+    paras = [p.strip() for p in (request.paragraphs or []) if p.strip()]
+    if not paras:
+        return {"translated": []}
+    results = []
+    for p in paras:
+        if not p:
+            results.append("")
+            continue
+        msg = f"将以下英文翻译成中文，只输出翻译结果，不要其他说明：\n\n{p[:2000]}"
+        try:
+            out = call_deepseek([{"role": "user", "content": msg}], max_tokens=1500)
+            results.append(out.strip() if out else "")
+        except Exception:
+            results.append("")
+    return {"translated": results}
+
+
 class ConvertVideosRequest(BaseModel):
     urls: List[str]
 
@@ -856,6 +880,82 @@ def temp_clean_empty():
         except Exception:
             pass
     return {"ok": True, "removed": removed}
+
+
+@app.post("/api/temp-delete-video")
+def temp_delete_video(video_id: str):
+    """从临时上传列表中移除指定视频"""
+    vid = (video_id or "").strip()
+    if not vid or len(vid) != 11:
+        raise HTTPException(status_code=400, detail="invalid video_id")
+    temp_dir = get_data_dir("temp")
+    csv_path = temp_dir / "master_index.csv"
+    if not csv_path.exists():
+        return {"ok": True}
+    import csv
+    rows = []
+    with open(csv_path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
+        for row in reader:
+            if get_video_id(row.get("URL", "")) != vid:
+                rows.append(row)
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    idx_path = temp_dir / "transcript_index.json"
+    if idx_path.exists():
+        try:
+            with open(idx_path, encoding="utf-8") as fp:
+                idx = json.load(fp)
+            idx.pop(vid, None)
+            with open(idx_path, "w", encoding="utf-8") as fp:
+                json.dump(idx, fp, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+    return {"ok": True}
+
+
+class TempDeleteVideosRequest(BaseModel):
+    video_ids: List[str]
+
+
+@app.post("/api/temp-delete-videos")
+def temp_delete_videos(request: TempDeleteVideosRequest):
+    """批量从临时上传列表移除视频"""
+    ids = [v.strip() for v in (request.video_ids or []) if v.strip() and len(v.strip()) == 11]
+    if not ids:
+        return {"ok": True, "deleted": 0}
+    temp_dir = get_data_dir("temp")
+    csv_path = temp_dir / "master_index.csv"
+    if not csv_path.exists():
+        return {"ok": True, "deleted": 0}
+    import csv
+    ids_set = set(ids)
+    rows = []
+    with open(csv_path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
+        for row in reader:
+            if get_video_id(row.get("URL", "")) not in ids_set:
+                rows.append(row)
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    idx_path = temp_dir / "transcript_index.json"
+    if idx_path.exists():
+        try:
+            with open(idx_path, encoding="utf-8") as fp:
+                idx = json.load(fp)
+            for vid in ids:
+                idx.pop(vid, None)
+            with open(idx_path, "w", encoding="utf-8") as fp:
+                json.dump(idx, fp, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+    return {"ok": True, "deleted": len(ids)}
 
 
 # --- 智能报告生成 ---

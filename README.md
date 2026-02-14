@@ -68,7 +68,7 @@ cd frontend && npm install && npm run dev
 ```
 
 - 后端默认监听 `http://0.0.0.0:8000`
-- 前端默认 `http://localhost:5173`
+- 前端默认 `http://localhost:5178`
 - 若字幕显示「Failed to fetch」，说明后端未启动，请先运行 `python3 api.py`
 - 若出现 `command not found: python`，改用 `python3` 即可
 
@@ -197,7 +197,7 @@ PALANTIR_CHANNEL_URL = "https://www.youtube.com/@其他频道"
 
 | 环境 | 后端启动 | 前端 |
 |------|----------|------|
-| 本地开发 | `python3 api.py`（8000 端口） | `npm run dev`（5173） |
+| 本地开发 | `python3 api.py`（8000 端口） | `npm run dev`（5178） |
 | 阿里云 ECS | systemd 守护进程 | Nginx 托管 `dist/` 静态资源 |
 
 ### 阿里云 ECS（前后端一体）

@@ -170,19 +170,30 @@ export function ReportModal({ open, onClose, dashboardId, lang = 'zh', videos = 
   };
 
   const handleDownloadPdf = async (id, reportText, title) => {
-    if (reportText) {
-      downloadReportAsPdf(reportText, title);
-      return;
+    const text = reportText || (id ? await fetchReportText(id) : null);
+    if (text) downloadReportAsPdf(text, title || 'Report');
+  };
+
+  const fetchReportText = async (id) => {
+    const r = await apiFetch(`/api/report/${id}?dashboard_id=${dashboardId}`);
+    if (r.ok) {
+      const d = await r.json();
+      return d.report;
     }
-    try {
-      const r = await apiFetch(`/api/report/${id}?dashboard_id=${dashboardId}`);
-      if (r.ok) {
-        const data = await r.json();
-        downloadReportAsPdf(data.report, data.title || title);
-      }
-    } catch {
-      setError(t(lang, 'requestFailed'));
-    }
+    return null;
+  };
+
+  const handleDownloadMd = async (id, reportText, title) => {
+    let text = reportText;
+    if (!text && id) text = await fetchReportText(id);
+    if (!text) return;
+    const name = (title || 'report').replace(/[^\w\s\u4e00-\u9fa5-]/g, '').slice(0, 50) + '.md';
+    const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
   };
 
   const handleDeleteReport = async (id) => {
@@ -198,24 +209,31 @@ export function ReportModal({ open, onClose, dashboardId, lang = 'zh', videos = 
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setViewingReport(null);
     setError(null);
     setCustomPrompt('');
     setNlQuery('');
     setTab('generate');
     onClose();
-  };
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') handleClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, handleClose]);
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)]">
           <div className="flex items-center gap-2">
             <FileText size={20} className="text-[var(--accent)]" />
-            <h2 className="text-lg font-semibold">{t(lang, 'reportGenerate')}</h2>
+            <h2 id="report-modal-title" className="text-lg font-semibold">{t(lang, 'reportGenerate')}</h2>
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -254,6 +272,13 @@ export function ReportModal({ open, onClose, dashboardId, lang = 'zh', videos = 
                   >
                     <FileDown size={14} />
                     {t(lang, 'reportDownloadPdf')}
+                  </button>
+                  <button
+                    onClick={() => handleDownloadMd(viewingReport.id, viewingReport.report, viewingReport.title)}
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--accent)]/20 hover:bg-[var(--accent)]/30 text-[var(--accent)]"
+                  >
+                    <FileDown size={14} />
+                    {t(lang, 'reportDownloadMd')}
                   </button>
                   <button
                     onClick={() => handleDeleteReport(viewingReport.id)}
@@ -328,6 +353,13 @@ export function ReportModal({ open, onClose, dashboardId, lang = 'zh', videos = 
                               onClick={() => handleDownloadPdf(h.id, null, h.title)}
                               className="px-2 py-1 text-xs rounded hover:bg-white/10"
                               title={t(lang, 'reportDownloadPdf')}
+                            >
+                              <FileDown size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleDownloadMd(h.id, null, h.title)}
+                              className="px-2 py-1 text-xs rounded hover:bg-white/10"
+                              title={t(lang, 'reportDownloadMd')}
                             >
                               <FileDown size={14} />
                             </button>

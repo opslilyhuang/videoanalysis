@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RefreshCw, Settings, Sun, Moon, Languages, Play, LogOut, ChevronDown, ChevronUp, FileText, BookOpen } from 'lucide-react';
 import { useData } from './hooks/useData';
 import { useApp } from './context/AppContext';
@@ -18,6 +18,8 @@ import { ResizableLayout } from './components/ResizableLayout';
 import { ReportModal } from './components/ReportModal';
 import { UsageGuide } from './components/UsageGuide';
 import { FilterProvider } from './context/FilterContext';
+import { useFavoritesRecycle } from './context/FavoritesRecycleContext';
+import { apiFetch } from './utils/api';
 
 function App() {
   const { isAuthenticated, login, logout } = useAuth();
@@ -35,12 +37,15 @@ function App() {
   const [scrollToVideoId, setScrollToVideoId] = useState(null);
   const [transcriptRefetchTrigger, setTranscriptRefetchTrigger] = useState(0);
   const [statsExpanded, setStatsExpanded] = useState(false);
+  const [viewMode, setViewMode] = useState('main'); // 'main' | 'favorites' | 'recycle'
 
+  const { toggleFavorite, moveToRecycle, restoreFromRecycle, removeFromRecycle, isFavorite, isRecycled, isPermanentlyDeleted, favoritesCount, recycleCount } = useFavoritesRecycle();
   const extractVideoId = (url) => (url || '').match(/[?&]v=([a-zA-Z0-9_-]{11})/)?.[1] || null;
   const {
     dashboards,
     channelId,
     setChannelId,
+    videosChannelId,
     videos,
     config,
     appConfig,
@@ -55,37 +60,72 @@ function App() {
   } = useData();
 
   const isTempBoard = channelId === 'temp' || (dashboards.find((d) => d.id === channelId)?.isTemp ?? false);
-  const displayVideos = videos.length > 0 ? videos : (isTempBoard ? [] : MOCK_VIDEOS);
+  const videosBelongToCurrentBoard = videosChannelId === channelId;
+  const baseVideos = videosBelongToCurrentBoard ? videos : (isTempBoard ? [] : MOCK_VIDEOS);
+  const displayVideos = (() => {
+    if (isTempBoard || !channelId) return baseVideos;
+    const getVid = (v) => extractVideoId(v.URL);
+    if (viewMode === 'favorites') {
+      return baseVideos.filter((v) => isFavorite(channelId, getVid(v)) && !isPermanentlyDeleted(channelId, getVid(v)));
+    }
+    if (viewMode === 'recycle') {
+      return baseVideos.filter((v) => isRecycled(channelId, getVid(v)));
+    }
+    return baseVideos.filter((v) => !isRecycled(channelId, getVid(v)) && !isPermanentlyDeleted(channelId, getVid(v)));
+  })();
   const failedCount = failedVideos?.length ?? status?.failed_count ?? 0;
   const isAnalyzing = status?.status === 'processing' || status?.status === 'filtering';
 
+  useEffect(() => {
+    if (isTempBoard) setViewMode('main');
+  }, [isTempBoard]);
+
+  const handleTempDelete = async (videoId) => {
+    const r = await apiFetch(`/api/temp-delete-video?video_id=${encodeURIComponent(videoId)}`, { method: 'POST' });
+    if (r.ok) refresh();
+  };
+
   const leftPanel = (
     <div className="h-full flex flex-col overflow-hidden">
-        <header className="shrink-0 flex flex-wrap items-center gap-4 p-6 pb-4">
-        <h1 className="text-xl font-bold">{t(lang, 'title')}</h1>
-        <button
-          onClick={() => setGuideOpen(true)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm text-[var(--muted)] hover:text-[var(--text)]"
-          title={t(lang, 'usageGuide')}
-        >
-          <BookOpen size={16} />
-          {t(lang, 'usageGuide')}
-        </button>
+        <header className="shrink-0 space-y-3 p-6 pb-4">
+        {/* 第一行：标题 + 使用指南 + 主题/语言/消息/退出 */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <h1 className="text-xl font-bold">{t(lang, 'title')}</h1>
+          <button
+            onClick={() => setGuideOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm text-[var(--muted)] hover:text-[var(--text)]"
+            title={t(lang, 'usageGuide')}
+          >
+            <BookOpen size={16} />
+            {t(lang, 'usageGuide')}
+          </button>
+          <div className="flex items-center gap-2 ml-2">
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]"
+              title={theme === 'dark' ? 'Light' : 'Dark'}
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+              className="px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm"
+            >
+              <Languages size={16} className="inline mr-1" />
+              {lang === 'zh' ? 'EN' : '中文'}
+            </button>
+            <MessageCenter onUpdateClick={(id) => runAnalysis('full', null, id)} lang={lang} />
+            <button
+              onClick={logout}
+              className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-red-500/50 text-sm"
+              title="退出登录"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        </div>
+        {/* 第二行：看板选择、收藏、回收站、运行、刷新、报告、配置 */}
         <div className="flex items-center gap-3 flex-wrap">
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]"
-            title={theme === 'dark' ? 'Light' : 'Dark'}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button
-            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-            className="px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm"
-          >
-            <Languages size={16} className="inline mr-1" />
-            {lang === 'zh' ? 'EN' : '中文'}
-          </button>
           <select
             value={isTempBoard ? '' : channelId}
             onChange={(e) => { const v = e.target.value; if (v) setChannelId(v); }}
@@ -108,7 +148,6 @@ function App() {
           >
             {t(lang, 'tempBoard')}
           </button>
-          <MessageCenter onUpdateClick={(id) => runAnalysis('full', null, id)} lang={lang} />
           <button
             onClick={() => runAnalysis('full')}
             disabled
@@ -151,16 +190,8 @@ function App() {
             <Settings size={16} />
             {t(lang, 'config')}
           </button>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] border border-[var(--border)] hover:border-red-500/50 rounded-lg text-sm"
-            title="退出登录"
-          >
-            <LogOut size={16} />
-            退出
-          </button>
         </div>
-      </header>
+        </header>
 
       <div className="flex-1 min-h-0 overflow-auto px-6 pb-6">
         <div className="space-y-6">
@@ -205,6 +236,18 @@ function App() {
             onScrolledToVideo={() => setScrollToVideoId(null)}
             isEmptyTemp={isTempBoard && displayVideos.length === 0}
             onTranscriptConverted={() => setTranscriptRefetchTrigger((t) => t + 1)}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            favoritesCount={favoritesCount}
+            recycleCount={recycleCount}
+            showFavoritesRecycle={!isTempBoard}
+            onTempDelete={isTempBoard ? handleTempDelete : undefined}
+            onFavorite={toggleFavorite}
+            onRecycle={moveToRecycle}
+            onRestore={restoreFromRecycle}
+            onRemoveFromRecycle={removeFromRecycle}
+            isFavorite={isFavorite}
+            isRecycled={isRecycled}
           />
         </div>
       </div>

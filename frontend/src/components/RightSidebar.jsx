@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FileText, MessageSquare, Sparkles, Send, Volume2, Square, Trash2, RefreshCw } from 'lucide-react';
+import { FileText, MessageSquare, Sparkles, Send, Volume2, Square, Trash2, RefreshCw, Copy, Download } from 'lucide-react';
 
 const CHAT_MAX_ROUNDS = 10;
 import { t } from '../i18n';
@@ -11,6 +11,29 @@ function extractVideoId(url) {
   return m ? m[1] : null;
 }
 
+/** 将字幕文本按段落拆分，长段落按句子再分（支持中英文） */
+function splitIntoParagraphs(text) {
+  if (!text || !text.trim()) return [];
+  const byNewline = text.trim().split(/\n\n+/).filter(Boolean);
+  if (byNewline.length > 1) return byNewline;
+  const single = byNewline[0] || text.trim();
+  if (single.length <= 500) return [single];
+  const sentences = single.match(/[^。！？.!?]+[。！？.!?]+(?:\s|$)/g) || single.match(/[^\n]+/g) || [single];
+  const paras = [];
+  let buf = '';
+  const maxLen = 400;
+  for (const s of sentences) {
+    if (buf.length + s.length > maxLen && buf) {
+      paras.push(buf.trim());
+      buf = s;
+    } else {
+      buf += s;
+    }
+  }
+  if (buf.trim()) paras.push(buf.trim());
+  return paras.length ? paras : [single];
+}
+
 export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideoClick, transcriptRefetchTrigger = 0, lang = 'zh', dashboardId = 'palantirtech' }) {
   const [transcript, setTranscript] = useState(null);
   const [summary, setSummary] = useState(null);
@@ -18,6 +41,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [transcriptViewMode, setTranscriptViewMode] = useState('original');
   const [translatedZh, setTranslatedZh] = useState(null);
+  const [translatedParas, setTranslatedParas] = useState(null);
   const [transcriptError, setTranscriptError] = useState(null);
   const [loadingTranslate, setLoadingTranslate] = useState(false);
   const [ttsLang, setTtsLang] = useState('en'); // en | zh
@@ -28,6 +52,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
   const [chatScope, setChatScope] = useState('all');
   const [chatCategory, setChatCategory] = useState('A');
   const [rightTab, setRightTab] = useState('transcript'); // 'transcript' | 'chat'
+  const [transcriptSearch, setTranscriptSearch] = useState('');
 
   const videoId = selectedVideo ? extractVideoId(selectedVideo.URL) : null;
 
@@ -38,6 +63,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
     setTranscriptError(null);
     setSummary(null);
     setTranslatedZh(null);
+    setTranslatedParas(null);
     setTranscriptViewMode('original');
     apiFetch(`/api/transcript/${videoId}?dashboard_id=${dashboardId}&_t=${Date.now()}`)
       .then(async (r) => {
@@ -102,6 +128,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
       setTranscript(null);
       setSummary(null);
       setTranslatedZh(null);
+      setTranslatedParas(null);
       setTranscriptViewMode('original');
       return;
     }
@@ -145,9 +172,7 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
   const needsTranslation = transcriptViewMode === 'zh' || transcriptViewMode === 'bilingual';
   const hasContent = rawText && rawText.length > 50 && !rawText.includes('NO TRANSCRIPT');
 
-  const requestTranslation = useCallback(() => {
-    if (!hasContent || translatedZh != null || loadingTranslate) return;
-    setLoadingTranslate(true);
+  const fallbackFullTranslate = useCallback(() => {
     apiFetch('/api/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -155,33 +180,174 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
     })
       .then((r) => r.json())
       .then((d) => {
-        setTranslatedZh(d.translated || '');
+        const full = (d.translated || '').trim();
+        setTranslatedZh(full);
+        const paras = splitIntoParagraphs(rawText);
+        const transParas = splitIntoParagraphs(full);
+        if (transParas.length >= paras.length) {
+          setTranslatedParas(transParas.slice(0, paras.length));
+        } else if (transParas.length > 1) {
+          setTranslatedParas(transParas);
+        } else if (full) {
+          const n = paras.length;
+          const size = Math.ceil(full.length / n);
+          const chunks = [];
+          for (let i = 0; i < n; i++) {
+            chunks.push(full.slice(i * size, (i + 1) * size).trim());
+          }
+          setTranslatedParas(chunks);
+        } else {
+          setTranslatedParas([]);
+        }
       })
-      .catch(() => {})
-      .finally(() => setLoadingTranslate(false));
-  }, [hasContent, translatedZh, loadingTranslate, rawText]);
+      .catch(() => {});
+  }, [rawText]);
+
+  const requestTranslation = useCallback(() => {
+    if (!hasContent || loadingTranslate) return;
+    const needBilingual = transcriptViewMode === 'bilingual';
+    const needZh = transcriptViewMode === 'zh';
+    if (needBilingual && translatedParas != null) return;
+    if (needZh && translatedZh != null) return;
+    setLoadingTranslate(true);
+    if (needBilingual) {
+      const paras = splitIntoParagraphs(rawText);
+      apiFetch('/api/translate-paragraphs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paragraphs: paras }),
+      })
+        .then((r) => r.json())
+        .then((d) => {
+          const arr = Array.isArray(d.translated) ? d.translated : [];
+          if (arr.length >= paras.length) {
+            setTranslatedParas(arr.slice(0, paras.length));
+            setTranslatedZh(arr.join('\n\n'));
+          } else if (arr.length > 0) {
+            setTranslatedParas(arr);
+            setTranslatedZh(arr.join('\n\n'));
+          } else {
+            fallbackFullTranslate();
+          }
+        })
+        .catch(() => fallbackFullTranslate())
+        .finally(() => setLoadingTranslate(false));
+    } else {
+      apiFetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: rawText, target: 'zh' }),
+      })
+        .then((r) => r.json())
+        .then((d) => {
+          setTranslatedZh(d.translated || '');
+        })
+        .catch(() => {})
+        .finally(() => setLoadingTranslate(false));
+    }
+  }, [hasContent, translatedZh, translatedParas, loadingTranslate, rawText, transcriptViewMode]);
 
   useEffect(() => {
-    if (!hasContent || !needsTranslation || translatedZh != null || loadingTranslate) return;
+    if (!hasContent || !needsTranslation || loadingTranslate) return;
+    if (transcriptViewMode === 'bilingual' && translatedParas != null) return;
+    if (transcriptViewMode === 'zh' && translatedZh != null) return;
     requestTranslation();
-  }, [videoId, hasContent, needsTranslation, translatedZh, loadingTranslate, requestTranslation]);
+  }, [videoId, hasContent, needsTranslation, transcriptViewMode, translatedZh, translatedParas, loadingTranslate, requestTranslation]);
 
-  const displayTranscript = () => {
-    if (!rawText) return '无内容';
-    if (transcriptViewMode === 'original' || transcriptViewMode === 'en') return rawText;
-    if (transcriptViewMode === 'zh') {
-      if (loadingTranslate) return t(lang, 'loading');
-      return translatedZh || rawText;
-    }
-    if (transcriptViewMode === 'bilingual') {
-      if (loadingTranslate) return t(lang, 'loading');
-      if (!translatedZh) return rawText;
-      const origParas = rawText.split(/\n\n+/).filter(Boolean);
-      const transParas = translatedZh.split(/\n\n+/).filter(Boolean);
-      const pairs = origParas.map((o, i) => ({ orig: o, trans: transParas[i] || '' }));
-      return pairs.map((p) => `${p.orig}\n${p.trans ? `【中】${p.trans}\n` : ''}`).join('\n');
+  const getTranscriptForExport = (langMode) => {
+    if (!rawText) return '';
+    if (langMode === 'original' || langMode === 'en') return rawText;
+    if (langMode === 'zh') return translatedZh || rawText;
+    if (langMode === 'bilingual') {
+      const origParas = splitIntoParagraphs(rawText);
+      const transArr = Array.isArray(translatedParas) ? translatedParas : [];
+      return origParas.map((o, i) => (transArr[i] ? `${o}\n【中】${transArr[i]}` : o)).join('\n\n');
     }
     return rawText;
+  };
+
+  const handleExportTranscript = (format, langMode) => {
+    const text = getTranscriptForExport(langMode);
+    if (!text) return;
+    const title = (selectedVideo?.Title || 'transcript').replace(/[^\w\s\u4e00-\u9fa5-]/g, '').slice(0, 50);
+    const ext = format === 'md' ? 'md' : 'txt';
+    const content = format === 'md' ? `# ${selectedVideo?.Title || 'Transcript'}\n\n${text}` : text;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${title}.${ext}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  const formatParagraphWithHighlightAndTimestamps = (text) => {
+    if (!text || typeof text !== 'string') return text;
+    let out = text;
+    const url = selectedVideo?.URL || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : '');
+    if (url && /\d{1,2}:\d{2}/.test(out)) {
+      out = out.replace(/(?:\[)?(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\])?/g, (m, h, min, sec) => {
+        const s = (parseInt(h, 10) || 0) * 3600 + (parseInt(min, 10) || 0) * 60 + (parseInt(sec, 10) || 0);
+        const href = `${url}${url.includes('?') ? '&' : '?'}t=${s}`;
+        return `<a href="${href}" target="_blank" rel="noopener" class="text-[var(--accent)] hover:underline">${m}</a>`;
+      });
+    }
+    if (transcriptSearch && transcriptSearch.trim()) {
+      const esc = transcriptSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      out = out.replace(new RegExp(`(${esc})`, 'gi'), '<mark class="bg-amber-500/40 rounded px-0.5">$1</mark>');
+    }
+    return out;
+  };
+
+  const renderParagraph = (content) => {
+    const html = formatParagraphWithHighlightAndTimestamps(String(content));
+    if (html !== content || transcriptSearch || /\d{1,2}:\d{2}/.test(content)) {
+      return <span dangerouslySetInnerHTML={{ __html: html }} />;
+    }
+    return content;
+  };
+
+  const renderTranscriptContent = () => {
+    if (!rawText) return <p className="text-[var(--muted)]">{t(lang, 'noTranscript')}</p>;
+    if (transcriptViewMode === 'original' || transcriptViewMode === 'en') {
+      const paras = splitIntoParagraphs(rawText);
+      return paras.map((p, i) => (
+        <div key={i} className="mb-3 last:mb-0 flex items-start gap-2 group">
+          <p className="flex-1 leading-relaxed">{renderParagraph(p)}</p>
+          <button onClick={() => navigator.clipboard?.writeText(p)} className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)]" title={t(lang, 'copyToClipboard')}><Copy size={12} /></button>
+        </div>
+      ));
+    }
+    if (transcriptViewMode === 'zh') {
+      if (loadingTranslate) return <p className="text-[var(--muted)]">{t(lang, 'loading')}</p>;
+      const text = translatedZh || rawText;
+      const paras = splitIntoParagraphs(text);
+      return paras.map((p, i) => (
+        <div key={i} className="mb-3 last:mb-0 flex items-start gap-2 group">
+          <p className="flex-1 leading-relaxed">{renderParagraph(p)}</p>
+          <button onClick={() => navigator.clipboard?.writeText(p)} className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)]" title={t(lang, 'copyToClipboard')}><Copy size={12} /></button>
+        </div>
+      ));
+    }
+    if (transcriptViewMode === 'bilingual') {
+      if (loadingTranslate) return <p className="text-[var(--muted)]">{t(lang, 'loading')}</p>;
+      const origParas = splitIntoParagraphs(rawText);
+      const transArr = Array.isArray(translatedParas) ? translatedParas : [];
+      return origParas.map((orig, i) => (
+        <div key={i} className="mb-4 last:mb-0">
+          <div className="flex items-start gap-2 group">
+            <p className="flex-1 mb-1.5 leading-relaxed">{renderParagraph(orig)}</p>
+            <button onClick={() => navigator.clipboard?.writeText(orig)} className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)]" title={t(lang, 'copyToClipboard')}><Copy size={12} /></button>
+          </div>
+          {transArr[i] && (
+            <div className="flex items-start gap-2 group">
+              <p className="flex-1 text-[var(--muted)] text-sm leading-relaxed pl-2 border-l-2 border-[var(--accent)]/40">{renderParagraph(transArr[i])}</p>
+              <button onClick={() => navigator.clipboard?.writeText(transArr[i])} className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)]" title={t(lang, 'copyToClipboard')}><Copy size={12} /></button>
+            </div>
+          )}
+        </div>
+      ));
+    }
+    return null;
   };
 
   const speakText = (text, lang) => {
@@ -282,7 +448,16 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
                 </p>
               ) : summary ? (
                 <div className="p-3 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/30">
-                  <div className="text-xs font-medium text-[var(--accent)] mb-2">📋 {t(lang, 'summary')}</div>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-xs font-medium text-[var(--accent)]">📋 {t(lang, 'summary')}</span>
+                    <button
+                      onClick={() => { navigator.clipboard?.writeText(summary); }}
+                      className="p-1.5 rounded hover:bg-[var(--accent)]/20 text-[var(--accent)]"
+                      title={t(lang, 'copyToClipboard')}
+                    >
+                      <Copy size={14} />
+                    </button>
+                  </div>
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{summary}</p>
                 </div>
               ) : transcript.transcript?.includes('NO TRANSCRIPT') ? (
@@ -290,14 +465,48 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
               ) : null}
               <div>
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <input
+                    type="text"
+                    placeholder={t(lang, 'transcriptSearchPlaceholder')}
+                    value={transcriptSearch}
+                    onChange={(e) => setTranscriptSearch(e.target.value)}
+                    className="px-2 py-1 text-xs bg-[var(--bg)] border border-[var(--border)] rounded w-28"
+                  />
                   <span className="text-xs font-medium text-[var(--muted)]">{t(lang, 'detailedTranscript')}</span>
+                  <button
+                    onClick={() => navigator.clipboard?.writeText(getTranscriptForExport(transcriptViewMode))}
+                    className="p-1.5 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)] hover:text-[var(--accent)]"
+                    title={t(lang, 'copyToClipboard')}
+                  >
+                    <Copy size={14} />
+                  </button>
+                  <div className="relative group">
+                    <button
+                      className="p-1.5 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)] hover:text-[var(--accent)]"
+                      title={t(lang, 'exportTranscript')}
+                    >
+                      <Download size={14} />
+                    </button>
+                    <div className="hidden group-hover:block absolute left-0 top-full mt-1 z-10 bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-lg p-2 min-w-[160px]">
+                      <div className="text-xs text-[var(--muted)] mb-1">{t(lang, 'exportTranscript')}</div>
+                      <div className="grid grid-cols-2 gap-0.5 text-xs">
+                        {['original', 'zh', 'bilingual'].map((lm) => (
+                          ['txt', 'md'].map((fmt) => (
+                            <button key={`${lm}-${fmt}`} onClick={() => handleExportTranscript(fmt, lm)} className="px-2 py-1 text-left hover:bg-[var(--bg)] rounded">
+                              {fmt.toUpperCase()} · {lm === 'original' ? t(lang, 'transcriptEn') : lm === 'zh' ? t(lang, 'transcriptZh') : t(lang, 'transcriptBilingual')}
+                            </button>
+                          ))
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex gap-1">
                     {['original', 'zh', 'bilingual'].map((m) => (
                       <button
                         key={m}
                         onClick={() => {
                           setTranscriptViewMode(m);
-                          if ((m === 'zh' || m === 'bilingual') && hasContent && !translatedZh && !loadingTranslate) {
+                          if ((m === 'zh' || m === 'bilingual') && hasContent && !loadingTranslate) {
                             requestTranslation();
                           }
                         }}
@@ -331,8 +540,8 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
                     </div>
                   )}
                 </div>
-                <div className="text-sm leading-relaxed p-3 rounded bg-[var(--bg)] border border-[var(--border)] whitespace-pre-wrap">
-                  {displayTranscript()}
+                <div className="text-sm leading-relaxed p-3 rounded bg-[var(--bg)] border border-[var(--border)]">
+                  {renderTranscriptContent()}
                 </div>
               </div>
             </div>
@@ -342,7 +551,11 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
               {transcriptError && (
                 <p className="text-xs text-[var(--muted)] break-all">{transcriptError}</p>
               )}
-              <p className="text-xs text-[var(--muted)]">{t(lang, 'transcriptRefreshHint')}</p>
+              <p className="text-xs text-[var(--muted)]">
+                {transcriptError && (transcriptError.includes('Failed to fetch') || transcriptError.includes('fetch'))
+                  ? t(lang, 'transcriptBackendHint')
+                  : t(lang, 'transcriptRefreshHint')}
+              </p>
             </div>
           )}
         </div>
@@ -412,9 +625,9 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
                           key={j}
                           type="button"
                           onClick={() => onSourceVideoClick?.(s.video_id)}
-                          className="text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] hover:underline"
+                          className={`text-xs hover:underline ${s.video_id === videoId ? 'text-[var(--accent)] font-medium' : 'text-[var(--accent)] hover:text-[var(--accent-hover)]'}`}
                         >
-                          {s.title || s.video_id}
+                          {s.title || s.video_id}{s.video_id === videoId ? ` (${lang === 'zh' ? '当前' : 'current'})` : ''}
                         </button>
                       ))}
                     </span>
@@ -422,6 +635,18 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
                 )}
               </div>
             ))}
+        </div>
+        <div className="flex flex-wrap gap-1 mb-2 shrink-0">
+          {(lang === 'zh' ? ['总结要点', '提取金句', '核心观点有哪些？', '产品功能有哪些？', '客户案例概览'] : ['Summarize key points', 'Extract key quotes', 'What are the main arguments?', 'What product features?', 'Customer case overview']).map((q) => (
+            <button
+              key={q}
+              type="button"
+              onClick={() => setInput(q)}
+              className="px-2 py-1 text-xs rounded bg-[var(--bg)] border border-[var(--border)] hover:border-[var(--accent)] text-[var(--muted)] hover:text-[var(--text)]"
+            >
+              {q}
+            </button>
+          ))}
         </div>
         <div className="flex gap-2 shrink-0">
             <input
