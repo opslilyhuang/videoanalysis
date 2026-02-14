@@ -1,2 +1,0 @@
-# 若接口 404，设置 API 地址（需重启 dev server）
-# VITE_API_BASE=http://localhost:8000
