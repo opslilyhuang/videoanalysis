@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir: Automating the COVID Persons Under Investigation Form
+URL: https://www.youtube.com/watch?v=0DzIQ-ygQV4
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Containing the spread of COVID-19 requires detailed information from case-support data frequently collected by local public health agencies. Here we've used the fire spec to streamline a traditionally manual process where we can retrieve the initial data needed for case reporting by using data from EHRs. As a clinician treating a patient that has tested positive for COVID-19 as we're showing here, I can log into my EMR and launch this electronic case report form. Only data that the clinician has authorized to access via the hospital's EMR system is transferred into the case-support template. In this case, we can see that this successfully retrieved information from the EMR. Now that I've been able to pull in information that already exists and validated, I can then just focus on the incomplete sections that matter the most, like whether this was a laboratory confirmed case or information about how this person was exposed to the virus. We've set this up so that a clinician has a clear set of actions and can also mark sections as not applicable based on their understanding of the case. Instead of having to manually fill out almost 100 fields requested by the public health authority, I can instead focus on the most relevant information that is going to help understand the spread of coronavirus. The form is designed to guide them step by step to the details about the case that are still incomplete and relevant for public health case reporting. Finally, after I've reviewed all of this information and focused on what matters, I can submit this information that only captures non-sensitive, non-PHI data to share with local and federal public health authorities and compliance with existing reporting requirements. This approach uses an open API standard that enables various types of data reuse, including enabling data to be exported by the clinician for their own local needs. This not only minimizes the reporting burden on clinical work and public health workers, but it can also make the data reusable for a pandemic response. As we're going to show an open standards approach like this can provide near real-time improvements to a common operating picture at the national state and local level. For example, with the new case data that we've just recorded, we can immediately narrow into emerging hotspot counties in Washington state and then overlay that with other data such as available hospitals. This is a simple example, but it gives a picture of how secure standards based data exchange can alleviate the administrative burden placed on clinicians at the point of care, as well as saving local agencies, time-parseting and packaging the relevant information to be able to develop an appropriate response to the pandemic.

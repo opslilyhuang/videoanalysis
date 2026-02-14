@@ -24,7 +24,8 @@
       "data integration",
       "real-time briefing",
       "audit trail",
-      "interoperability"
+      "interoperability",
+      "mobile access"
     ],
     "category": "产品介绍"
   },
@@ -48,13 +49,13 @@
       "Palantir",
       "AI",
       "data analytics",
-      "energy transition",
+      "CEO interview",
+      "creativity",
+      "outdoor activities",
       "defense technology",
-      "innovation",
-      "leadership interview",
-      "outdoor fitness",
-      "complex engineering",
-      "business strategy"
+      "energy industry",
+      "technology ethics",
+      "complex engineering"
     ],
     "category": "产品介绍"
   },
@@ -112,6 +113,35 @@
       "resource planning",
       "clinical decision support",
       "healthcare analytics"
+    ],
+    "category": "产品介绍"
+  },
+  "jtS6Dxi3c1A": {
+    "keywords": [
+      "Palantir",
+      "earnings call",
+      "Q3 2021",
+      "Foundry platform",
+      "commercial revenue growth",
+      "operational APIs",
+      "Apollo",
+      "data integration",
+      "enterprise software",
+      "customer case studies"
+    ],
+    "category": "产品介绍"
+  },
+  "wq8ziQHHzVI": {
+    "keywords": [
+      "COVID-19",
+      "crisis management",
+      "information platform",
+      "data integration",
+      "safety region",
+      "mobility data",
+      "risk assessment",
+      "decision support",
+      "visualization"
     ],
     "category": "产品介绍"
   }

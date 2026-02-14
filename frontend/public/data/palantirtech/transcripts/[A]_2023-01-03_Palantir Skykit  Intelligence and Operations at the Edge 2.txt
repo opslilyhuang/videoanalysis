@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir Skykit | Intelligence and Operations at the Edge
+URL: https://www.youtube.com/watch?v=F5a9aASy--c
+Published: 2023-01-03
+View Count: 58,207
+Duration: 164 seconds
+Score: 71.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Introducing Palantir's Sky Kit Bringing intelligence and operations to the edge Sky Kit is built for disconnected, adverse, hostile and extreme environments It is a self-contained intelligence center, giving soldiers an advantage over adversaries Sky Kit contains dual integrated monitors On board battery packs to power the entire unit for days, fully disconnected and a secure storage area for the included devices Sky Kit includes satellite communications with commercial and government options available A ruggedised laptop with Palantir software pre-installed A quadcopter drone, running computer vision algorithms via Palantir AIP and a trail cam nano, also running detection algorithms on board the device The Sky Kit hardware is powered by Palantir software Palantir Metaconstellation is installed on Sky Kit, enabling users to task and analyse satellite imagery rapidly from anywhere in the world Palantir AIP powers the computer vision algorithms deployed on board the devices These send detections directly to the base station Sky Kit has a modular design with variants for different use cases Sky Kit L is a lightweight backpack form factor Sky Kit S is for C and maritime use Palantir Sky Kit, the future of intelligence and ops, on the edge

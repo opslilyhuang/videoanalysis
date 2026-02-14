@@ -1,0 +1,385 @@
+================================================================================
+METADATA
+================================================================================
+Title: Reinventing IndyCar Race Performance | Andretti at AIPCon 8
+URL: https://www.youtube.com/watch?v=mBDQK7OJ1Ls
+Published: 2025-09-07
+View Count: 2,362
+Duration: 1658 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Good morning everyone and welcome to AIPCON 8. My 
+name is Jack Dobson, AIP lead here at Palanteer and it's my absolute pleasure to welcome you to 
+the show. For those of you that are returning, welcome back. Those of you that are new to 
+the show, thank you so much for joining us. We have a great morning's content lined up 
+for you. A whole set of customer keynotes, including also our CEO, Dr. Karp, taking to 
+the stage. But before any of that, we have a very special pre-show to kick off the show. I am 
+delighted to be joined with two of my colleagues from Andretti Global. We've got Zack Porter, 
+senior simulation engineer within Indie Car, and then Carl Kirkwood, Indie Car driver with 
+the team. Thank you so much, guys, for joining me. Thank you for having us. Awesome. So, we're 
+going to be kicking off the show with a little bit of a run through and actually a launch of the 
+partnership between Palanteer and Andretti. We're going to be showcasing some of the work we've been 
+building over just the last few weeks and setting a vision for what we're going to go and achieve in 
+2026. So with that, let's hop into a little demo and we're going to actually drive all of this by 
+showcasing some of the work we've been building together. Perhaps Zach, do you want to kick us 
+off? Introduce us to the world of Indie Car, the world of Andretti, and kind of the beginnings 
+of our partnership. Yeah, so Indie Car is uh it's 11 teams. It's 27 full-time entries, 33 at 
+the Indy500. We compete on road courses, street courses, short ovals, speedways, this 
+massive amount of data, this massive different kinds of racing and all across the globe uh with 
+massive number of variables. Uh and and all that we have to work together to make decisions in in 
+in real time really really really quickly between sessions. Um it it's quite a challenge. That's 
+incredible. And obviously I mean as with a lot of the challenges we face out in the field like 
+this is a heavy data challenge, right? So Carl, for you I'm curious like as we think about 
+we're going to be talking a lot about data, a lot about workflows and things like that. As the 
+race weekend progresses, like how is it for you? Like what's the progression of the weekend? How do 
+you think about the technology and the data you're working with? And I guess what's the experience 
+from the driver side of all of this? Yeah, I mean there's so much to experience and and I don't 
+even know where to start if I'm being honest, but um as a driver you don't get a lot of time to to 
+look over things. you are um between media events, you're driving the car, you're or meeting with 
+sponsors, um partners, uh whoever it might be, and you get a very short period to actually focus 
+on the data that's in front of you. And um you're you're typically always trying to find lap time. 
+You're always looking at sectors. You're looking at uh speed traces, throttle traces, brake traces, 
+steering traces, and and trying to understand where you can find lap time because ultimately 
+everything leading up into the race is is all about just how can you make a car go as fast as 
+possible around a single lap or a single sector. So for us, it's it's focusing on that, trying to 
+find exactly how we can optimize the corners, the speeds, everything um for a driver standpoint, but 
+also for the car. So, um, it's really important and and we like like Zach just said, we have so 
+much data to look at and it's crucial to pinpoint and find exactly what you need, but there's also 
+so many variables, right? So, a lot of times you'll look at a a portion of data and then you 
+also need to um compare it to another portion of data and you kind of just keep falling down rabbit 
+holes um trying to understand things and there's always questions and we always run out of time and 
+that that's ultimately our our sport, right? It's time. It's it's time on the racetrack. It's time 
+looking at data. It's time in in every format. So, um it's important to get through it quickly to to 
+optimize everything. That's incredible. I mean, as you say, it's as much a race off track as it is on 
+track. Right. Exactly. Like that is the challenge we're fundamentally solving. So, great segue into 
+the problems we're solving together, right? So, this is race OS. This is what we've been building 
+over just the last few weeks, right? The last handful of races as we closed out the 2025 
+season. Congrats again in the championship. That's incredible. Um Zach, do you want to kind of tee up 
+this demo a little bit? talk us through race and we'll also talk through a little bit about how we 
+actually went about building this as well. Yeah, so race here is like a it's a central point for 
+all the work we do between sessions. So we have, you know, everything from a quick snapshot of 
+timing and scoring. In the bottom left corner, maybe some actions uh in the bottom right there 
+of of sensor anomalies or some things that come up that we need to take action on. You know, 
+in the top right, we have weather information, a countdown to the next session, um outings along 
+the left hand side, and then a series of of apps along the left that are all the workflows that 
+we need to work through to get from where we are right now and make decisions for the next session. 
+100%. And as always, like with any race, this is now just a timing game to see how long it takes 
+me to say the word ontology. And that is exactly what we're going to start by talking about. So 
+obviously everything with regards to race OS, everything we've built is built on Andrett's 
+unique ontology, right? That is the coalescing of the data, the logic, the actions that make up 
+the team and every single decision you make off and on track. So maybe like Zach, talk me talk 
+to me a little bit about the kind of systems that you're working with, how you work with data 
+within the team, and I guess what were some of those challenges that we went in to go and solve? 
+Yeah, I mean part of the big problem we have is we we have a ton of data and we're really good with 
+data. We have a ton of tools and we've been doing this a very long time as as my colleagues say 
+we we're big data before big data was a thing sometimes uh and we're really good at that but 
+it it sits in silos and it sits in buckets and it sits in in unconnected ways. So timing and 
+scoring comes from Indie car but you know data and telemetry comes from the car and those two things 
+are not directly connected in any way. And what Foundaries allowed us to do is is create those 
+connections to all these like unique individual buckets of of data and serve them all up in one 
+way and in in relationships that make sense. Yeah, 100%. So that's obviously where it starts, right? 
+You start with the data component of that sort of holy trinity. So this is our broader ontology. 
+This is the circuitry behind the entirety of race and as we dive in, we'll see that data component 
+to begin with. So you can see obviously we're not thinking about spreadsheets. We're not thinking 
+about data sets. We're thinking about the the sort of concepts and the entities you work with 
+on a day-to-day basis, right? You got the tracks, the drivers, the sessions, lap times, performance. 
+Like this basically allows the team to stop thinking about, oh, where do I need to go to get 
+to that information and instead everything is connected, contextualized. So, I mean, Zach, kind 
+of what's your thoughts around how this is going to speed up operations for the team? For us, we we 
+need to serve like kind like kind like kind like kind like kind like kind like kind like kind like 
+kind like kind like kind of like Kyle said too, we need to serve all of these disparate pieces of 
+data up in one way to allow our race engineers and performance engineers and systems engineers to 
+make decisions quicker. So as we connect these things, you know, tracks to sectors to sessions 
+to timing to setups to all the important pieces of our puzzle if we can serve them up in one 
+way and present them to our race engineers, we can be more informed to make better decisions 
+sooner. 100%. And I think that's also where AIP comes in, right? The ability to not only just 
+have the data, but also then start adding logic, layering logic on top of that information so 
+we can actually start getting closer to driving decisions, right? KL, I'm curious for you like if 
+you put yourself in the position of you've just come straight off track, right? you're in that 
+time between sessions. I've seen you you sit down in the engineering truck, you sit with the team 
+and start digging through what just happened, right? What did we learn? How to improve for the 
+next session. Talk me through some of that process in your mind. Like what kind of things do you want 
+to see? How do you go about sort of evaluating what just happened? Well, it it solely depends 
+on how you do in a session, of course. Um, but I would say in in general, you're always looking at 
+teammates data and um, there's many many sensors that we can look at as as drivers comparative 
+to to our teammates. We get raw data from there, but you also look at telemetry, GPS data from 
+other cars that we can also get from from the series. And um, you kind of use both of those 
+along with some some video as well. You kind of go back to the raw formats of of things, right? 
+where you're just looking at offtrack video, um, car on boards from the broadcast even. Um, 
+just a combination of many things that if you're looking for one piece of you, you typically start 
+with the data. You start with the data compared to teammates or data compared to another car and then 
+you find that and you're like, okay, what's going on here? Why why do we need to find pace here? 
+And then you translate that into video, um, oncar or incar footage, I should say, um, broadcast 
+footage, whatever it might be. and then you try and just put the whole picture together. Um, so 
+you're always just bouncing around from a lot of different things to to find out exactly what you 
+need for pace in the race car. And and our our job with that on the engineering side is to take his 
+sensations and his view and the things his talents in the race car and turn that into data and and 
+find actions in the data that back up what he said and helps us understand with context the the level 
+of of under steer that we need to fix or the level of power down problems or whatever it might be. 
+So we can um make a datadriven decision to to help him go faster. Makes total sense. And that action 
+component exactly is the next piece of this, right? The ontology is it's data, it's logic, 
+but it's also the ability to take action on that information as well. So a lot of what we've been 
+building is really kind of empowering your team, right? Like we're not looking to replace people 
+like you guys, as you said, are extremely adept at working with this data. This is about getting 
+the right data into users hands quicker. And these applications you see on the screen is just a 
+subset of all the apps we've built, right? Like tell me more Zach about like some of the pace 
+that you've seen and actually building this out. We've been working together for a handful of 
+weeks, right? Yeah. I mean truly we spent about I don't know 5 days getting all the different data 
+sources connected and and and streaming in and then from there we've we've had some use cases 
+with our systems engineers for example just fall out and and build something uh that they can take 
+action on in like 24 hours. That's the that's the power of this whole thing is once we get all the 
+data in, once we once we understand really what the end goals are, some some applications just 
+kind of fall out of the bottom and usefulness just comes right away. That's incredible. So, 
+speaking of that, we're sort of in the context now of we are 30 minutes, just over 30 minutes 
+out from the race. We're thinking about car setup, right? Like that's step one of this. How do we 
+start applying everything we've learned not just this weekend, but also previous weekends at 
+the same track. How do we pull that together to start configuring the car to perform as best as 
+possible on track? So what we see here is actually we're looking at one particular setup that we've 
+run in the past and you can see we've even got our own Kyle represented in the ontology but we've 
+also got your performance on track your laps your segment times as you mentioned and of course even 
+your commentary there so every driver comment we get every engineering change made as a result of 
+those comments it's all captured that ontology and this view I actually kind of like the ability 
+to see like if we focus in on Kyle you can see all of that context that with just one click you 
+can jump to right so I mean Zach how would this have worked in the past like if you wanted to jump 
+from Kyle to like show me every race, every timing performance, every sector. Like what would that 
+have looked like previously for a while? That's really difficult. Um yeah, in the past, you know, 
+we we have like a setup database that has setups that have been run that is broken down across 
+tracks and years and and sessions and drivers and uh you know, then a different database that has 
+timing and scoring information. And so you'd have to one by one in all these different programs, 
+go to different places and try and drill down to find, you know, there's not even an easy way to 
+search like, hey, what's the fastest we've ever been around this track? uh you kind of have to 
+just know that and then go to that session and find that setup and find that information and then 
+navigate somewhere else to find all the timing and scoring data and navigate to a different program 
+to find all the time series data that's associated with that and that's what we're trying to make 
+those connections here. Yeah, makes total sense and I think that's also a good segue there of 
+like you mentioned you just have to sort of know that that kind of intuition you're running 
+on. So the way I've certainly thought about it is like how do we bring more of the data backing 
+more of the actual like datadriven insights and actions beyond just ins uh the sort of intuition 
+that you guys have built because obviously you've got a ton of experience but this is about backing 
+it up with the right data and also identifying the things that you may have missed right like 
+what are those things kind of in the gaps in the noise that you may not have otherwise spotted so I 
+guess Carl for you as well like as you think about working with this data and say you're literally 
+30 minutes out from a race session like where's your mind at and also what are you thinking 
+about what do I need to know to perform as good as best as possible in this next session? 
+Well, I mean that that's a great question, right? It depends which session you're going into, 
+but I'd say into the race, we're we're focused a lot on the actual strategy of the race and how is 
+it going to play out? How can we run the fastest, say 80 laps from from the green flag to the 
+checkered? And and a lot of that comes down to tire de uh fuel saving uh performance. When 
+when is the car fast? When is the car slow? How is traffic going to be involved in your race? How 
+how are um at what point are pit stops going to be the the fastest time to to to optimize your 
+race? Right? So you're you're there's a lot of variables that that you're trying to pull together 
+and you're trying to understand it, but a lot of things change as the race um progresses, right? 
+So understanding how um the race progresses and how things may change also dictates a lot of of 
+how you're ultimately going to end up in a race, right? And um trying to understand those things 
+is extremely important. Yeah, 100%. And and Zach, we were talking about this earlier, but I think 
+as we look at this view on the screen now, we've actually like the system AIP has assisted us with 
+finding four potential setups that we can compare, right? I think the cool thing about this 
+is when we start to layer in AIP as well, you start pulling out some of those proactive 
+insights of here are the things that have happened in the past, things that you may have forgotten, 
+yellow flag in that session or that person going off track or whatever it is. What the system 
+can actually do is pull all of that information together alongside the setup data to actually 
+contextualize it with performance information with session information beyond just trying to remember 
+why did we run that setup. You now have everything at your fingertips, right? So talk me through how 
+you're thinking about this helping the team in the future. Yeah, I mean this particular view here has 
+as along the left the fastest lap we've ever run around and the setup associated with it that we've 
+ever run around Long Beach in this particular case. Uh and in the in the previous slide, we were 
+searching for something, you know, a setup change that maybe Kyle or or Jeremy as race engineer 
+have gone through and something that they want to explore for this next session. And this AIP 
+has has gone through and found inside our database three setups that are very similar to that change 
+that they wanted to make and all the associated data that is that that's with that. So we have the 
+setup differences that are listed here and then down below there's also the key metrics that are 
+associated with that. Um and it's it's it's quite a powerful tool to really quickly drill down. We 
+we had no way to do this before. No way of like making a setup change or proposing a setup change 
+and then understanding all the things that go along with that that we've ever done historically. 
+That's a brand new tool for us. That's awesome. That's incredible. So, I think what we're going 
+to see now is obviously that was all the setup information that we quite rightly have hidden from 
+the audience a little bit. We don't want to give away the secret source, but you can see all of 
+those parameters, right? The difference here, the deltas from session to session. This is all well 
+and good like it's useful seeing that comparison, but I think it's then how do you actually apply 
+logic on top of that, right? It's not just show me the delta, but show me maybe some of the context 
+behind some of that delta, right? Like why did you make those decisions? Yeah, each each of those 
+setups were run in different years and different sessions in different conditions. Uh, and the 
+ability for AIP to go through and and provide the context like we see here on the left. So that's 
+a specific setup picked, but then it provides the story of how we got there. So each outing in 
+that session that led up to this, its performance relative to the field, which is the second part 
+we see there. Uh, and then its comparison to the reference, the fastest time we've ever gone around 
+that racetrack. and what things are different and what things sort of tell the story of why this 
+is maybe a good direction to go or maybe why it's a bad direction to go. Exactly. And talk me 
+through I know I've heard you in the truck a few times be like I remember we did this last year 
+or I remember we ran this setup or something like that. Like are you often just going off like 
+oh what did we do last time what worked? What didn't? Like how do you think this would change 
+maybe your flow getting ready for a session? You know it's extremely interesting looking at at 
+some of this stuff right and and talking about it beforehand in this in this pre-show. It's there's 
+a lot of bins in in silos as you said that that information um topics, setups, everything is kind 
+of spread out and we're always finding that we have to go to a different folder, a different a 
+different area or a different server to to find things that we want. And simplifying it and 
+putting it all in one spot saves us so much time. And I go back to the time that it that our 
+our whole motorsports career is about. counts, you know, every minute counts. Off the track, on 
+the track, everything is is important and it just it allows us to make more educated decisions um 
+with with valid information. That's awesome. So, I think what we're going to do now is we're 
+going to segue. So, like this was all pre-race, right? Like we're looking ahead of Long Beach, 
+which was a race of the season, which actually Carl won. Not to give away the lead there. Um but 
+I think what's important is okay, great. We've got our setup down. We can obviously capture that 
+in the ontology. Then we transition to postra, right? Like so obviously we get the car ready, 
+we optimize the setup going into the session. That's all well and good. What you can see here is 
+we're actually capturing all of that those setup decisions and all the edits that have been made in 
+the ontology. So it's you're continually adding to those breadcrumbs, right? Like adding to the asset 
+that you have to draw upon next time. I think where this gets particularly exciting is when we 
+start to get into the more telemetrydriven stuff, right? As we start to think about sensors, 
+how the car is performing. So, as we now kind of transition to that post-race, you can see 
+there KL, you're you're at the top of the timing stands. That's pretty good. Um, now the next 
+stage is like, well, what worked, what didn't, how did the car perform, and what can we learn 
+from for next time. And I think we've built some pretty cool stuff around session review. So, 
+Zach, talk me through some of the behind the scenes of how we went around building this and I 
+guess also like how's this compare to how you guys work with particularly tire information and tire 
+sensor based data today. Yeah, when when we get to post session, we have this dump of data that's 
+arrived in all these different forms. Uh and and all of them represent a performance or a piece of 
+performance of the car and and and how tells the story of how we can go faster someday. Um so this 
+session review piece, specifically this view with with tire information here, helps us understand 
+like how we're developing grip over the lap, over a session. Um and and all this stuff is is 
+coming in automatically in the background and it's ready within two or two or three minutes from post 
+session. Um, that's really the powerful thing is is being able to just serve this information 
+up right away instead of our tire engineer, for example, having to go and calculate these 
+reports and put this stuff together and then it gets sent out 30 or 40 or 50 minutes later and 
+it gives us a significantly less amount of time to take action upon it. How do you actually think 
+that's going to compare then? You mentioned they like it could take 10, 20, like an hour tops to 
+actually coales this information. When you've got these I mean we've got some great custom widgets 
+here that actually kind of show that information in the format that your users your team are 
+familiar with. like in terms of the time cut down, what do you expect like the impact of this is 
+going to be? I I think what what it really does is it allows our our engineering group, you know, 
+his Kyle's race engineer and and Kyle to sit down and and in five or six minutes as they sort 
+of debrief in detail with themselves from the session to immediately go and like, hey, like what 
+happened with tire pressure? What happened with the tire temperatures? You know, why did I have 
+this sensation of over steer after three or four laps? Like what what was the temperature 
+distribution front to rear of the tires, for example, or something? And it just serves 
+that information right away. So as they debrief from the session, they can answer their own 
+questions right away. We we find that a lot of times we we we just don't have time to look at 
+things like this, right? We we there's a lot of important things to look at and it's kind of in in 
+order what you should be looking at. And a lot of times some of this stuff falls behind. So having a 
+clearcut um informative place to just click on it, review it within seconds, and then get out of 
+it and understand it is absolutely crucial for between sessions, right? A lot of times we don't 
+find things until after a race or after a session at night when engineers are staying up till 
+midnight looking at things. So um it's extremely interesting and what we saw there in the previous 
+screen was actually some of your comments right you've got the evolution of your comments coming 
+out of the car the changes that the engineers have made as a result and then you can actually 
+see that outing to outing right so KL how do you think about communicating with your team right I 
+know that there's a lot of nuance around like you could say oh this doesn't feel great this doesn't 
+feel good but you're always thinking about how can I give my team the right information for them 
+to take the right action so how do you think about that when communicating with the team on 
+track of Of course. And and you you want to give them simple um terms that they can understand 
+where you talked about over steer, under steer, um things that are just going to help the balance 
+of the car that you know intuitively that that will make it faster. And that that's kind of 
+just kind of the seat of the pants of the driver, but you also want it to correlate directly with 
+what the data says. And um it's important that you that you compare each one of those and understand 
+that because a lot of times you can find yourself where the data completely contradicts what the 
+driver says. And that is a pretty disappointing thing as a driver if I'm being honest. Um 
+because usually the data is right. So, so you're always trying to wanting or you're always 
+wanting to match those things up. And when you do match them up, which is 90% of the time I would 
+say, um you usually get good things out of it. That's awesome. And on that note, talking of data 
+and like backing up your commentary, let's talk sensors for a second. We've done a lot of work to 
+pull in all of the telemetry coming off the car. I think this is amassed something like a quarter 
+of a trillion data points that we're working with within the platform. Just got started. Just got 
+started. Yeah, this is like days weeks in. I we actually ran this little experiment in Nashville 
+just last weekend when we saw that the time it takes for you to walk from the timing stand on 
+the pit wall back to the garage. In that time, all of that data is flowing off the car into the 
+platform and actually contextualizing within that within that ontology ready to start working with. 
+So, Zach, I mean, that's firstly insane. It's just so impressive we'd be able to do that so quickly. 
+How do you think that's going to transform the way that Andretti operates? I mean, the big challenge, 
+especially with the time series data that we have, is it comes in these big chunks, these big splats 
+between between outings. Uh, and there's over 2,000 channels of data in there and and much of 
+it is things that we don't necessarily need or they are channels that are calculating something 
+that we need further downstream that help that help us inform. You know, Kyle's talking about a 
+a high-speed imbalance and we go look at the the center of pressure of the car and understand 
+where the aerero balance of the car is. Um, and so making sure that that data is accurate 
+and is not having failing sensors or or missing stuff. You know, these these are not gentle road 
+cars that drive around all day. These are race cars that are smashed around the racetrack and 
+occasionally crash. And it's a never- ending battle, unfortunately. It's a never- ending battle 
+to keep every sensor on the car in prime condition and operating correctly. And and that's the the 
+biggest challenge of this kind of data. Yeah, that's incredible. And K, I mean, I guess for you 
+as well, I think we've we've talked a lot about how do we make sure that that data is in the best 
+possible form, right? Like everything's working, you're getting all the telemetry you need. Like 
+how does that I guess that makes a massive impact for you, right? When you have those that stuff to 
+hand ready to use as quickly as possible. Yeah, certainly. Right. And there's always questions 
+whether the data that you're looking at is correct or or incorrect, and you're always basing it off 
+of multiple other sensors kind of around the car to just correlate and tie the whole picture 
+together. So, um, yeah, you you and that goes back to what I'm talking about like in between 
+sessions where you look at one thing, you're like, "Okay, I see this is what's happening, but what 
+what is happening here and what's happening here?" And you're always you're always kind of tying 
+the whole picture together. So, to to have a data point that is that you know is accurate 
+and you know you can trust is something that also saves time for us, right? And and it's very 
+important for performance. That's awesome. And I think the big thing for us, and I know I've been 
+working with the team a lot on this, is okay, it's one thing seeing the data. It's one thing having 
+visibility, but it's really about being proactive around like what can we alert upon, like what can 
+we actually push to the team proactively to say, hey, this is something you should take a look at. 
+So, I mean, tell me the story, Zach. We built this tire pressure and monitoring system workflow, 
+right, where we were building off some of those tire sensors that we're working with to actually 
+identify anomalies and even like something around battery levels, right? So, tell me a bit of the 
+story about how this workflow came to be. Yeah, we we were at Toronto uh and and struggling. 
+Actually, Kyle's car specifically in a session had a TPMS sensor that failed. Um and that that 
+that sensor tells us not just the tire pressure, but tire temperatures and all kinds of things that 
+represent performance. Um and when that fails, that that's a huge bit of information that he 
+doesn't have, that we don't have that we can't make decisions on. So, uh uh Joe and and the group 
+kind of overheard this challenge. And because we were already scooping the data up, because we were 
+already parsing it and and doing all the things we were, they in about 24 hours, we're able to to 
+push this app out to our systems engineers to help them see the status of every sensor that's ever 
+been on the car, when the last time it was run, all the times it was run, what its battery 
+level was, and a little prediction of of when that battery might get to a place where they got 
+to take it out of service. And and truthfully, since then, since Toronto, Kyle's not had a single 
+TPMS problem on the car because of this app. We've we've been able to to to peel the sensors out at 
+the right time and replace them with new ones. That's awesome. And I think it also speaks to 
+a little bit of our approach of building with Andretti, especially in these last few weeks where 
+once you get that foundational ontology down, the ability to very quickly stand up new solutions, 
+new apps, like we hear a bit of feedback from the team, we implement it 24 hours later or even 
+less. Like it's kind of enabling the team to move faster, right? Like obviously challenges 
+are always showing up and the nature of your performance on track, the evolution of the season, 
+the team is constantly evolving, right? So, it's a little bit like how do we keep pace with 
+that and build to exactly what the team needs at any given point, right? Yeah. And I and I think 
+like things like this, our systems engineers are really good. They're really bright. They they they 
+keep the car in a really good running condition, but there are so many sensors and there's so much 
+stuff that humans are bound to miss something. But if we if we can peel them up and and and serve 
+them better information sooner, they're happier. Awesome. That's perfect. So to wrap us up, I think 
+we're going to be talking a little bit about some of that anomaly detection. Like what are those 
+things that we spot where okay, obviously the the tire battery stuff, pretty simple, like go change 
+this, go solve this problem. I think as you start to talk about identifying those sensor anomalies 
+and those sort of behaviors that are maybe harder to deduce like what exactly is going on, we're 
+building more of a sort of investigation workflow around that, right? So I guess like Zach, tell 
+me a little bit more about how like when you see that behavior like how did you work with that data 
+previously? How would you go through that process? And as we see in the demo, like how is that going 
+to change when building a palenteer? Yeah. So, so the the current workflow would be every time a a 
+data file comes off the car, the systems engineer is going to page through very quickly by eye and 
+just make sure that all the critical sensors, all the things that we were testing, everything was 
+working and in working order. And they're humans, so we're going to miss things. Um, so if we 
+can add some some machine learning on top of that to help flag things that that h that maybe 
+just failed for a split second on a lap that we weren't particularly looking at, we can flag that 
+to go investigate eventually. Uh, I I think that's that's really powerful. And then from there, we 
+can drill down into like here's all the anomalies we saw. Here's how many of them there were. Here's 
+the corner they keep showing up on. You know, can we can we flag that for someone else to follow up 
+with later. Is there a a build of the car that we have to move around in a different way uh to to to 
+prevent these problems from happening? And I think that's the that's the beauty of of this deeper 
+dive. That's awesome. And it's actually a perfect segue as we sort of start to wrap up thinking 
+about 2026, right, Carl? As I mentioned, solid performance this championship really exciting to 
+see the speed that the team's moving at. How does that set you up for the 26 season, right? Like 
+what some of the focuses, what's top of mind for you in terms of improvement. Yeah. What does the 
+the next few months look like in the offseason? Well, we're in a constantly evolving sport. You 
+always need to progress. You always need to get better. And we have a long time to do that now. 
+And and things like this will help us immensely. And for me as a driver, I'm always just trying 
+to figure out, okay, what what is our what is our best tracks? Yeah. How do we improve on that? How 
+do we continue down this route? And then also what is our worst tracks and how can we adjust to make 
+those better? So, um that's really the the topic of of focus um for the offseason for us. Awesome. 
+And Zach, final remarks from you. What are you most excited about looking forward to the next 12 
+months with Palanteer? I I think the the workflows that we can build that we can uh take some time 
+away, get our race engineers specifically to go to bed a little earlier and not be staying up so 
+late so they're not so cranky the next morning. Um and and and help them make better decisions cuz 
+winning races is why we're here. That's awesome. Well, K's going to be upset I got him up bright 
+and early for little pre-show. But honestly, guys, thank you so much for joining us. This 
+has been great fun. Great to work through all the work that we've built so far in just a few 
+short weeks. I've never been more excited for the next season. Honestly, it's only the start, 
+too. It's only the start, literally. Um, well, with that, thank you so much, everyone at home for 
+tuning in. This is only the start of the show. Do not go anywhere. Thank you so much for joining 
+us. This is AIPCON 8. Thank you for watching.

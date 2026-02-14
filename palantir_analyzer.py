@@ -1476,8 +1476,11 @@ def main():
 
     if args.convert_urls:
         channel_id = "temp"
-        analyzer_temp = PalantirVideoAnalyzer(output_dir="palantir_analysis", data_dir="frontend/public/data", channel_id=channel_id)
-        analyzer_temp.data_dir.mkdir(parents=True, exist_ok=True)
+        temp_data_dir = Path("frontend/public/data") / channel_id
+        temp_data_dir.mkdir(parents=True, exist_ok=True)
+        # 使用 data_dir 作为 output_dir，使字幕直接保存到 frontend/public/data/temp/transcripts/
+        # 供 API 的 get_transcript 从同一路径读取
+        analyzer_temp = PalantirVideoAnalyzer(output_dir=str(temp_data_dir), data_dir="frontend/public/data", channel_id=channel_id)
         vids = [v.strip() for v in args.convert_urls.split(",") if v.strip()][:5]
         for vid in vids:
             details = analyzer_temp.fetch_video_details(f"https://www.youtube.com/watch?v={vid}")
@@ -1491,7 +1494,7 @@ def main():
         if analyzer_temp.data_dir:
             analyzer_temp._generate_master_index_csv()
             analyzer_temp._generate_transcript_index()
-        print(f"✅ 临时转换完成: {len(vids)} 个视频")
+        print(f"✅ 临时转换完成: {len(vids)} 个视频，字幕已保存至 {temp_data_dir / 'transcripts'}")
         return
 
     if args.retry_failed:

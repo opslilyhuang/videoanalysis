@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: FT Weekend 2022 | Palantir CEO Alex Karp on the NHS and Data-Driven Healthcare
+URL: https://www.youtube.com/watch?v=5gBFDXUihgg
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+What is very important about the actual question you asked is what does it actually mean to work with data? Can you actually get data into a space where it's operational? So then in the context of, for example, Britain, where you had a healthcare system, which I would be very proud of if I was British, but it consisted of 150 different data systems called trusts. If you want to deliver PPE to a country that's scarce or any other thing, or for example, backlog issues that are in Britain now because of COVID, you're going to have to find a way to integrate that system so that you know who you should prioritize. By the way, if you think of yourself as progressive as I do of myself, how do you make sure the prioritization is fair that it's not going to people in one neighborhood, but not in another? How do you make sure that political connections are not being used against? If it's a disparate data set, you are not going to know if it's fair. If you're using volunteer, you can very easily do a regression and say, okay, who got it under what conditions? Was it prioritized? And is the prioritization rational according to what we as Britain, and you can also see where the data moved, how it moved under what conditions, which is by the way, exceedingly important because otherwise you have this silo, you have the negative side of this where people can actually go in and move data around and you'll never know.

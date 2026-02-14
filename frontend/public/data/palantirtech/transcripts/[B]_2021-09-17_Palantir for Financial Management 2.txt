@@ -1,0 +1,18 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir for Financial Management
+URL: https://www.youtube.com/watch?v=Gkz4J0vjxAQ
+Published: 2021-09-17
+View Count: 23,940
+Duration: 191 seconds
+Score: 45.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+From safeguarding national security to protecting public health, government organizations serve our nation's most critical missions. With limited budgets to achieve these missions, agencies must agilely align spending against urgent priorities. However, the scale of financial data is immense. Millions of transactions flow across thousands of contracts. Worse, data is often codified in disparate formats within a web of siloed systems, which continue to inform mission-critical work. Palantir helps unify this fractured landscape without a full system migration, creating a collaborative access-controlled foundation for users to analyze portfolios, track budgets, and reallocate funds to power more impact. Previously, it was difficult for contracting officers to understand how much money could be removed from a contract, or even what contracts with large unpaid balances were in their portfolio. Now, with one click, officers have immediate visibility into their complete contract list, sorted by probability of excess funds with the assistance of an integrated third-party ML model. After initiating a deobligation, the recouped funds are automatically tracked in the underlying data asset, ready for reassignment. Within the first year, this workflow helped the Army successfully deobligate more than $3.3 billion in funding. Once established, the same data asset can power many adjacent workflows, such as financial auditing, as millions of transactions stream across existing systems. Palantir helps to surface discrepancies at pace, highlighting unmatched transactions on authorized payments, and pushing notifications to analysts for corrective action. Similarly, budget analysts are often forced to rely on static financial reports, limiting their ability to effectively manage risk and adjust their budgets as priorities change. Using Palantir's budget planning module, analysts can proactively identify variants and intelligently reprogram funds, while seamlessly collaborating with internal and external stakeholders. As the pace of innovation quickens, an instability becomes more norm than exception. Agencies need immediate visibility into their finances to deploy the right solutions against changing problems. Palantir's integrated financial platform empowers analysts, officers, and leaders to ensure that every cent serves the mission. Agencies need immediate visibility into the mission.

@@ -55,15 +55,22 @@ pip install -r requirements.txt
 python palantir_analyzer.py
 ```
 
-### 3. 启动前端与 API（可选）
+### 3. 启动前端与 API（本地开发）
+
+**必须同时运行两个进程**（字幕、智能问答、报告等均依赖后端 API）：
 
 ```bash
-# 终端 1：启动 API
-python api.py
+# 终端 1：启动后端 API（macOS/Linux 使用 python3）
+python3 api.py
 
 # 终端 2：启动前端
 cd frontend && npm install && npm run dev
 ```
+
+- 后端默认监听 `http://0.0.0.0:8000`
+- 前端默认 `http://localhost:5173`
+- 若字幕显示「Failed to fetch」，说明后端未启动，请先运行 `python3 api.py`
+- 若出现 `command not found: python`，改用 `python3` 即可
 
 访问前端后，可点击「运行分析」按钮启动分析，进度条会实时显示脚本状态。
 
@@ -129,15 +136,16 @@ SECONDARY_KEYWORDS = ['Demo', 'Tutorial', 'Workshop', ...]
 
 ## 🔧 常见问题
 
-### Q: 智能报告提示「接口未找到」？
+### Q: 智能报告/字幕提示「接口未找到」或「Failed to fetch」？
 
-确保 API 已启动（`python api.py`）。若仍 404，在 `frontend/.env` 中添加：
+**本地开发**：
+1. 确保后端已启动：`python3 api.py`
+2. 若仍 404，在 `frontend/.env` 中添加 `VITE_API_BASE=http://localhost:8000`
+3. 重启前端
 
-```
-VITE_API_BASE=http://localhost:8000
-```
-
-然后重启前端（`npm run dev`）。
+**生产部署（用户访问公网 IP 时请求 localhost 失败）**：
+- 生产构建必须使用 `frontend/.env.production`（其中 `VITE_API_BASE=` 为空），API 走相对路径
+- 若用含 `localhost:8000` 的 `.env` 构建，需删除后重新 `npm run build` 并重新部署
 
 ### Q: 如何只测试前10个视频？
 
@@ -183,7 +191,18 @@ PALANTIR_CHANNEL_URL = "https://www.youtube.com/@其他频道"
 2. 使用 CSV 索引文件快速定位 S 级视频
 3. 针对 S 级视频可以单独创建 NotebookLM 实例进行深度分析
 
-## 🚀 部署到 Git 与 Vercel
+## 🚀 部署
+
+### 本地开发与阿里云部署的差异
+
+| 环境 | 后端启动 | 前端 |
+|------|----------|------|
+| 本地开发 | `python3 api.py`（8000 端口） | `npm run dev`（5173） |
+| 阿里云 ECS | systemd 守护进程 | Nginx 托管 `dist/` 静态资源 |
+
+### 阿里云 ECS（前后端一体）
+
+完整步骤见 [DEPLOY_ALIYUN.md](./DEPLOY_ALIYUN.md)：单机部署、Nginx 配置、systemd 守护进程。
 
 ### 推送到 Git
 

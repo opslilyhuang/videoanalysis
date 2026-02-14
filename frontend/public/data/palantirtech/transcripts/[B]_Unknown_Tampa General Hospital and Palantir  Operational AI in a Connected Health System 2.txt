@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Tampa General Hospital and Palantir | Operational AI in a Connected Health System
+URL: https://www.youtube.com/watch?v=73R1k-nLiRg
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Acquired AI models are crucial for our operators. They have to be able to trust the recommendations in order to be able to leverage that data to make decisions. The PAKU is our post anesthesia care unit. It's where our patient temporarily recovers from their surgery. We're leveraging the foundry in order to deploy AI models and recommendation engines in order to optimize how we plan for patients leaving the PAKU and entering into our hospital in patient units. What we've done is we've predicted the time that a patient will recover even down to whether or not they are going to need a bed in our hospital. And then we're exactly able to forecast what time they're going to need that bed. This has allowed us to not only better plan for the day, but as we are looking at end days and advance, how do we prepare for those patients? And so we are leveraging the ontology, the AI, the predictive algorithms in order to better plan our days and a better staff and resource based off of those predictions. We've seen a 28% reduction in our patient whole time, and we've reduced the time that our managers spend managing patient placement by 83%. So patients are moving into care faster, and they're getting the treatment that they need faster. Currently our predictive models are at over 95% accuracy, and that high accuracy percentage gives us a lot more confidence in making those strategic moves. Data privacy and data governance are something that we treat seriously, and so with the ontology, we're able to leverage much greater controls over who sees what data and how those data points are being used. I've loved it to great more and more AI and machine learning algorithms that would allow us to better treat our patients, whether it means us identifying gaps in our care, being able to identify risk before they become issues, really leveraging the volunteer platform to be able to guide our clinicians in making stronger clinical decisions.

@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Conagra | Prix 2024
+URL: https://www.youtube.com/watch?v=AA_zF-pQHek
+Published: 2024-12-09
+View Count: 1,522
+Duration: 192 seconds
+Score: 52.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Good afternoon. Connect your brands for those of you that don't know. We make the food you love. We make products in cans like Chef Burradi, frozen meals, healthy choice, marine calendar. We make snacks, over reddened bock or Angie's boom check-up pop. So food that you'll see in everyday store shelf. That variety poses a problem for us in the complexity of the different locations and the different ways you make the product. And there is a use case I wanted to share today that we entertained about a year ago with Palantir. And that is around traceability of our product. So we are required by our customers and under regulation that we're able to, in the event of a food safety issue that we can trace and recall that product. So we can do that. It's been part of our food safety standards for a very long period of time. But with different systems and different technologies and different plants and warehouses and in logistics, it takes time. And it can take hours. And even sometimes in days. And if you think about food that might be unsafe in the market out there, faster getting it off the shelf is better for the consumer. So we partnered with Palantir in our traceability. Brought in our ERP system, our quality management system, our lab information system. And we took up an idea or a process that would take four hours to a day for numerous people to do this trace that one person can do it within minutes. We are now able to, within one screen, pull all of the information of logistics, where the products went, the customers that have that product, even all the raw materials that went into that product upstream through our supply chain. What's intriguing about once the ontology is created with Palantir, and in this we have that use case of going fast. But once the ontologies are the questions start to get asked. And when you start asking questions, you start thinking, well, what else could I do with that information? And in this regard, our second use case popped up, and that was related to our consumers, our customers. And we, on occasion, will have a complaint from a customer that maybe something is off flavor, off color. Maybe there's a question they have about that the integrity of the product isn't to the standard they want. Well, now with this ontology and trace that we have, our consumer affairs team is able to know exactly where it was made, when it was made, who the suppliers are, and our food safety quality regulatory team can do an investigation very quick, rapid, and very highly focused within our supply chain and our customers. It brings a lot of visibility that we just would not have had the manpower to do without it. So we're much faster and better and safer with our Palantir partnership. Thank you.

@@ -33,6 +33,7 @@ function App() {
   const [whisperConfirmOpen, setWhisperConfirmOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [scrollToVideoId, setScrollToVideoId] = useState(null);
+  const [transcriptRefetchTrigger, setTranscriptRefetchTrigger] = useState(0);
   const [statsExpanded, setStatsExpanded] = useState(false);
 
   const extractVideoId = (url) => (url || '').match(/[?&]v=([a-zA-Z0-9_-]{11})/)?.[1] || null;
@@ -110,20 +111,20 @@ function App() {
           <MessageCenter onUpdateClick={(id) => runAnalysis('full', null, id)} lang={lang} />
           <button
             onClick={() => runAnalysis('full')}
-            disabled={loading || runAnalysisLoading || isAnalyzing}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+            disabled
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 cursor-not-allowed"
             title={t(lang, 'runAnalysisFull')}
           >
-            <Play size={16} className={runAnalysisLoading || isAnalyzing ? 'animate-pulse' : ''} />
-            {runAnalysisLoading || isAnalyzing ? t(lang, 'runAnalysisStarting') : t(lang, 'runAnalysis')}
+            <Play size={16} />
+            {t(lang, 'runAnalysis')}
           </button>
           <button
             onClick={() => setWhisperConfirmOpen(true)}
-            disabled={loading || runAnalysisLoading || isAnalyzing}
-            className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+            disabled
+            className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 cursor-not-allowed"
             title={t(lang, 'runAnalysisWhisper')}
           >
-            <Play size={16} className={runAnalysisLoading || isAnalyzing ? 'animate-pulse' : ''} />
+            <Play size={16} />
             {t(lang, 'runAnalysisWhisper')}
           </button>
           <button
@@ -203,6 +204,7 @@ function App() {
             scrollToVideoId={scrollToVideoId}
             onScrolledToVideo={() => setScrollToVideoId(null)}
             isEmptyTemp={isTempBoard && displayVideos.length === 0}
+            onTranscriptConverted={() => setTranscriptRefetchTrigger((t) => t + 1)}
           />
         </div>
       </div>
@@ -223,7 +225,7 @@ function App() {
     setScrollToVideoId(videoId);
   };
 
-  const rightPanel = <RightSidebar selectedVideo={selectedVideo} videos={displayVideos} onMetaSaved={refresh} onSourceVideoClick={handleSourceVideoClick} lang={lang} dashboardId={channelId} />;
+  const rightPanel = <RightSidebar selectedVideo={selectedVideo} videos={displayVideos} onMetaSaved={refresh} onSourceVideoClick={handleSourceVideoClick} transcriptRefetchTrigger={transcriptRefetchTrigger} lang={lang} dashboardId={channelId} />;
 
   return (
     <FilterProvider>

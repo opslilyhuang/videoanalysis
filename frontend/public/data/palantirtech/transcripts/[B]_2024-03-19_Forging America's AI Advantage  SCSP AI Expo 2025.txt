@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Forging America's AI Advantage | SCSP AI Expo 2024
+URL: https://www.youtube.com/watch?v=WhjkjSv09u8
+Published: 2024-03-19
+View Count: 5,547
+Duration: 84 seconds
+Score: 46.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+The South China Sea is here. A North Korean nuclear attack could be... The North Afghanistan, the Taliban. The Germans between the US and Iran are in it. We should be so dominant that nobody can even imagine we're not number one. As with the Manhattan Project, which I think should be our standard, the fact that what we're doing in AI is equally as transformational. American prosperity and national security are two sides of the same coin. We need to realize that M Day was yesterday, that we need to be marshalling the full forces of America's industrial might and software advantage to deliver for the war fighter to deter the conflicts that are staring us straight in the face. If we need to be ready to fight in 2025, there's only a handful of new exquisite systems that we can field. But we can field an enormous amount of software, and we should not underestimate America's software advantage. Today, we want to convene all of defense tech to reintroduce the American industrial days to our pressing problems. This is why Palantir is proud to be the lead sponsor of SCSP's inaugural AIXBO. Every minute war fighters aren't training and using AI is a lost opportunity. We cannot hesitate on building and deploying AI into the hands of war fighters. So join us May 7th or 8th in Washington DC to forge the future of AI-Nable Defense.

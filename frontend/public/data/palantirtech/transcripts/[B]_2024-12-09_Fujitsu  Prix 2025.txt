@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Fujitsu | Prix 2024
+URL: https://www.youtube.com/watch?v=8cNvqaeOslU
+Published: 2024-12-09
+View Count: 2,289
+Duration: 260 seconds
+Score: 52.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Hello everyone. We are Fujitsu, 19 years old, and number one technology company in Japan. And we studied the parent-year partnership in 2020, and last year we have concluded the strategic partnership. So let me introduce one example. So we are from Japan where the country of the manufacturing and supply chain efficiency and at the same time, unfortunately, the company, the country of the natural disasters. So there is one big manufacturing company over 10 billion annual revenue. They have had over 1,000 supply chain management operators across the 20 factory plants, 100 over 200 parts items. All the data is on their own spreadsheet in the local PC, and all the supply chain simulation model just exists in their head. So we are a data engineers and approach to the customer, and made all the supply chain inventory data visualized in two weeks. And also in three months, we created the 300 supply chain prediction model in three months. And then coincidentally, the natural disaster hit this customer, and they had to stop the one or two plant operations, and they have to only calculate and resubilate where is the alternative suppliers, and what is the profitable loss impact. Thanks for this data model, they have done that profit-profit and loss simulation in two days. So this is a very powerful use case, powered by parent-year and our data engineers. So this is the physics-yubance. So we provide the business impact efficiency, and also if the supply chain becomes better, it is also good for the social and environment impact. physics-yubance mainly handles the data intelligence and businesses. And today, I would like to announce that we extended the partnership with parent-year, that we will provide our own application with the OEM model, OEM model of the parent-year. So we integrate parent-year foundry and our own AI and machine learning and blockchain technologies, and the other third-party cutting-edge technologies. So many Silicon Valley companies approach to us to get the access for the Japanese market. So we embed everything in our physics-data intelligence path. But the parent-year foundry is the key strategy for us, and we decided to create all the applications on physics-data intelligence path, powered by a planetary foundry. We wanted to package all the past delivery assets in a repeatable model. And we learned from the customers that nowadays, the engineering chain optimization need to be integrated with the supply chain optimization and operations. And also, the ESG decision-making platform also need to be associated with the supply chain data. So we see similarities from the customer's requirement, and based on our past delivery models, we create this model and provide it to customers. So I appreciate the parent-year to extend this partnership with the next level, and very excited to drive the power of data intelligence together. And those will even more excited to make our customers better together. Thank you very much.

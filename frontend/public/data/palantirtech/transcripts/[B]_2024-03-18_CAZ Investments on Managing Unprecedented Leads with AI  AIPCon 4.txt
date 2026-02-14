@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: CAZ Investments on Managing Unprecedented Leads with AI | AIPCon 3
+URL: https://www.youtube.com/watch?v=B3duyenB4rQ
+Published: 2024-03-18
+View Count: 2,251
+Duration: 213 seconds
+Score: 64.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Good morning. My name is James Stewart and the Vice President of Finance at CAS Investments. CAS Investments provides exclusive access to unique alternative investments. We have experienced tremendous amount of growth over the past few years, and this has been supercharged over the past couple months. In February, our chairman Christopher Zook released a new book with Tony Robbins called The Holy Grail of Investing. We also launched a new fund called The Strategic Opportunities Fund that dramatically reduces the minimum investment required by individual investors. Our decision to partner with an AI firm has brought about a plethora of opportunities for us. We are so grateful to AIP to be able to build an online lead triaging system, and we partnered with them six months ago, and I want to share with you what we've been able to accomplish and how. With AIP, we can now process over 100 times more leads with the same amount of resources. This has reduced our overall lead processing time by over 90 percent. In just two months, we have managed 7,000 leads. This would not have been possible without AIP. Together, we've automated 85 percent of our workflow. While leaving humans at key checkpoints, these humans in the loop provide feedback to make the system smarter and more efficient. AIP is able to extract key information from unstructured data sources such as emails, enrich that data, and send intelligent communications both internally and externally. All of this works together seamlessly with our current systems such as Salesforce. But not only has AIP made us more efficient, we have been more effective. We now have complete visibility over our lead to partner conversion process. This allows us to tailor the experience for each lead. Utilizing large language models, AIP is able to enrich lead and manager data, proposing a pairing that provides us with the greatest opportunity for a success. AIP also provides us with key metrics such as manager performance, communication detail, and financial analysis. All of this has worked together to help CAS investments continue to learn, win, and provide the best experience to our partners. I invite you all to come later today to our demonstration booth. I will go through this process in more detail. Palantir has been an amazing partner, and we continue to look forward working with them on future projects. For example, we're looking to utilize AIP in our research as we review and analyze future investment opportunities. I hope to see you all there. Thank you. Thank you.

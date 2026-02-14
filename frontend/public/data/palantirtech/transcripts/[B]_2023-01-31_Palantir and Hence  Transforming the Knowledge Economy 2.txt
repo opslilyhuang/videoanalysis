@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir and Hence | Transforming the Knowledge Economy
+URL: https://www.youtube.com/watch?v=2aCpwKyNkfs
+Published: 2023-01-31
+View Count: 5,836
+Duration: 173 seconds
+Score: 55.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+My name is Steve Hykamp and I'm a co-founder of INS Technologies. Companies all over the world of every shape and size need and use legal expertise, but have no easy way for teams to determine what they already know or who they might be able to work with to solve a new problem. This helps companies to easily use the most relevant data to find the right lawyers and services for them, given their needs, values and goals. Hensys product integrates data from companies internal systems and augments it with external, publicly available sources into a single and easily usable front end application. This is right back their own preferences and data into the system, which helps them find the best matches for the specific matters they have. At the core, Hensys using Foundry to integrate disparate data sets and to create a common operational layer on top of that data, which we call the Foundry ontology. This allows Hens to build connected workflows across all types of internal teams and external users. Foundry by having this kind of object business relevant concept that feeds into how you approach problems means that when you integrate lots of different data into a concept like a person or a company or a country or an area of expertise, it's informed by lots of pieces of information, but then you can build off of it very quickly. Our product by our customers is used by everyone who's working on the problem, not just some subset of users that we decide is the most valuable or the most useful, but that doesn't mean a bunch of disconnected systems. It means actually a bunch of disparate views that feed back into an underlying data foundation and underlying structure that actually can be used throughout the organization. And that's something that's really, really powerful and very unique to how Hensys solves this problem and it's something we can only do because we're building on top of Foundry. I don't think we could accomplish the time to value and pace of refinement with another tech stack. On top of this, Foundry has provided a platform that we can not only build on, but also have our customers directly used. Across startups and enterprise customers, we're seeing more companies use Foundry to power their customer-facing platforms. Seeing the Hens team really take the reins as Foundry developers has only made us more enthusiastic about our partners building new products and launching new businesses on top of Foundry. We built this product in less than a year and in many ways have only scratched the surface of what we can and will do with Foundry.

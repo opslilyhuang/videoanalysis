@@ -1,0 +1,114 @@
+================================================================================
+METADATA
+================================================================================
+Title: Driving Operational Value | bp at AIPCon 8
+URL: https://www.youtube.com/watch?v=1Wrhaur3ws0
+Published: 2025-09-08
+View Count: 3,130
+Duration: 586 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+[Music] Please welcome from BP executive vice 
+president technology Acha Amebleu and senior vice president digital delivery Sanjay Pande. [Music] 
+So um hello everyone. This is Thunderhorse. This is one of our platforms that we operate in the 
+we're here from BP. This is one of our platforms, our biggest platform that we operate in the 
+Gulf of America. Um really hi everyone. It's really great to be with you today. Um we've been 
+one we're one of Palunteer's first commercial customers. We've been working with Palunteer for 
+over 10 years and it's really been a phenomenal journey to be working with them. This has been 
+Palanteer has been a huge value creator for our company. It's been value for employees, value for 
+our shareholders, for our customers across the board. We've gotten huge value from what we've 
+done with Palunteer. Quick introduction by the way, my name is Amecha Ameble. I'm the EVP for 
+technology at BP and I'm here with my colleague Sanjay Pande who's our senior vice president for 
+digital delivery. So for those of you who may be unfamiliar with BP, we've been operating for about 
+116 years. So a long time as a company. Um at the heart of our company, what our strategy is is 
+we're about growing. We our strategy is to deliver um energy to the world today and tomorrow. We grow 
+our we're growing our oil and gas business. We're focusing our customer and products business and 
+we're investing into the energy transition in a very disciplined way. And technology underpins 
+everything that we do in this in this part of our business. Um technology underpins us improving 
+our operating efficiency, driving competitiveness, and as you can imagine, keeping people 
+safe and secure in all of the platforms and everywhere we operate. And our approach to 
+technology is based in all of this. And at core, at the core of our approach to technology, we use 
+Palunteer. We've worked with Palunteer, as I said, for over a decade. Um, we have we've been doubling 
+we're we've been worked with we've worked with Palunteer for over a decade, and now we're 
+doubling down with that decade's worth of work with the new AIP system out of Palunteer. And this 
+what this is going to be doing is really helping us drive a lot of competitiveness for BP as a 
+company. Um what we're trying to do really as a company is build we're we're building an ontology. 
+We we are actually advancing the ontology we build as with Palanteer as a company looking at every 
+part of our company and connecting everything that we do. We we're trying to build a fully integrated 
+fully forecastable business across our entire company. What you can see on the screen here is 
+this is our Sherlock suite for example. What this does is it helps us look at how we manage when 
+we have failures in our wells or our production systems. Everything goes into the ontology. 
+Everything is trackable. It's connected through Palunteer and accessible to engineers everywhere 
+in our company. So, this is what we're trying to do to make sure everything we do from our wells 
+all the way through our platforms, everything it's all connected. And what does this look like? 
+Another thing we're doing, we're building so um we actually heard Dr. Karp talk about data earlier 
+today. We've heard other people talk about data. We're making this data accessible to everybody in 
+our company. Again, using the using Palunteer's Foundry and the ontology, it's pulling the whole 
+data from across our company all the way together. We're um using operational data from our fields 
+in the Gulf of America all the way through to our wells in Kazan in the deserts of Kazan and 
+making sure we're understanding actually what we can learn for how failures occur, how we make 
+our systems better, how we make our systems more resilient, how we make our systems more productive 
+every day. This is what we're doing through our Palunteer system. And you can imagine in a world 
+where previously we actually had engineers trying to pull all of these data insights together just 
+not connected not learning from each other. We are in our upstream business now. We've moved past 
+that and that's what the ontology has helped us put in place. But we didn't we haven't actually 
+we're not stopping there. We're taking this to our retail sites. We're taking it to our trading 
+systems. We're taking it to our we're taking this across everywhere we operate in the company 
+starting in the upstream to our refineries to make sure and our traders. We have a big trading 
+organization to make sure they can leverage data across our entire company to drive value for 
+BP. So this innovation really is I would say you know I'm sure many of you worry or you have 
+conversations about returns on investment of different technologies you invest in. for us. 
+I can say to you again very confidently year on year, we're getting triple figure investments 
+from the investments that we've made in Palunteer without without failing. People across our 
+company are we know about this and yeah, this is very clear. It's this is a value this is 
+a been a big force value multiplier for us as a company. Um Sanjay is actually going to talk you 
+through some details of what this has looked like in the Thunderhorse asset that we talked about. 
+Again, we start there from a molecular basis and you can see how this can be or how it can be and 
+is applied to the rest of our company. Sanjay, thank you Mecca. Um, excited to be here uh and 
+represent the work of our teams and our business people uh across BP. Um, this is Thunderhorse. 
+It's our largest production and drilling platform in the Gulf of America, capable of 250,000 barrels 
+of oil a day. For a sense of scale, the main deck on Thunderhorse is about the size of uh three 
+regulation sized football fields. It's massive. Um operating a platform like this is highly complex 
+and we have to balance maximizing efficiency with the safety of our teams. It's a tough problem. 
+The kind of complexity here translates to working with over 60,000 pieces of equipment 
+uh attached to 40,000 real-time sensors and um 40 4,000 synthetic uh sensors streaming data 
+from the asset. We ran over 1.4 million digital twin simulations in the last year alone. This 
+kind of visibility that we get through Foundry is transformational at the asset level. Um, our 
+teams, our engineers, I can interface with every dimension of the asset in one place in a way that 
+I couldn't do before. And with AIP, we're not only looking at structured data, we're integrating 
+and leveraging them into the same ontology. This is one asset, Thunderhorse. We're scaling 
+this capability across dozens more globally. The foundation though is only as valuable as 
+our ability to drive effective operations and decisions. And so by integrating the live 
+sensor data with our physics-based models along with best practices and the engineering 
+expertise of our talented operators, we're optimizing our assets without compromising 
+safety. is job one for us is safety and capturing production deviations below target to support 
+the reliability of the equipment and preventive maintenance across an equipment class and at 
+the asset level. Um in the last 12 months the strong foundation has accelerated our ability 
+to develop new use cases and drive value from AI. Um we'll look at two that we've built on 
+AIP. Uh starting in the optimization space, um routing is one of our newest expansions and 
+performing routing optimization through brute force techniques would take multiple weeks to set 
+up, execute and evaluate and the existing digital twin system optimiz optimizers only give us a 
+singular optimal solution. With AI, our engineers now can set up and run these optimizations in 
+hours. It's a massive deal. uh an engineer can see the optimal solution and options close to 
+optimal allowing us to consider operational factors like schedules risks and recommending 
+a configuration to increase the production. Second one we'll look up we we'll look at how 
+we're removing data silos and we talked about data sharing across organization and acha talked about 
+that a little bit. It's vital to us as a large multinational and having an integrated data set 
+our teams can use. Um, so we'll look at how we're analyzing uh our equipment data at scale. With 
+AIP, we're further enhancing the data foundation by digitally encoding our best practices and 
+engineering expertise using the AI agents um through AIP to surface insights in seconds. 
+This has been scaled um relatively simply in fact across a 1.4 million pieces of equipment 
+uh across our global oil and gas assets and this has reduced the time to get to operational 
+insights on maintenance data by 75%. To put a finer point on it, this is all about operational 
+excellence for us. Safety's at the core and assets like Thunderhorse that you saw um are incredibly 
+incredibly hard uh to maintain and execute. Um so we're not just talking about unlocking value 
+though, we're measuring it. And now we're in we're expanding the insights gained from our 
+oil and gas business as a Mecha talked about to other parts of our portfolio. It's deeply 
+complex an integrated energy value chain and this is how technology is enabling BP strategy uh 
+in partnership with uh with Palunteer. Thank you. [Music]

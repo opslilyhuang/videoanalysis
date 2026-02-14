@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Powering Pandemic Response in Colombia
+URL: https://www.youtube.com/watch?v=n5hqA24bzTw
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+From the beginning of the pandemic, the presidential conference for economic and digital and impulse transformation joined forces with Amazon Web Services and to advance, dedicating resources for the construction of technological tools that help all governmental entities to take important decisions about the pandemic through COVID-19. This tool called Visual COVID-19 is the largest inclusion of open data in Colombia. The Visual COVID-19 with its time almost real, several sources of Colombia data and international organizations that allow prioritizing the efforts of detection and mitigation of COVID-19, supporting the presidency of the republic to cooperate with local governments in responding to the pandemic. These sources include data from hospital capacity through the Ministry of Health, data from biological, anonymized, national institute of health, data added to the national department and the mobility of Google comparing the general movement of the citizens from the Sierra por Cuenta of the Sanitarian crisis. Data of the cases in other countries come from the World Bank. Data of data from the data that allows to characterize the vulnerability of each person and data anonymized by technological and user-friendly applications. In the possible visual evaluation of the pandemic, from data aggregations presented at the national department and municipal. It is also possible to perform a analysis through the time that indicates how the pandemic progressed in the different areas of the country, allowing local authorities to understand the impact of their health public health policies in the population's view. The integration of data sources updated daily and in this tool allows a unified vision to detect vulnerable parts of the population and coordinate prevention measures such as medical equipment, isolation orders, health care, to control the spread of COVID-19 virus.

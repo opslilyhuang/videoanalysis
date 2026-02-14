@@ -1,0 +1,138 @@
+================================================================================
+METADATA
+================================================================================
+Title: Unifying the Care Journey for Every Patient | HSS at AIPCon 8
+URL: https://www.youtube.com/watch?v=mKp3TTggihU
+Published: 2025-09-08
+View Count: 2,437
+Duration: 800 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome from Hospital for Special Surgery Chief Digital and Technology 
+Officer Ashish Barad. [Music] Hello everybody. Uh so I am Dr. Ashish Barad. I'm 
+a practicing physician for roughly 20 years now. Um, and um, you know, wi with that being said, 
+the the work we're doing with Palunteer um, is is really exceptional. I can't wait to 
+to dive in uh, from that perspective. Um, there's an interesting fact that I want to 
+open with that you may not know. So, uh, since I started practice roughly 20 years ago now, uh, 
+physician productivity has dropped roughly 13%. So just think about that for a second. Nursing 
+even more significant, right? So I did a time study recently. Our nurses spend a roughly 20% 
+of their shift with um their uh patients. That's a lot of hours, a lot of time on paperwork, 
+administrative tasks. So um we um we are taking that on and that's and I want to make a very 
+significant portion of that is after we digitized everything in healthcare. So although there's 
+still foxes do exist in healthcare um we um have digitized everything and yet productivity has 
+dropped 13%. So our our partnership with Palunteer is really focused on giving that time back so our 
+front lines can spend time with their patients which is what they went to nursing medical school 
+to do. So before we dive in, um I do want to make sure that many of you may not know what HSS stands 
+for. It's a hospital for special surgery. We're in New York. Uh and it really is the premier 
+destination for muscularkeeletal health, right? Um and you can read the stats. Uh we have 
+many of them. We're very proud of them. Um but I'll I'll leave you with this just as far as the 
+the hospital goes. uh during the NBA playoffs uh when your Achilles tendons pop, you come to HSS. 
+So, uh it is absolutely the place to be. So, uh you know, I'm going to dive into a demo uh to 
+show you something u different that we're doing now. And I know you heard a lot about appeals 
+with Main Health. Uh so I won't spend as much time um on this slide but I do want to say that at the 
+beginning of this year we partnered with Palunteer uh and we decided to take on that same journey 
+of automating insurance appeals um and uh and as a physician appeals authorizations insurance is 
+the bane of your existence oftent times. Um and we really took that on end to end and what we found 
+was 45 minutes of manual work by a lot of people uh really just doing chart searching and typing 
+letters uh and taking on the insurance company companies uh went down to 5 minutes and we did 
+that work in five weeks. We've been tapping that for decades. Uh so in a simple fiveweek time 
+frame we were to automate all those and and what we could get to to about 100 appeals per month to 
+insurance companies turned to a thousand appeals a month and so it wasn't and and so the efficiency 
+was tremendous but I also want to make sure that we don't just focus on efficiency the performance 
+of the AI was better than the people that were doing it. So, um, and that time for those people 
+was given back to higher, uh, license work. Um, and so, uh, it was a, it was a big win for us. 
+Appeals, you heard a lot about it a bit ago, so I won't spend too much time on it, but I do want 
+to make sure you understand that roughly one in 10 appeals um, or uh, claims in healthcare claims 
+is denied by insurance companies. So we spend a lot of our time and energy of manual labor, 
+our nurses, our doctors, our staff on really working that um through. And so um if you really 
+uh think about the the fact that 17% of healthcare uh or 17% of the GDP is on healthcare um a lot 
+of that has to do with this what's called waste in medicine. This is an example of that waste. 
+It's really not in in any way helping a patient uh a person get care. it's really just doing a lot 
+of uh manual labor and work uh paperwork. So to automate that is very significant uh for people 
+getting care. Um so uh that's work that we've already undertaken. We continue to do and um is 
+really significant. We expect a lot more things. So, you know, having that win under our belt, 
+we we said, you know, that's wonderful and we've automated a lot of the back end, but we haven't 
+really touched the patient and that's the center of care that has drifted a bit in healthcare. We 
+spend so much time on the paperwork. We spend so much time in the administrative work. We're not 
+spending as much time with the patient as I just articulate at the beginning of this. So, how do 
+we get that time back? How do we really get the patient back in to the center of the care? The 
+medical record that we've had in healthcare isn't really focused on the patient as they go through 
+a journey. It's very siloed. And so when you show up to a clinic, you go to the hospital, you get a 
+phone call, you may go to different specialists, you might go to an imaging center, all that data 
+is not following really you along in a very, you know, continuous way where the care teams are 
+are really reading off of one sheet of music. So that's the work we're taking on with Balanteer 
+now. Uh so we started four weeks ago. Um and so um really all that fragmentation of care um at 
+best it's a poor experience um at worst it's critical details that get missed right leads to 
+poor outcomes um so we're building a patient card is what we're calling it right so really just a 
+single sheet of music it's a single living summary that travels with the person as they go through 
+their journey allergies medications care plans what's next predictive uh and it's consistent 
+everywhere. So now you have clinicians, all clinicians, surgeons, doctors, uh nurses, medical 
+assistants, patients, very important and payers, right? They are part of your healthcare journey 
+all reading off the same page and that is not possible in today's world. That data lives in 
+different places. So it's living as I said. So the card updates right with real time in real 
+time. So orders, results and decisions change. So I think at the beginning of this uh you heard 
+from American Airlines and in many ways I think of running an O and I've done that before in 
+my past life um is like American Airlines, right? We have crews, we have turnarounds, 
+we have clearances, we have equipment and the occasional emergency, right? The difference, we 
+actually encourage sharp objects. So in this case, uh we're seeing a patient that's not ready for 
+surgery uh as she needs a lifestyle medicine referral. Right? So you see that the ontology 
+puts a flag there. Take a minute because right we're if you just watched this demo you might 
+not really capture what's happening. Take a minute think about Zoe. She's your mom. She's your 
+spouse. She's your sister. She's been hurting for years. She needs a knee replacement. She lives 
+in pain every day. She finally got to the best place on earth to get her knee done. And and the 
+surgeon said, "You need surgery. can't wait to be painf free right now let's dive back into the 
+demo right because that person is waiting and and can't wait to live painf free and so you see 
+AIP running it raises uh a flag there's a risk so in seconds right it's assembling the relevant data 
+BMI tobacco use meds problem list it checks player policy clinical criteria for medical necessity So 
+what you see now is because she's not yet cleared, AIP is automatically compiling and submitting. 
+The agent is submitting as well the prior authorization packet with the right documentation 
+and it's alerting the whole care team in real time with a clear reason code and next steps. So what 
+you see is that she needs counseling for smoking sessation and for weight right management. And 
+so that is a uh criteria that is both needed by the insurance company and the right thing to do 
+for Zoe to ensure that she gets uh that in check before she has surgery. Current state that is all 
+data that lives in different parts of the chart if at all. Right? And that is something that really 
+if it gets picked up great oftentimes it doesn't get picked up right and either again at best you 
+don't get paid for the surgery you're doing and at worst at least the bad outcomes because that's 
+actually the right thing to do for the patient. So here you see that she's moved through this 
+process and Zoe has moved into presurgical square uh screening. her cardiac clearance is in and uh 
+the living patient card stays current across the teams. The information that's being put in there, 
+the whole team's seeing it. And really what's transformative about this agent that you're seeing 
+as far as next steps here is in a few clicks, right? It's recommending same day discharge. 
+So now that she's had lifestyle medicine, she actually qualifies for same day discharge. 
+She can go back to her own bed. she can sleep and she can have her caregivers there doesn't need 
+to stay in the hospital right it's notifying the whole teams that has a huge just like an airline 
+industry let's say has a huge implication on the surgeon needs to know the nurses need to know the 
+clinicians the operators need to know uh insurance u may need to know so again single pane of glass 
+it's messaging Zoe patient in the loop right that is right now potentially nurse's job to remember 
+her to call Zoe and say, "Hey, you actually qualify for same day discharge. We're going to 
+move up your surgery to be able to do that." And that's a manual thing. And it takes time away 
+again from that 20% of time in the patient's room. And we have a second customer in healthcare, 
+our physicians, right? So, and making sure the surgeons in this case are aware of this move 
+and this recommendation and with consent offers to move the surgery time. So, it's one source of 
+truth, coordinated actions, and zero swivel chair. Hi, this is an automated call from the HSS 
+call center. Can you please confirm your full name and date of birth? Hi, my name is 
+Zoe McMillan and I was born July 27th, 1961. Hello, Miss McMillan. This is HSS scheduling 
+calling from HSS. I'm calling to inform you of a change to your upcoming surgery schedule. So, 
+we're not going to play the whole recording for the sake of time, but um it's right to have that 
+conversational AI to be able to guide having that um source of truth to be able to guide 
+that conversation and to recommend same day discharge. Um and if you listen to 
+the recording um which would say, well, I can't do 11, can I do nine? Right? it's able to 
+accommodate that knowing the surgery schedule. Um, so really really getting the patient back in the 
+loop and being able to have that shared decision- making with patients that has oftentimes been 
+missing. So again, this is where we started with a schedule with the red flag and this is where 
+we land, right? No red flags. Schedule optimized not just for the patient but the clinicians, 
+the surgeons, the o texts. So no red flags, everyone in the loop. Again, we stood this up in 
+four weeks. So, as far as speed to action, we're just getting started on our journey. We're taking 
+the entire patient journey, right? From discovery, ouch to recovery, right? And we're going to 
+use AI to orchestrate that. Very important. We're not taking our frontline clinicians, our 
+doctors or nurses out of the loop. We're actually elevating them, augmenting them to do what's 
+necessary that humans should do with humans. AI is a really wonderful orchestrator. Things 
+get lost in the middle, right? And so that's how we look at it. So our goal is simple, 
+right? We want our people with our patients in their care journey and we want the agents to 
+do everything else. Thank you. [Applause] [Music]

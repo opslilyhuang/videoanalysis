@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Securing the Air, Space, and Cyber Domains | Palantir
+URL: https://www.youtube.com/watch?v=touvdfsYLrk
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+To maintain U.S. and Western military superiority requires deliberate action and technological innovation. At Palantir, we deliver secure, innovative, and scalable software solutions at speed, accelerating decision-making to detect, deter, and defeat threats. In the global war on terror, to space-domain awareness, and the historic Afghanistan airlift, Palantir continues to be a mission partner for the U.S. and allied nations, designing solutions that connect and strengthen existing systems, expand competitive advantage, and deliver measurable value and operational impact. Today, the U.S. Air Force leverages Palantir software to improve personnel, equipment, and training readiness. At the U.S. Space Force, Palantir serves as the data backbone for its space command and control modernization program. Palantir's interoperable and mission-tested solutions enable organizations to adapt to evolving technological challenges, to power decision-making at the edge, in contested and disconnected environments in near real time. From Earth to Space and beyond, we are delivering the software of tomorrow today. Palantir is proud to build software for strategic advantage.

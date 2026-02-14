@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Nebraska Medicine | Prix 2024
+URL: https://www.youtube.com/watch?v=Ojw36MpvOzY
+Published: 2024-12-09
+View Count: 1,161
+Duration: 186 seconds
+Score: 52.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Thank you. So I drew this short star. They have to go after Alex. But I think that I got this position because health care is the most important industry. Unfortunately has the lowest margins. Why we need to volunteer. So Nebraska Medicine is the only academic medical center in Nebraska. And we are the only level one trauma center in Nebraska. And we service our service. The four surrounding states and international with all of our specialties that we provide. We're also the main transfer center for the state and the surrounding state. So our work I feel is super important. But unfortunately we're not super efficient surprise right health care is not efficient. But we're getting better. We've been on our Palantir journey for about a year. We have 14 use cases in play. We have about 42. We're also a few people who are not very well. Cute up. Most of those right now are focused on operational efficiencies. And you think well it's about business. It's really not a lot of it's focused on throughput. So we have a lot of patients every day that are waiting in the ER waiting in hallways to get into inpatient beds. So how do we more effectively get patients through the hospital out of the hospital in into care post hospital. So we're doing a lot of work around that throughput around staffing around focusing on employee efficiency. So if you think about Palantir and what its power is it's it's to me it's a giant data lake that I can put all of my data from health care which is thousands of different we have a thousand and 11 applications. So imagine trying to do manual abstraction for all those systems. I can connect all those systems into Palantir. I can just point a problem at it and get the data in a meaningful way. And I think the biggest thing we found. That we're getting real time insights at the point of care and we're focused on patient care right that's what we do so how how are we going to improve that patient journey and that patient experience. So that's what we're focused on and I think it's been a great journey we have great support from our teams. The Palantir folks have really leaned in to help us. We're kind of tease we have our main group of Ford engineers that that claim to be nurses now I'm not quite sure I went to nursing school for like six years so. So maybe but I think they've learned so much so fast that they really are becoming experts in the industry and that's good for us but it's also good for the health systems in the room. So I hope you guys get on this journey and all of us share so why should I create a use case and keep it to myself we should share the use cases with each other and get better because we're all in this together and again it's the most important. Industry because and you don't agree with me when you're sitting in the ER so I'm going to end a minute early so thank you.

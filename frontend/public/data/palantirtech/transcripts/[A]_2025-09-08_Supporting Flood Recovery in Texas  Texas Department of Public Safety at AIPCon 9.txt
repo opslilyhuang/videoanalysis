@@ -1,0 +1,148 @@
+================================================================================
+METADATA
+================================================================================
+Title: Supporting Flood Recovery in Texas | Texas Department of Public Safety at AIPCon 8
+URL: https://www.youtube.com/watch?v=sk2peD8SB3s
+Published: 2025-09-08
+View Count: 3,647
+Duration: 732 seconds
+Score: 76.0/100
+Rank: A (Active - 高参考价值)
+Transcript: Available
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+Please welcome Captain at the Texas 
+Department of Public Safety, John Miller. All right, good morning everybody. My name is John 
+Miller. I'm a captain with the Texas Department of Public Safety, Texas Ranger Division Special 
+Operations Group. We are an organization that responds to critical man-made and natural 
+disasters across the entire state of Texas, focusing on everything from border security 
+operations to hostage rescue events at the tactical level and augmented by our border uh 
+border security operations center and joint operation intelligence centers spread across the 
+uh Texas border at the operational and strategic level. I'm going to be talking to you about the uh 
+runthrough of events leading up to the uh flooding events on the 4th of July in Kirk County. 
+Two months ago today, in hours of darkness, there was a massive storm system that gathered 
+over Kirk County and dropped a record amount of rainfall in Kirk County. Specifically, the area up 
+river of Hunt, Texas, going through the South Fork of the Guadalupe, really starting at Camp Mystic. 
+At the time period from midnight to 3:00 a.m., stream velocity rapidly increased in that area, 
+going from an average rate of about 50 gallons a second through the South Fork flood gauges 
+that we have going up to in the next 3 hours 250 gallons per second. In the next 30 minutes, 
+that 250 gallons per second jumped to 125,000 gallons per second, which equates to about 10t of 
+flooding in the Kirk County area. However, in the next 30 minutes, that rate increased from 125,000 
+gallons per second to 900,000 gallons per second, making a storm system pass through the city of 
+Hunt, Ingram, Kurville, Centerpoint, crossing the Kerr, Kendall County line into the city of Comfort 
+at approximately 1.7 million gallons per second. That storm system continued its path of travel 
+through Kendall County going to the Kendall Kell County line and continuing for an additional 
+27 miles before the Guadaloop River dumps into Canyon Lake. With that, we had approximately 
+a 127mi area that we needed to work through. And I want to say before I move forward that this 
+is all preliminary flood information as academics and experts are still trying to make sense and 
+accurately model what happened on the flood event. However, what we do know is that on the morning 
+of 4th of July, 39 children lost their lives in the initial storm that came through. Those 39 
+uh children ranged in ages of 18 months to 18 years old. Additionally, with that, 80 adults 
+were lost. And making this extremely difficult is the three primary loss sites that we had 
+during the flood event are all campgrounds that were heavily populated due to the fact that 
+it was the 4th of July and people were trying to get riverfront access to planned Fourth of July 
+activities in Kirk County. With that being said, 10 foot of flooding in Kirk County when we were 
+at the 125,000 gallons per second is somewhat somewhat usual. Uh that area is prone to flooding. 
+There have been numerous flooding events. However, this flooding event that came through the area 
+was truly truly off the records. I arrived in uh Kurville on the 4th of July where I've been 
+in the uh incident command uh role for the entire time. It's my first first two days away from there 
+and thank you Palunteer for the opportunity. So, I'm going to talk about what happened uh before 
+my arrival on the day of the 4th. At around 4:00 a.m., local first responders and pre-stage 
+rescue elements uh activated in response to the flood event. Inaccurate and impartial information 
+dominated the space when we first showed up. But through systematic interviews with witnesses and 
+survivors, as well as listening to 911 emergency calls, we were able to start reconstructing the 
+event. And understandably so with the impartial and inaccurate information as a victim's sense 
+of time and space was greatly skewed by the sheer terror of being in a life ordeath situation 
+mirrored with the fact that they were working in torrential downpours unable to see other than 
+quick flashes of lightning that were going through the area at 4:00 a.m. and uh completely unable 
+to notice anything except the audible and visual signatures of being up on the second floor or 
+higher elevation of their houses, hearing victims go by and cars with headlights on screaming for 
+help and uh trying to reconstruct what had taken place around them. With that information that 
+we gathered from those survivors and through teams on the ground reporting back information, 
+we're able to realize that the initial modeling on flood levels that we got was was inaccurate and 
+flood levels had been on average 30 to 40 ft as it was going through the South Fork AO. As that flood 
+continued through the South Fork and met with rock faces and restricted terrain features, reflective 
+pressures pushed the flood waters up to as high as 84 feet in some places. And as that flood plane 
+opened up and came into the flood plane areas near Kurville, Ingram and Centerpoint, pushed 
+out sometimes up to a mile from center line on the river, taking destruction and debris with it. 
+Now, what we were able to do with that information was start tracking and guiding the efforts of 
+first responders shown behind here uh shown shown behind me in pink to uh direct their efforts 
+in our initial early phases of operation. As geography and time increase in any critical event 
+management, specifically a multi-jurisdictional, multi- agency response, we need to effectively 
+manage the distribution of figuring out victims, survivors, and severe property damage across 127 
+river miles. The need to identify and inform these locations was paramount and we needed a tool 
+set to accomplish all these system all these tasks systematically without duplicating efforts 
+and avoiding circular reporting consistently. The need for a consolidated common intelligence 
+and common operating picture was very apparent during initial phases of the operation. The 
+DPS tax server and SAROP uh software that we're using to track operations was very effective 
+initially. However, these two systems that were the primary sources of information for 
+us were not consolidated, were not federated, and were not able to ingest outside data feed 
+showing critical information that we needed. For example, maintaining a single source where we 
+could track property damage, property locations, and develop a system for granting and receiving 
+uh access from property owners uh to go onto their properties and further assess the damage 
+and search for victims. through the event at the end of that first week uh extremely chaotic 
+high volume of casualties uh coming through the area we were able to uh finally be asked 
+by all local, state, and federal leadership, what do you need to continue this colossal task 
+of finding these victims? To uh Dr. Karp's point, I was one of those young special forces soldiers 
+working Afghanistan that had the fortunate opportunity of utilizing Palunteer to inform where 
+my special forces team was operating. And I knew that there was one answer to that question. We 
+needed assistance from Palunteer to build a common operating picture that we would use to drive 
+future operations. DPS leadership requ uh received that request for support. Contact was made between 
+DPS leadership, Mark Bennett, and Laya. And the the ball started moving forward and getting 
+Palunteer out to Texas. We wrapped up our initial conversations with Palunteer and that request for 
+support at about 7 or 5:00 p. a.m. local time back in Texas. From there, the very next day, engineers 
+flew in from Washington DC, New York City, and Rory, Jake, and Patrick joined my team on the 
+ground and were sitting next to me in that EOC by 11:00 a.m. With that, they built the entire Gaia 
+Foundry instance, you've been seeing behind me, in less than 48 hours. As that 48 hour time period 
+passed and the instance was fully mission capable, we began integrating other key stakeholders and 
+this platform became the center of gravity not just for a sole agency but for the event overall 
+with input from our leadership team, ground units and very critical and very useful injects from the 
+Palunteer team. We were able to cons consistently improve and optimize the platform from that point 
+forward with every operational day to increase our efficiency in the area of operation. We were able 
+to build in systems for indicators and warnings, taking real-time stream information from USGS and 
+multiple other sources and monitor and utilize that historic data and real-time variables 
+to develop something more than your standard linear regression models and actually do time 
+series analysis and ARMA models to figure out where we need to go next and develop a system for 
+what needed to happen as the uh as uh follow on rain systems came through the area. As those 
+disperate but unified efforts be were able to start visualizing the graphics that we had at 
+the micro messo and macrolevel unit of analyses, we were able to begin generating statistical 
+analyses as well as predictive analysis for future operational periods. That has allowed 
+us to synthesize maritime, ground, and aerial sensors to direct maritime and ground teams in 
+their search efforts. The search strategy at this point has been through multiple phases. Putting 
+our main search efforts at the highest probability locations guided by uh spatial and temporal 
+analysis to place duplicative efforts at all phases of the operation and be able through uh our 
+one of our chief investigators, Mr. Don Carter, give the families accurate information about the 
+disposition of their loved ones during the event. We were also able to develop a process of 
+cleaning that data, finding where uh where we could give information to those families 
+and drive that effort forward even further uh integrating in intelligence and investigative 
+functions within the team. Palanteer has support us through all five phases of the operation. 
+Beginning with our hasty search through the area coming 127 miles in a period of under three and a 
+half days with approximately 3,000 rescue efforts that were in the area. We're able to generate and 
+manage target intelligence locations based off of reporting back off multiple sensors going into 
+a very thorough maritime search of the entire affected AO and leading to our final phase of 
+operation where we're working on geoysical data collection sourced from synthetic aperture radar, 
+highdensity LAR, high density and highfidelity uh visual uh imagery that's been captured. 
+overlay that with magnetometry, thermal scans, and then use ground sensors with ground 
+penetrating radar, methane, and LAR to figure out where victims are. So, in in giving 
+this presentation and saying everything that I've said up here today, I'd like to close out firstly 
+by saying thank you to Dr. Karp and Palanteer. uh before joining the military, before going into 
+college and grad school and find my way into DPS and the Ranger Special Operations Group, I was 
+raised in Kurville, Texas, uh where my parents, my grandparents still live and several close 
+family friends that were lost in the event. So from Kurville and the citizens of Kirk County, 
+citizens of Texas, from the unified command, from the search efforts that have been out there 
+at the local, state, and then national level as well as the international searchers that have 
+come in to help us. Thank you for giving us the unfair advantage as we continue this herculean 
+task of finding our last two victims of the 119 victims total. As we found 117 victims in record 
+time and uh really outside well above center mass for an event like this, we are still not calling 
+this a victory as we still have two victims that are unaccounted for. So to the families of those 
+victims, specifically to the the family of Mr. Jeff Ramsay, father who is swept away with his 
+wife on the morning of the 4th, and Seal Stewart, a beautiful young 8-year-old camper at Camp Mystic 
+that we're still looking for. To her parents, Will and Cece, thank you for trusting us with this 
+most important mission that we've had. Thank you for allowing us to bring in all these technology 
+sources to search for your loved one and giving us the time and space to employ all these assets 
+to bring some resolution. We love you guys. Thank you for trusting us and thank you 
+to all the people in this room for helping us continue having that unfair advantage 
+and bring these last two home. Thank you.

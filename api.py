@@ -168,46 +168,59 @@ def regen_transcript_index(dashboard_id: str = "palantirtech") -> dict:
 
 def _find_best_transcript_file(video_id: str, dashboard_id: str = "palantirtech") -> str | None:
     """返回该视频最合适的 transcript 文件名（优先有实际内容的文件）。若无可读字幕则返回 None。
-    若通过扫描找到比索引更好的文件，会更新 transcript_index 以便后续请求更快。"""
+    若通过扫描找到比索引更好的文件，会更新 transcript_index 以便后续请求更快。
+    temp 看板若无对应文件则回退到 palantirtech 目录查找（兼容历史数据）。"""
     transcripts_path = get_transcripts_dir(dashboard_id)
     index = load_transcript_index(dashboard_id)
     candidate = index.get(video_id)
     if candidate:
         path = transcripts_path / candidate
+        if not path.exists() and dashboard_id == "temp":
+            path = get_transcripts_dir("palantirtech") / candidate
         if path.exists():
             raw = path.read_text(encoding="utf-8")
             if "NO TRANSCRIPT AVAILABLE" not in raw:
                 return candidate
     # 索引指向空内容或无，扫描 transcripts 查找有内容的同视频文件
-    for txt_path in sorted(transcripts_path.glob("*.txt")):
+    def _scan_dir(scan_path: Path) -> str | None:
+        for txt_path in sorted(scan_path.glob("*.txt")):
+            try:
+                raw = txt_path.read_text(encoding="utf-8")
+                if "NO TRANSCRIPT AVAILABLE" in raw:
+                    continue
+                for line in raw.split("\n"):
+                    if line.strip().startswith("URL:"):
+                        url = line.split(":", 1)[1].strip()
+                        m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
+                        if m and m.group(1) == video_id:
+                            return txt_path.name
+                        break
+            except Exception:
+                pass
+        return None
+
+    found = _scan_dir(transcripts_path)
+    if found:
+        index[video_id] = found
+        idx_path = get_data_dir(dashboard_id) / "transcript_index.json"
         try:
-            raw = txt_path.read_text(encoding="utf-8")
-            if "NO TRANSCRIPT AVAILABLE" in raw:
-                continue
-            for line in raw.split("\n"):
-                if line.strip().startswith("URL:"):
-                    url = line.split(":", 1)[1].strip()
-                    m = re.search(r"[?&]v=([a-zA-Z0-9_-]{11})", url)
-                    if m and m.group(1) == video_id:
-                        found = txt_path.name
-                        # 更新索引，下次直接命中
-                        index[video_id] = found
-                        idx_path = get_data_dir(dashboard_id) / "transcript_index.json"
-                        try:
-                            with open(idx_path, "w", encoding="utf-8") as f:
-                                json.dump(index, f, ensure_ascii=False, indent=2)
-                        except Exception:
-                            pass
-                        return found
-                    break
+            with open(idx_path, "w", encoding="utf-8") as f:
+                json.dump(index, f, ensure_ascii=False, indent=2)
         except Exception:
             pass
+        return found
+    if dashboard_id == "temp":
+        found = _scan_dir(get_transcripts_dir("palantirtech"))
+        if found:
+            return found
     return None
 
 
 def read_transcript_content(filename: str, dashboard_id: str = "palantirtech") -> tuple[str, str]:
-    """返回 (metadata_section, transcript_text)"""
+    """返回 (metadata_section, transcript_text)。temp 看板若无该文件则回退到 palantirtech 读取（兼容历史数据）。"""
     path = get_transcripts_dir(dashboard_id) / filename
+    if not path.exists() and dashboard_id == "temp":
+        path = get_transcripts_dir("palantirtech") / filename
     if not path.exists():
         return "", ""
     with open(path, encoding="utf-8") as f:
@@ -343,12 +356,23 @@ def get_status(dashboard_id: str = "palantirtech"):
         return {"current": 0, "total": 0, "status": "idle", "phase": "process", "failed_count": 0}
 
 
+@app.get("/api/transcript-ready/{video_id}")
+def transcript_ready(video_id: str, dashboard_id: str = "palantirtech"):
+    """检查该视频的字幕是否已生成并可用（用于转换完成后的轮询）"""
+    filename = _find_best_transcript_file(video_id, dashboard_id)
+    return {"ready": bool(filename)}
+
+
 @app.get("/api/transcript/{video_id}")
 def get_transcript(video_id: str, dashboard_id: str = "palantirtech"):
     """根据 video_id 获取字幕内容。自动优先选用有实际内容的文件（即使 transcript_index 指向空文件）"""
     filename = _find_best_transcript_file(video_id, dashboard_id)
     if not filename:
-        raise HTTPException(status_code=404, detail="未找到该视频的字幕")
+        tp = get_transcripts_dir(dashboard_id)
+        raise HTTPException(
+            status_code=404,
+            detail=f"未找到该视频的字幕。字幕目录: {tp}，请确认该目录存在且包含对应 .txt 文件"
+        )
     meta, transcript = read_transcript_content(filename, dashboard_id)
     return {"metadata": meta, "transcript": transcript, "filename": filename}
 

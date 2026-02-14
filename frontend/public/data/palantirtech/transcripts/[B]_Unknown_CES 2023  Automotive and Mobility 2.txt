@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: CES 2023 | Automotive and Mobility
+URL: https://www.youtube.com/watch?v=UbWKyMWlD6M
+Published: Unknown
+View Count: 0
+Duration: 0 seconds
+Score: 37.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 其他
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+This is a company that's focused on building the products that we think the world really needs. And that's led us to throw ourselves against the hardest problems our customers can give us. As you can imagine, we have so much data from our plans, from our supply chain. And we worked on over 30 projects last year. We have double digit million euro savings achieved this year. We have a roadmap to achieve 3 digit million euro savings. And Palantir with the ontology, with the know-how helped us really to embark on this ambitious journey. Take that real complexity, terabytes, petabytes of data, whatever it is. Map them into these objects that people actually think about. And then on top of that, it's not just data. You know, this needs to be a living, breathing, dynamic, evolving organisation. So the ontology also needs to be a living, breathing, dynamically evolving representation of that. This is exciting for us to discuss opportunities with you guys in the room, with Palantir specifically, of course. Like how can we make the best out of that type of data? How can we facilitate data? I guess we have quite a view on how we can collect data. But then it's really about how do we build use cases on top of it? How do we monetize? This is the challenge for us that we are interested to discuss with you guys in the room. So, therefore, again, for the opportunity to have the opportunity to network today, but also to be part of this bigger group, which is quite an exciting one, breathing through the booklet. So, thanks for having us.

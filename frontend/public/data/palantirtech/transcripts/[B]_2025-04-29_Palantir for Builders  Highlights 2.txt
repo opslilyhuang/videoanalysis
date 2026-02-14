@@ -1,0 +1,19 @@
+================================================================================
+METADATA
+================================================================================
+Title: Palantir for Builders | Highlights
+URL: https://www.youtube.com/watch?v=2Els62b1_CY
+Published: 2025-04-29
+View Count: 3,742
+Duration: 144 seconds
+Score: 58.0/100
+Rank: B (Basic - 基础背景资料)
+Transcript: Available
+Category: 
+Source: whisper
+
+================================================================================
+TRANSCRIPT
+================================================================================
+
+To really understand Pantipa Builders, it's important to go back and understand what Pantis offering is in general. The deployment mechanism is very much our software and our people and that's what we call for deployed engineering. It's really good at getting the important pieces of a business together in the form of data and automating that in their platform. The Pantipa Builders program does is it allows us to work with startups through to medium size companies, growing companies. One tier is actually a shockingly good tool nowadays, even if you're not a Fortune 500 even if you're a startup studying it. It is the same enterprise-grade software, but we're really leaning on the talent of our customers to do the building. Just being able to go deep on these things. We've been that sort of no-code, low-code team for a long time, but again over the last year we've just exploded in growth. It's across the company. We've needed to do a lot more complex things. We've been doing a lot more things in code. They really have this spirit of building. They know that they want to solve this problem, but they also want their engineers to be empowered to build it. I'm less interested in writing code and being an engineer than I am in shipping a product that does something actually in the world that I view as a good thing. Deying kind of the builders program is a way of really authentically growing this FDE culture outside of Pounty is another thing that I've been seeing. The end of today is it's about speed. I need to get something out there, right? And it needs to be very quickly evaluated. Instead, what the market wants and needs and then I need to divert. Why do we call it builders instead of developers or these things? And really is because anybody can build. Yes. It's the cool part about the tools. You can have a person that is very proficient at code building and local tools because it's faster. It's easier. And when they need the Pro Code option, they can exit this component of that component and allows them to move very, very quickly. And it's like, oh, OK. Now we can really go fast with some of this stuff. So a couple of weeks into that is when my co-founder Peter and I said, OK, we're doing a company around this. And we're going to build as much as we can on the Palantir platform.
