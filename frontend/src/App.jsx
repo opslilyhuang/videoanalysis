@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, Settings, Sun, Moon, Languages, Play, LogOut, ChevronDown, ChevronUp, FileText, BookOpen } from 'lucide-react';
+import { RefreshCw, Settings, Sun, Moon, Languages, Play, LogOut, ChevronDown, ChevronUp, FileText, BookOpen, History } from 'lucide-react';
 import { useData } from './hooks/useData';
 import { useApp } from './context/AppContext';
 import { useAuth } from './context/AuthContext';
@@ -17,6 +17,7 @@ import { RightSidebar } from './components/RightSidebar';
 import { ResizableLayout } from './components/ResizableLayout';
 import { ReportModal } from './components/ReportModal';
 import { UsageGuide } from './components/UsageGuide';
+import { ChangelogModal } from './components/ChangelogModal';
 import { FilterProvider } from './context/FilterContext';
 import { useFavoritesRecycle } from './context/FavoritesRecycleContext';
 import { apiFetch } from './utils/api';
@@ -32,6 +33,7 @@ function App() {
   const [progressHistoryOpen, setProgressHistoryOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [changelogOpen, setChangelogOpen] = useState(false);
   const [whisperConfirmOpen, setWhisperConfirmOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [scrollToVideoId, setScrollToVideoId] = useState(null);
@@ -98,6 +100,14 @@ function App() {
           >
             <BookOpen size={16} />
             {t(lang, 'usageGuide')}
+          </button>
+          <button
+            onClick={() => setChangelogOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm text-[var(--muted)] hover:text-[var(--text)]"
+            title={t(lang, 'changelog')}
+          >
+            <History size={16} />
+            {t(lang, 'changelog')}
           </button>
           <div className="flex items-center gap-2 ml-2">
             <button
@@ -285,6 +295,7 @@ function App() {
         config={config}
       />
       <UsageGuide open={guideOpen} onClose={() => setGuideOpen(false)} lang={lang} />
+      <ChangelogModal open={changelogOpen} onClose={() => setChangelogOpen(false)} lang={lang} />
       {whisperConfirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 max-w-md mx-4 shadow-xl">
