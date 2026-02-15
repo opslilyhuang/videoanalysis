@@ -309,7 +309,7 @@ class PalantirVideoAnalyzer:
 
     def get_transcript(self, video_id: str, timeout_ms: int = 10000) -> Optional[str]:
         """
-        获取视频字幕（增强版 fallback 策略）
+        获取视频字幕（智能 fallback 策略）
 
         Args:
             video_id: YouTube 视频 ID
@@ -318,38 +318,64 @@ class PalantirVideoAnalyzer:
         Returns:
             字幕文本，如果所有方法都失败则返回 None
 
-        Fallback 策略（优化版）：
-            1. BibiGPT API (10秒超时，不需要访问YouTube)
-            2. YouTube Transcript API (10秒超时)
-            3. yt-dlp 下载字幕 (10秒超时)
-            4. Whisper 转录 (5分钟，本地 faster-whisper)
+        Fallback 策略（根据运行环境自动调整）：
+
+        【本地环境 - 可访问 YouTube】
+            1. YouTube Transcript API (10秒超时，免费)
+            2. yt-dlp 下载字幕 (10秒超时，免费)
+            3. BibiGPT API (10秒超时，需要 API token)
+            4. Whisper 转录 (3-5分钟，本地 faster-whisper，免费)
+
+        【云环境 - 无法访问 YouTube】
+            1. BibiGPT API (10秒超时，需要 API token，无需访问 YouTube)
+            2. Whisper 转录 (3-5分钟，本地 faster-whisper，免费)
+
+        注意：YouTube API 和 yt-dlp 在云环境会被跳过（因为网络不可达）
         """
         start_time = time.time()
         logger.info(f"开始提取字幕: {video_id}")
 
-        # 方法0: BibiGPT API (新增，最快速)
-        result = self._try_bibigpt_api(video_id, timeout_ms)
-        if result and result.success:
-            logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
-            extraction_stats.record("bibigpt_api", True)
-            return result.text
+        # 检测运行环境
+        can_access_youtube = self._can_access_youtube()
 
-        # 方法1: YouTube Transcript API
-        result = self._try_youtube_transcript_api(video_id, timeout_ms)
-        if result and result.success:
-            logger.info(f"✓ YouTube API 成功: {video_id} (耗时: {result.duration_ms}ms)")
-            extraction_stats.record("youtube_api", True)
-            return result.text
+        if can_access_youtube:
+            # 本地环境：优先使用免费的 YouTube API/yt-dlp
+            logger.info(f"[本地环境] 使用策略: YouTube API → yt-dlp → BibiGPT → Whisper")
 
-        # 方法2: yt-dlp 下载字幕
-        result = self._try_yt_dlp_subtitles(video_id, timeout_ms)
-        if result and result.success:
-            logger.info(f"✓ yt-dlp 成功: {video_id} (耗时: {result.duration_ms}ms)")
-            extraction_stats.record("yt_dlp", True)
-            return result.text
+            # 方法1: YouTube Transcript API（免费）
+            result = self._try_youtube_transcript_api(video_id, timeout_ms)
+            if result and result.success:
+                logger.info(f"✓ YouTube API 成功: {video_id} (耗时: {result.duration_ms}ms)")
+                extraction_stats.record("youtube_api", True)
+                return result.text
 
-        # 方法3: Whisper 转录（本地，无需外网）
-        logger.warning(f"前三种方法失败，使用本地 Whisper: {video_id}")
+            # 方法2: yt-dlp 下载字幕（免费）
+            result = self._try_yt_dlp_subtitles(video_id, timeout_ms)
+            if result and result.success:
+                logger.info(f"✓ yt-dlp 成功: {video_id} (耗时: {result.duration_ms}ms)")
+                extraction_stats.record("yt_dlp", True)
+                return result.text
+
+            # 方法3: BibiGPT API（需要 token）
+            result = self._try_bibigpt_api(video_id, timeout_ms)
+            if result and result.success:
+                logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
+                extraction_stats.record("bibigpt_api", True)
+                return result.text
+
+        else:
+            # 云环境：跳过 YouTube API/yt-dlp（网络不可达），直接使用 BibiGPT
+            logger.info(f"[云环境] 使用策略: BibiGPT → Whisper（跳过 YouTube API/yt-dlp）")
+
+            # 方法1: BibiGPT API（需要 token，无需访问 YouTube）
+            result = self._try_bibigpt_api(video_id, timeout_ms)
+            if result and result.success:
+                logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
+                extraction_stats.record("bibigpt_api", True)
+                return result.text
+
+        # 最后兜底：Whisper 转录（本地，免费，但耗时较长）
+        logger.warning(f"前述方法失败，使用本地 Whisper: {video_id}")
         result = self._try_whisper_transcription(video_id)
         if result and result.success:
             logger.info(f"✓ Whisper 成功: {video_id} (耗时: {result.duration_ms}ms)")
@@ -707,6 +733,38 @@ class PalantirVideoAnalyzer:
             return None
 
     _whisper_model_cache = None
+    _can_access_youtube_cache = None
+
+    def _can_access_youtube(self, timeout_ms: int = 3000) -> bool:
+        """
+        检测当前环境是否能访问 YouTube
+        本地环境：可以访问，优先使用 YouTube API/yt-dlp（免费）
+        云环境：无法访问，直接使用 BibiGPT → Whisper
+        """
+        if PalantirVideoAnalyzer._can_access_youtube_cache is not None:
+            return PalantirVideoAnalyzer._can_access_youtube_cache
+
+        try:
+            import socket
+            # 尝试连接 YouTube（端口 443，超时 3 秒）
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(timeout_ms / 1000)
+            result = sock.connect_ex(("www.youtube.com", 443))
+            sock.close()
+
+            can_access = (result == 0)
+            PalantirVideoAnalyzer._can_access_youtube_cache = can_access
+
+            if can_access:
+                logger.info("✓ 检测到可以访问 YouTube（本地环境），优先使用 YouTube API/yt-dlp")
+            else:
+                logger.info("✗ 检测到无法访问 YouTube（云环境），使用 BibiGPT → Whisper")
+
+            return can_access
+        except Exception as e:
+            logger.warning(f"网络检测失败: {e}，假设无法访问 YouTube")
+            PalantirVideoAnalyzer._can_access_youtube_cache = False
+            return False
 
     def _transcribe_whisper_local(self, video_id: str) -> Optional[str]:
         """使用本地 faster-whisper 转录（需 ffmpeg 用于音频提取）"""
