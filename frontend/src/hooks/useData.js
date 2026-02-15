@@ -68,6 +68,35 @@ export function useData(baseUrl = '') {
 
   const fetchVideos = useCallback(async (id) => {
     try {
+      // temp/slim 使用 API，与 temp-convert-status 同数据源，确保转换完成后列表正确更新
+      if (id === 'temp' || id === 'slim') {
+        const r = await apiFetch(`/api/master-index?dashboard_id=${id}&_t=${Date.now()}`);
+        if (!r.ok) {
+          setVideos([]);
+          setVideosChannelId(id);
+          return;
+        }
+        const rows = await r.json();
+        const getVid = (url) => (url || '').match(/[?&]v=([a-zA-Z0-9_-]{11})/)?.[1] || '';
+        let meta = {};
+        try {
+          const metaRes = await apiFetch(`/api/video-meta?dashboard_id=${id}`);
+          if (metaRes.ok) meta = await metaRes.json();
+        } catch {}
+        setVideos((rows || []).map((r, i) => {
+          const vid = getVid(r.URL);
+          const m = meta[vid] || {};
+          return {
+            ...r,
+            Keywords: r.Keywords || (Array.isArray(m.keywords) ? m.keywords.join(', ') : (m.keywords || '')),
+            Category: r.Category || r.category || m.category || '',
+            _id: i,
+          };
+        }));
+        setVideosChannelId(id);
+        setError(null);
+        return;
+      }
       const csvRes = await fetch(dataUrl(`${id}/master_index.csv?t=${Date.now()}`), { cache: 'no-store' });
       if (!csvRes.ok) {
         setVideos([]);

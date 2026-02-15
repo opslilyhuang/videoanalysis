@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { RefreshCw, Settings, Sun, Moon, Languages, Play, LogOut, ChevronDown, ChevronUp, FileText, BookOpen, History } from 'lucide-react';
 import { useData } from './hooks/useData';
 import { useApp } from './context/AppContext';
@@ -83,7 +84,7 @@ function App() {
   }, [isTempBoard]);
 
   const handleTempDelete = async (videoId) => {
-    const r = await apiFetch(`/api/temp-delete-video?video_id=${encodeURIComponent(videoId)}`, { method: 'POST' });
+    const r = await apiFetch(`/api/temp-delete-video?video_id=${encodeURIComponent(videoId)}&dashboard_id=temp`, { method: 'POST' });
     if (r.ok) refresh();
   };
 
@@ -93,6 +94,9 @@ function App() {
         {/* 第一行：标题 + 使用指南 + 主题/语言/消息/退出 */}
         <div className="flex items-center gap-4 flex-wrap">
           <h1 className="text-xl font-bold">{t(lang, 'title')}</h1>
+          <Link to="/upload" className="text-sm text-[var(--muted)] hover:text-[var(--accent)]">
+            {t(lang, 'slimEntry')} →
+          </Link>
           <button
             onClick={() => setGuideOpen(true)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)] text-sm text-[var(--muted)] hover:text-[var(--text)]"
@@ -206,7 +210,7 @@ function App() {
       <div className="flex-1 min-h-0 overflow-auto px-6 pb-6">
         <div className="space-y-6">
         {isTempBoard && (
-          <TempBoardPanel onConvert={refresh} onCleanEmpty={refresh} loading={runAnalysisLoading} lang={lang} />
+          <TempBoardPanel onConvert={refresh} onCleanEmpty={refresh} loading={runAnalysisLoading} lang={lang} dashboardId="temp" />
         )}
         {!isTempBoard && (
           <div className="border border-[var(--border)] rounded-lg overflow-hidden">

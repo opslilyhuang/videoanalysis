@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 
 export function LoginPage({ onLogin }) {
@@ -57,6 +58,11 @@ export function LoginPage({ onLogin }) {
           >
             登录
           </button>
+          <p className="text-center text-sm text-[var(--muted)] mt-4">
+            <Link to="/upload" className="text-[var(--accent)] hover:underline">极简上传</Link>
+            <span className="mx-1">·</span>
+            无需登录，每日 10 个
+          </p>
         </form>
       </div>
     </div>

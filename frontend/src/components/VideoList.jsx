@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, ExternalLink, FileText, FileQuestion, Mic, X, Star, Trash2, RotateCcw, Download } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, ExternalLink, FileText, FileQuestion, Mic, X, Star, Trash2, RotateCcw, Download, Copy, Loader2 } from 'lucide-react';
+import JSZip from 'jszip';
 import { t, getViewsOptions } from '../i18n';
 import { useFilters } from '../context/FilterContext';
 import { useLayout } from '../context/LayoutContext';
@@ -35,8 +36,61 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const [batchDownloading, setBatchDownloading] = useState(false);
+  const [batchDownloadOpen, setBatchDownloadOpen] = useState(false);
 
-  const isTempWithDelete = dashboardId === 'temp' && onTempDelete;
+  const isTempWithDelete = (dashboardId === 'temp' || dashboardId === 'slim') && onTempDelete;
+
+  const handleBatchDownloadTranscripts = async (mode, format) => {
+    if (!dashboardId || selectedIds.size === 0) return;
+    setBatchDownloadOpen(false);
+    setBatchDownloading(true);
+    const { apiFetch } = await import('../utils/api');
+    const ids = [...selectedIds];
+    const selectedVideos = filtered.filter((v) => ids.includes(extractVideoId(v.URL)));
+    const results = [];
+    for (const v of selectedVideos) {
+      const vid = extractVideoId(v.URL);
+      if (!vid) continue;
+      try {
+        const r = await apiFetch(`/api/transcript/${vid}?dashboard_id=${dashboardId}`);
+        if (r.ok) {
+          const d = await r.json();
+          const text = d.transcript || '';
+          results.push({ vid, title: (v.Title || vid).replace(/[^\w\s\u4e00-\u9fa5-]/g, '').slice(0, 50), text });
+        }
+      } catch {}
+    }
+    try {
+      if (mode === 'merged') {
+        const sep = '\n\n' + '='.repeat(80) + '\n\n';
+        const body = results.map((r) => `# ${r.title}\n\n${r.text}`).join(sep);
+        const content = format === 'md' ? body : results.map((r) => r.text).join(sep);
+        const ext = format === 'md' ? 'md' : 'txt';
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `transcripts.${ext}`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      } else {
+        const zip = new JSZip();
+        const ext = format === 'md' ? 'md' : 'txt';
+        for (const r of results) {
+          const content = format === 'md' ? `# ${r.title}\n\n${r.text}` : r.text;
+          zip.file(`${r.title}.${ext}`, content);
+        }
+        const blob = await zip.generateAsync({ type: 'blob' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'transcripts.zip';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    } finally {
+      setBatchDownloading(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     let list = [...videos];
@@ -290,7 +344,7 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
                 const r = await apiFetch('/api/temp-delete-videos', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ video_ids: [...selectedIds] }),
+                  body: JSON.stringify({ video_ids: [...selectedIds], dashboard_id: dashboardId }),
                 });
                 if (r.ok) {
                   setSelectedIds(new Set());
@@ -302,6 +356,35 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
             >
               {t(lang, 'tempBatchDelete', { n: selectedIds.size })}
             </button>
+            <div className="relative">
+              <button
+                onClick={() => setBatchDownloadOpen((o) => !o)}
+                disabled={selectedIds.size === 0 || batchDownloading}
+                className="flex items-center gap-1 px-2 py-1 text-xs rounded border border-[var(--border)] hover:border-[var(--accent)] disabled:opacity-50"
+              >
+                {batchDownloading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
+                {t(lang, 'tempDownloadTranscripts')}
+              </button>
+              {batchDownloadOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setBatchDownloadOpen(false)} />
+                  <div className="absolute left-0 top-full mt-1 py-1 bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-xl z-20 min-w-[140px]">
+                    <button onClick={() => handleBatchDownloadTranscripts('merged', 'txt')} className="w-full px-3 py-2 text-left text-xs hover:bg-white/10">
+                      {t(lang, 'tempDownloadMerged')} (TXT)
+                    </button>
+                    <button onClick={() => handleBatchDownloadTranscripts('merged', 'md')} className="w-full px-3 py-2 text-left text-xs hover:bg-white/10">
+                      {t(lang, 'tempDownloadMerged')} (MD)
+                    </button>
+                    <button onClick={() => handleBatchDownloadTranscripts('zip', 'txt')} className="w-full px-3 py-2 text-left text-xs hover:bg-white/10">
+                      {t(lang, 'tempDownloadZip')} (TXT)
+                    </button>
+                    <button onClick={() => handleBatchDownloadTranscripts('zip', 'md')} className="w-full px-3 py-2 text-left text-xs hover:bg-white/10">
+                      {t(lang, 'tempDownloadZip')} (MD)
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             <button
               onClick={() => {
                 const headers = ['Rank', 'Score', 'Title', 'Date', 'Views', 'Transcript', 'Category', 'URL'];
@@ -435,13 +518,68 @@ export function VideoList({ videos, loading, selectedVideo, onVideoSelect, lang 
 const CONVERT_POLL_INTERVAL = 5000;
 const CONVERT_POLL_MAX = 120;
 
+function InlineCopyButton({ vid, dashboardId, lang, title }) {
+  const [loading, setLoading] = useState(false);
+  const handleClick = async (e) => {
+    e.stopPropagation();
+    if (!vid || !dashboardId || loading) return;
+    setLoading(true);
+    try {
+      const { apiFetch } = await import('../utils/api');
+      const r = await apiFetch(`/api/transcript/${vid}?dashboard_id=${dashboardId}`);
+      if (r.ok) {
+        const d = await r.json();
+        await navigator.clipboard?.writeText(d.transcript || '');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <button onClick={handleClick} disabled={loading} className="p-1.5 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)] hover:text-[var(--accent)] disabled:opacity-50" title={title}>
+      {loading ? <Loader2 size={16} className="animate-spin" /> : <Copy size={16} />}
+    </button>
+  );
+}
+
+function InlineDownloadButton({ video, vid, dashboardId, lang, title }) {
+  const [loading, setLoading] = useState(false);
+  const handleClick = async (e) => {
+    e.stopPropagation();
+    if (!vid || !dashboardId || loading) return;
+    setLoading(true);
+    try {
+      const { apiFetch } = await import('../utils/api');
+      const r = await apiFetch(`/api/transcript/${vid}?dashboard_id=${dashboardId}`);
+      if (r.ok) {
+        const d = await r.json();
+        const text = d.transcript || '';
+        const name = ((video?.Title || vid).replace(/[^\w\s\u4e00-\u9fa5-]/g, '') || 'transcript').slice(0, 50) + '.txt';
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <button onClick={handleClick} disabled={loading} className="p-1.5 rounded hover:bg-[var(--accent)]/20 text-[var(--muted)] hover:text-[var(--accent)] disabled:opacity-50" title={title}>
+      {loading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+    </button>
+  );
+}
+
 function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect, onVideoClick, dashboardId, onConvertSuccess, onTranscriptConverted, viewMode = 'main', onTempDelete, isTempWithDelete, selectedIds, onToggleSelect, onFavorite, onRecycle, onRestore, onRemoveFromRecycle, isFavorite, isRecycled }) {
   const rankColor = RANK_COLORS[video.Rank] || 'var(--muted)';
-  const vid = extractVideoId(video.URL);
+  const vid = extractVideoId(video.URL || video.url);
   const [converting, setConverting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const showFavRecycle = dashboardId && dashboardId !== 'temp' && (onFavorite || onRecycle || onRestore || onRemoveFromRecycle);
-  const showTempDelete = dashboardId === 'temp' && onTempDelete;
+  const showTempDelete = (dashboardId === 'temp' || dashboardId === 'slim') && onTempDelete;
 
   const handleConvert = async (e) => {
     e.stopPropagation();
@@ -467,127 +605,141 @@ function VideoRow({ video, lang = 'zh', expanded, onToggle, isSelected, onSelect
     }
   };
 
+  const handleDeleteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!vid) return;
+    if (deleting) return;
+    if (!window.confirm(t(lang, 'tempDeleteConfirm'))) return;
+    setDeleting(true);
+    Promise.resolve(onTempDelete?.(vid)).finally(() => setDeleting(false));
+  };
+
   return (
     <div
       className={`bg-[var(--surface)] border rounded-lg overflow-hidden transition-all ${
         expanded ? 'border-[var(--accent)]' : isSelected ? 'border-[var(--accent)]/50' : 'border-[var(--border)]'
       }`}
     >
-      <button
-        onClick={() => { onToggle(); onSelect?.(); }}
-        className="w-full text-left px-4 py-3 flex items-center gap-4 hover:bg-white/5"
-      >
-        {isTempWithDelete && vid && (
-          <input
-            type="checkbox"
-            checked={selectedIds?.has(vid) || false}
-            onChange={(e) => { e.stopPropagation(); onToggleSelect?.(vid); }}
-            onClick={(e) => e.stopPropagation()}
-            className="shrink-0"
-          />
-        )}
-        <span
-          className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm text-black shrink-0"
-          style={{ backgroundColor: rankColor }}
+      <div className="flex items-center gap-4 px-4 py-3">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => { onToggle(); onSelect?.(); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); onSelect?.(); } }}
+          className="flex-1 min-w-0 flex items-center gap-4 hover:bg-white/5 -m-3 p-3 rounded cursor-pointer"
         >
-          {video.Rank}
-        </span>
-        <div className="flex-1 min-w-0">
-          <div className="font-medium truncate">{video.Title}</div>
-          <div className="text-sm text-[var(--muted)] flex gap-4 mt-0.5">
-            <span>{video.Date}</span>
-            <span>Score: {video.Score}</span>
-            <span>Views: {Number(video.Views || 0).toLocaleString()}</span>
-            <span className="flex items-center gap-2">
-              {video.Transcript === '有' ? (
-                (video.TranscriptSource || '').toLowerCase() === 'whisper' ? (
-                  <Mic size={14} className="text-violet-500" title={t(lang, 'transcriptWhisper')} />
+          {isTempWithDelete && vid && (
+            <input
+              type="checkbox"
+              checked={selectedIds?.has(vid) || false}
+              onChange={(e) => { e.stopPropagation(); onToggleSelect?.(vid); }}
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0"
+            />
+          )}
+          <span
+            className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm text-black shrink-0"
+            style={{ backgroundColor: rankColor }}
+          >
+            {video.Rank}
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="font-medium truncate">{video.Title}</div>
+            <div className="text-sm text-[var(--muted)] flex gap-4 mt-0.5">
+              <span>{video.Date}</span>
+              <span>Score: {video.Score}</span>
+              <span>Views: {Number(video.Views || 0).toLocaleString()}</span>
+              <span className="flex items-center gap-2">
+                {video.Transcript === '有' ? (
+                  (video.TranscriptSource || '').toLowerCase() === 'whisper' ? (
+                    <Mic size={14} className="text-violet-500" title={t(lang, 'transcriptWhisper')} />
+                  ) : (
+                    <FileText size={14} className="text-green-500" title={t(lang, 'transcriptHas')} />
+                  )
                 ) : (
-                  <FileText size={14} className="text-green-500" title={t(lang, 'transcriptHas')} />
-                )
+                  <>
+                    <FileQuestion size={14} className="text-amber-500" />
+                    {dashboardId && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleConvert(e); }}
+                        disabled={converting}
+                        className="px-2 py-0.5 text-xs rounded bg-amber-500/20 text-amber-600 hover:bg-amber-500/30 disabled:opacity-50"
+                      >
+                        {converting ? '...' : t(lang, 'convertTranscript')}
+                      </button>
+                    )}
+                  </>
+                )}
+                {video.Transcript === '有' ? t(lang, 'transcriptHas') : t(lang, 'transcriptNo')}
+              </span>
+            </div>
+          </div>
+          {showFavRecycle && (
+            <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+              {viewMode === 'recycle' ? (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onRestore?.(dashboardId, vid); }}
+                    className="p-1.5 rounded hover:bg-emerald-500/20 text-emerald-500"
+                    title={t(lang, 'restoreFromRecycle')}
+                  >
+                    <RotateCcw size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); window.confirm(lang === 'zh' ? '确定彻底删除？' : 'Delete permanently?') && onRemoveFromRecycle?.(dashboardId, vid); }}
+                    className="p-1.5 rounded hover:bg-red-500/20 text-red-500"
+                    title={t(lang, 'removeFromRecycle')}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </>
               ) : (
                 <>
-                  <FileQuestion size={14} className="text-amber-500" />
-                  {dashboardId && dashboardId !== 'temp' && (
-                    <button
-                      onClick={handleConvert}
-                      disabled={converting}
-                      className="px-2 py-0.5 text-xs rounded bg-amber-500/20 text-amber-600 hover:bg-amber-500/30 disabled:opacity-50"
-                    >
-                      {converting ? '...' : t(lang, 'convertTranscript')}
-                    </button>
-                  )}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onFavorite?.(dashboardId, vid); }}
+                    className={`p-1.5 rounded hover:bg-amber-500/20 ${(isFavorite && isFavorite(dashboardId, vid)) ? 'text-amber-500' : 'text-[var(--muted)]'}`}
+                    title={(isFavorite && isFavorite(dashboardId, vid)) ? t(lang, 'favoriteRemove') : t(lang, 'favoriteAdd')}
+                  >
+                    <Star size={16} fill={(isFavorite && isFavorite(dashboardId, vid)) ? 'currentColor' : 'none'} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onRecycle?.(dashboardId, vid); }}
+                    className="p-1.5 rounded hover:bg-red-500/20 text-[var(--muted)] hover:text-red-500"
+                    title={t(lang, 'moveToRecycle')}
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </>
               )}
-              {video.Transcript === '有' ? t(lang, 'transcriptHas') : t(lang, 'transcriptNo')}
-            </span>
-          </div>
+            </div>
+          )}
+          {expanded ? (
+            <ChevronUp size={20} className="text-[var(--muted)] shrink-0" />
+          ) : (
+            <ChevronDown size={20} className="text-[var(--muted)] shrink-0" />
+          )}
         </div>
         {showTempDelete && (
-          <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-1 shrink-0">
+            {video.Transcript === '有' && (
+              <>
+                <InlineCopyButton vid={vid} dashboardId={dashboardId} lang={lang} title={t(lang, 'tempCopyRow')} />
+                <InlineDownloadButton video={video} vid={vid} dashboardId={dashboardId} lang={lang} title={t(lang, 'tempDownloadRow')} />
+              </>
+            )}
             <button
-              onClick={async () => {
-                if (!vid || deleting || !window.confirm(t(lang, 'tempDeleteConfirm'))) return;
-                setDeleting(true);
-                try {
-                  await onTempDelete?.(vid);
-                } finally {
-                  setDeleting(false);
-                }
-              }}
-              disabled={deleting}
-              className="p-1.5 rounded hover:bg-red-500/20 text-red-500 disabled:opacity-50"
+              type="button"
+              onClick={handleDeleteClick}
+              disabled={deleting || !vid}
+              className="p-1.5 rounded hover:bg-red-500/20 text-red-500 disabled:opacity-50 shrink-0"
               title={t(lang, 'tempDeleteFromList')}
             >
               <Trash2 size={16} />
             </button>
           </div>
         )}
-        {showFavRecycle && (
-          <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-            {viewMode === 'recycle' ? (
-              <>
-                <button
-                  onClick={() => onRestore?.(dashboardId, vid)}
-                  className="p-1.5 rounded hover:bg-emerald-500/20 text-emerald-500"
-                  title={t(lang, 'restoreFromRecycle')}
-                >
-                  <RotateCcw size={16} />
-                </button>
-                <button
-                  onClick={() => window.confirm(lang === 'zh' ? '确定彻底删除？' : 'Delete permanently?') && onRemoveFromRecycle?.(dashboardId, vid)}
-                  className="p-1.5 rounded hover:bg-red-500/20 text-red-500"
-                  title={t(lang, 'removeFromRecycle')}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => onFavorite?.(dashboardId, vid)}
-                  className={`p-1.5 rounded hover:bg-amber-500/20 ${(isFavorite && isFavorite(dashboardId, vid)) ? 'text-amber-500' : 'text-[var(--muted)]'}`}
-                  title={(isFavorite && isFavorite(dashboardId, vid)) ? t(lang, 'favoriteRemove') : t(lang, 'favoriteAdd')}
-                >
-                  <Star size={16} fill={(isFavorite && isFavorite(dashboardId, vid)) ? 'currentColor' : 'none'} />
-                </button>
-                <button
-                  onClick={() => onRecycle?.(dashboardId, vid)}
-                  className="p-1.5 rounded hover:bg-red-500/20 text-[var(--muted)] hover:text-red-500"
-                  title={t(lang, 'moveToRecycle')}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </>
-            )}
-          </div>
-        )}
-        {expanded ? (
-          <ChevronUp size={20} className="text-[var(--muted)] shrink-0" />
-        ) : (
-          <ChevronDown size={20} className="text-[var(--muted)] shrink-0" />
-        )}
-      </button>
+      </div>
       {expanded && (
         <div className="px-4 pb-4 pt-0 border-t border-[var(--border)] mt-0 pt-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mb-3">

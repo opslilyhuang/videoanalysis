@@ -3,6 +3,20 @@ import { t } from '../i18n';
 
 const CHANGELOG_ZH = [
   {
+    version: 'v1.6.0',
+    date: '2025-02-15',
+    title: '极简上传 & 字幕增强',
+    features: [
+      { icon: '🚀', title: '极简上传入口', desc: '访问 /upload 无需登录即可使用；游客每日 5 个视频，登录后无限制；适合快速获取字幕并导出到 NotebookLM' },
+      { icon: '📥', title: '多选下载字幕', desc: '勾选视频后一键下载：合并 TXT/MD 或 ZIP 包；每行支持复制/下载单条字幕；批量删除、导出 CSV' },
+      { icon: '📋', title: '字幕体验增强', desc: '摘要/字幕一键复制；导出 TXT 或 Markdown（原/中/双语）；时间戳点击跳转；搜索词高亮；单段复制' },
+      { icon: '📅', title: '时间筛选快捷', desc: '日期范围支持近 1 周/1 月/3 月/1 年快捷按钮' },
+      { icon: '🤖', title: '智能问答增强', desc: '追问链式对话；引用来源高亮；常用问题模板（总结要点、提取金句、核心观点等）' },
+      { icon: '📊', title: '报告与统计', desc: '报告支持导出 PDF 或 Markdown；统计面板新增等级分布、按月视频数、按月播放量图表' },
+      { icon: '🛡️', title: '稳定性优化', desc: 'API 自动重试（5xx、网络错误）；弹窗支持 Esc 关闭；可访问性改进' },
+    ],
+  },
+  {
     version: 'v1.5.0',
     date: '2025-02-15',
     title: '多轮问答 & 收藏系统',
@@ -12,7 +26,7 @@ const CHANGELOG_ZH = [
       { icon: '🎨', title: '交互体验优化', desc: '视频列表展示优化，支持快速筛选；字幕加载和显示性能提升；报告生成功能增强' },
       { icon: '🚀', title: '部署配置优化', desc: '新增标准化 Nginx 部署配置文件，自动化部署流程优化，提升运维效率' },
     ],
-    tech: ['后端：FastAPI + Python 3.11', '前端：React + Vite + Ant Design', '部署：Nginx 反向代理 + systemd'],
+    tech: ['后端：FastAPI + Python 3.11', '前端：React + Vite + Tailwind', '部署：Nginx 反向代理 + systemd'],
   },
   {
     version: 'v1.4.0',
@@ -62,6 +76,20 @@ const CHANGELOG_ZH = [
 
 const CHANGELOG_EN = [
   {
+    version: 'v1.6.0',
+    date: '2025-02-15',
+    title: 'Quick Upload & Transcript Enhancements',
+    features: [
+      { icon: '🚀', title: 'Quick Upload Entry', desc: 'Visit /upload without login; guests 5 videos/day, unlimited when logged in; ideal for NotebookLM export' },
+      { icon: '📥', title: 'Batch Download Transcripts', desc: 'Multi-select → merge TXT/MD or ZIP; per-row copy/download; batch delete, export CSV' },
+      { icon: '📋', title: 'Transcript Experience', desc: 'One-click copy summary/transcript; export TXT or Markdown (original/zh/bilingual); timestamp jump; search highlight; copy single paragraph' },
+      { icon: '📅', title: 'Date Filter Shortcuts', desc: 'Quick buttons: last 1w/1m/3m/1y' },
+      { icon: '🤖', title: 'AI Chat Enhancements', desc: 'Multi-turn follow-up; citation highlight; preset question templates (summarize, extract quotes, key points)' },
+      { icon: '📊', title: 'Reports & Stats', desc: 'Export reports as PDF or Markdown; rank distribution, videos/month, views/month charts' },
+      { icon: '🛡️', title: 'Stability', desc: 'API auto-retry for 5xx and network errors; Esc to close modals; accessibility improvements' },
+    ],
+  },
+  {
     version: 'v1.5.0',
     date: '2025-02-15',
     title: 'Multi-turn Chat & Favorites',
@@ -71,7 +99,7 @@ const CHANGELOG_EN = [
       { icon: '🎨', title: 'UX Improvements', desc: 'Better video list filtering, faster subtitle loading, enhanced reports' },
       { icon: '🚀', title: 'Deployment Optimization', desc: 'Standardized Nginx config and automated deployment' },
     ],
-    tech: ['Backend: FastAPI + Python 3.11', 'Frontend: React + Vite + Ant Design', 'Deployment: Nginx + systemd'],
+    tech: ['Backend: FastAPI + Python 3.11', 'Frontend: React + Vite + Tailwind', 'Deployment: Nginx + systemd'],
   },
   {
     version: 'v1.4.0',

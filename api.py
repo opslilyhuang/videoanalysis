@@ -107,12 +107,62 @@ def _delete_report(report_id: str, dashboard_id: str) -> bool:
 
 VALID_AUTH = base64.b64encode(b"admin:admin@2026").decode()
 
+# 游客可访问的 API 路径（无需登录，极简模式需字幕/总结/翻译/问答）
+GUEST_ALLOWED_PREFIXES = (
+    "/api/convert-videos",
+    "/api/convert-transcript",
+    "/api/temp-convert-status",
+    "/api/temp-clean-empty",
+    "/api/temp-delete-video",
+    "/api/temp-delete-videos",
+    "/api/transcript",
+    "/api/transcript-ready",
+    "/api/dashboards",
+    "/api/guest-remaining",
+    "/api/video-meta",
+    "/api/master-index",
+    "/api/summarize",
+    "/api/chat",
+    "/api/translate",
+    "/api/translate-paragraphs",
+    "/api/save-video-meta",
+)
+
+GUEST_DAILY_LIMIT = 10
+_guest_usage: dict[str, int] = {}  # "ip:yyyy-mm-dd" -> count
+
+
+def _get_guest_key(request: Request) -> str:
+    ip = request.client.host if request.client else "unknown"
+    today = datetime.now().strftime("%Y-%m-%d")
+    return f"{ip}:{today}"
+
+
+def _check_guest_limit(request: Request) -> tuple[bool, int]:
+    """返回 (是否可继续, 今日已用次数)"""
+    key = _get_guest_key(request)
+    used = _guest_usage.get(key, 0)
+    return used < GUEST_DAILY_LIMIT, used
+
+
+def _inc_guest_usage(request: Request, delta: int = 1) -> int:
+    key = _get_guest_key(request)
+    _guest_usage[key] = _guest_usage.get(key, 0) + delta
+    return _guest_usage[key]
+
+
+def _is_authenticated(request: Request) -> bool:
+    token = request.headers.get("X-Auth-Token") or request.headers.get("Authorization", "").replace("Bearer ", "")
+    return token == VALID_AUTH
+
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         if request.url.path.startswith("/api/") and request.method != "OPTIONS":
-            token = request.headers.get("X-Auth-Token") or request.headers.get("Authorization", "").replace("Bearer ", "")
-            if token != VALID_AUTH:
+            if _is_authenticated(request):
+                return await call_next(request)
+            allowed = any(request.url.path == p or request.url.path.startswith(p) for p in GUEST_ALLOWED_PREFIXES)
+            if not allowed:
                 return JSONResponse({"detail": "未授权，请先登录"}, status_code=401)
         return await call_next(request)
 
@@ -246,6 +296,14 @@ def load_master_index(dashboard_id: str = "palantirtech") -> List[dict]:
             r["_video_id"] = get_video_id(r.get("URL", ""))
             rows.append(r)
     return rows
+
+
+@app.get("/api/master-index")
+def api_master_index(dashboard_id: str = "temp"):
+    """获取临时/极简看板的视频列表，用于前端刷新（与 temp-convert-status 同数据源）"""
+    if dashboard_id not in ("temp", "slim"):
+        dashboard_id = "temp"
+    return load_master_index(dashboard_id)
 
 
 def call_deepseek(messages: list, max_tokens: int = 2000, model: str = "deepseek-chat") -> str:
@@ -767,6 +825,7 @@ def translate_paragraphs(request: TranslateParagraphsRequest):
 
 class ConvertVideosRequest(BaseModel):
     urls: List[str]
+    dashboard_id: Optional[str] = "temp"  # "temp"=主应用临时上传, "slim"=极简上传
 
 
 @app.post("/api/convert-transcript/{video_id}")
@@ -791,24 +850,47 @@ def convert_single_transcript(video_id: str, background_tasks: BackgroundTasks, 
     return {"ok": True, "message": "转换已启动", "video_id": video_id}
 
 
+@app.get("/api/guest-remaining")
+def guest_remaining(http_req: Request):
+    """游客今日剩余转换次数（未登录时）"""
+    if _is_authenticated(http_req):
+        return {"remaining": -1, "limit": -1}  # 登录用户无限制
+    ok, used = _check_guest_limit(http_req)
+    return {"remaining": max(0, GUEST_DAILY_LIMIT - used), "limit": GUEST_DAILY_LIMIT, "used": used}
+
+
 @app.post("/api/convert-videos")
-def convert_temp_videos(request: ConvertVideosRequest, background_tasks: BackgroundTasks):
-    """临时转换 1-5 个视频链接（临时看板用），保存到 data/temp/"""
-    urls = [u.strip() for u in (request.urls or []) if u.strip()][:5]
+def convert_temp_videos(body: ConvertVideosRequest, http_req: Request, background_tasks: BackgroundTasks):
+    """临时转换 1-5 个视频链接（临时/极简看板用）。登录用户无限制；游客每天限 10 个。"""
+    urls = [u.strip() for u in (body.urls or []) if u.strip()][:5]
     if not urls:
         raise HTTPException(status_code=400, detail="请提供 1-5 个 YouTube 视频链接")
     vids = [get_video_id(u) for u in urls]
     if any(not v for v in vids):
         raise HTTPException(status_code=400, detail="包含无效的视频链接")
+    if not _is_authenticated(http_req):
+        ok, used = _check_guest_limit(http_req)
+        if not ok or used + len(vids) > GUEST_DAILY_LIMIT:
+            raise HTTPException(
+                status_code=429,
+                detail=f"游客每日限 {GUEST_DAILY_LIMIT} 个视频，今日已用 {used}，请登录后无限制使用"
+            )
     script = PROJECT_ROOT / "palantir_analyzer.py"
     if not script.exists():
         raise HTTPException(status_code=500, detail="palantir_analyzer.py 未找到")
     vid_str = ",".join(vids)
 
+    if not _is_authenticated(http_req):
+        _inc_guest_usage(http_req, len(vids))
+
+    storage = (body.dashboard_id or "temp").strip() or "temp"
+    if storage not in ("temp", "slim"):
+        storage = "temp"
+
     def _run():
         try:
             subprocess.run(
-                [sys.executable, str(script), "--convert-urls", vid_str, "--dashboard", "temp"],
+                [sys.executable, str(script), "--convert-urls", vid_str, "--dashboard", storage],
                 cwd=str(PROJECT_ROOT),
                 env={**os.environ, "PYTHONUNBUFFERED": "1"},
                 capture_output=False,
@@ -821,12 +903,15 @@ def convert_temp_videos(request: ConvertVideosRequest, background_tasks: Backgro
 
 
 @app.get("/api/temp-convert-status")
-def temp_convert_status(video_ids: str = ""):
-    """检查临时看板中是否已包含指定视频 ID，用于轮询转换进度"""
+def temp_convert_status(video_ids: str = "", dashboard_id: str = "temp"):
+    """检查临时看板中是否已包含指定视频 ID，用于轮询转换进度。dashboard_id: temp=主应用, slim=极简上传"""
     ids = [v.strip() for v in video_ids.split(",") if v.strip()]
     if not ids:
         return {"all_found": True, "found": []}
-    temp_dir = get_data_dir("temp")
+    storage = (dashboard_id or "temp").strip() or "temp"
+    if storage not in ("temp", "slim"):
+        storage = "temp"
+    temp_dir = get_data_dir(storage)
     csv_path = temp_dir / "master_index.csv"
     if not csv_path.exists():
         return {"all_found": False, "found": []}
@@ -835,7 +920,7 @@ def temp_convert_status(video_ids: str = ""):
     with open(csv_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            vid = get_video_id(row.get("URL", ""))
+            vid = get_video_id(row.get("URL", row.get("url", "")))
             if vid:
                 existing.add(vid)
     found = [v for v in ids if v in existing]
@@ -843,9 +928,12 @@ def temp_convert_status(video_ids: str = ""):
 
 
 @app.post("/api/temp-clean-empty")
-def temp_clean_empty():
-    """清理临时看板中的空记录（无 URL 或无标题）"""
-    temp_dir = get_data_dir("temp")
+def temp_clean_empty(dashboard_id: str = "temp"):
+    """清理临时看板中的空记录。dashboard_id: temp=主应用, slim=极简上传"""
+    storage = (dashboard_id or "temp").strip() or "temp"
+    if storage not in ("temp", "slim"):
+        storage = "temp"
+    temp_dir = get_data_dir(storage)
     csv_path = temp_dir / "master_index.csv"
     if not csv_path.exists():
         return {"ok": True, "removed": 0}
@@ -883,12 +971,15 @@ def temp_clean_empty():
 
 
 @app.post("/api/temp-delete-video")
-def temp_delete_video(video_id: str):
-    """从临时上传列表中移除指定视频"""
+def temp_delete_video(video_id: str, dashboard_id: str = "temp"):
+    """从临时上传列表中移除指定视频。dashboard_id: temp=主应用, slim=极简上传"""
     vid = (video_id or "").strip()
     if not vid or len(vid) != 11:
         raise HTTPException(status_code=400, detail="invalid video_id")
-    temp_dir = get_data_dir("temp")
+    storage = (dashboard_id or "temp").strip() or "temp"
+    if storage not in ("temp", "slim"):
+        storage = "temp"
+    temp_dir = get_data_dir(storage)
     csv_path = temp_dir / "master_index.csv"
     if not csv_path.exists():
         return {"ok": True}
@@ -919,15 +1010,19 @@ def temp_delete_video(video_id: str):
 
 class TempDeleteVideosRequest(BaseModel):
     video_ids: List[str]
+    dashboard_id: Optional[str] = "temp"
 
 
 @app.post("/api/temp-delete-videos")
 def temp_delete_videos(request: TempDeleteVideosRequest):
-    """批量从临时上传列表移除视频"""
+    """批量从临时上传列表移除视频。dashboard_id: temp=主应用, slim=极简上传"""
     ids = [v.strip() for v in (request.video_ids or []) if v.strip() and len(v.strip()) == 11]
     if not ids:
         return {"ok": True, "deleted": 0}
-    temp_dir = get_data_dir("temp")
+    storage = (request.dashboard_id or "temp").strip() or "temp"
+    if storage not in ("temp", "slim"):
+        storage = "temp"
+    temp_dir = get_data_dir(storage)
     csv_path = temp_dir / "master_index.csv"
     if not csv_path.exists():
         return {"ok": True, "deleted": 0}

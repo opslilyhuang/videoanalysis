@@ -24,7 +24,7 @@ function extractVideoId(url) {
   return m ? m[1] : null;
 }
 
-export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty }) {
+export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty, onGuestLimitHit, dashboardId = 'temp' }) {
   const [urlList, setUrlList] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [converting, setConverting] = useState(false);
@@ -63,13 +63,14 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty }
         return;
       }
       try {
-        const r = await apiFetch(`/api/temp-convert-status?video_ids=${pendingIds.join(',')}`);
+        const r = await apiFetch(`/api/temp-convert-status?video_ids=${pendingIds.join(',')}&dashboard_id=${encodeURIComponent(dashboardId)}`);
         const d = await r.json();
         if (d.all_found) {
           setPendingIds([]);
           setUrlList([]);
           setMsg(lang === 'zh' ? '转换完成' : 'Convert completed');
           onConvert?.();
+          setTimeout(() => onConvert?.(), 500);
         } else {
           setMsg(lang === 'zh' ? `转换中… (${d.found?.length || 0}/${pendingIds.length})` : `Converting… (${d.found?.length || 0}/${pendingIds.length})`);
         }
@@ -77,34 +78,39 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty }
         setMsg(lang === 'zh' ? '检查进度失败' : 'Status check failed');
       }
     };
-    const timer = setInterval(check, POLL_INTERVAL);
     check();
+    const timer = setInterval(check, POLL_INTERVAL);
     return () => clearInterval(timer);
-  }, [pendingIds, onConvert, lang]);
+  }, [pendingIds, onConvert, lang, dashboardId]);
 
   const handleConfirm = async () => {
-    if (urlList.length === 0) {
-      setMsg(lang === 'zh' ? '请先添加 1-5 个视频链接' : 'Add 1-5 video URLs first');
+    // 若未点添加，尝试从输入框解析
+    let urlsToConvert = urlList.length > 0 ? [...urlList] : parseVideoUrls(inputValue).filter(isValidYoutubeUrl);
+    if (urlsToConvert.length === 0) {
+      setMsg(lang === 'zh' ? '请先添加 1-5 个视频链接，或粘贴链接后直接点确定转换' : 'Add 1-5 video URLs or paste links and click convert');
       return;
     }
-    if (urlList.length > MAX_URLS) {
-      setMsg(lang === 'zh' ? `最多 ${MAX_URLS} 个视频链接` : `Max ${MAX_URLS} video URLs`);
-      return;
+    if (urlsToConvert.length > MAX_URLS) {
+      urlsToConvert = urlsToConvert.slice(0, MAX_URLS);
     }
     setConverting(true);
-    setMsg('');
+    setMsg(lang === 'zh' ? '正在提交…' : 'Submitting…');
     try {
       const r = await apiFetch('/api/convert-videos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ urls: urlList }),
+        body: JSON.stringify({ urls: urlsToConvert, dashboard_id: dashboardId }),
       });
       const d = await r.json();
       if (r.ok) {
-        const ids = d.video_ids || urlList.map(extractVideoId).filter(Boolean);
-        setMsg(lang === 'zh' ? `已启动转换 ${d.count} 个视频，请稍候…` : `Converting ${d.count} videos…`);
+        const ids = d.video_ids || urlsToConvert.map(extractVideoId).filter(Boolean);
+        setMsg(lang === 'zh' ? `已启动转换 ${d.count} 个视频，约需 1–2 分钟，请稍候…` : `Converting ${d.count} videos, ~1-2 min, please wait…`);
         pollCountRef.current = 0;
         setPendingIds(ids);
+        onGuestLimitHit?.();
+      } else if (r.status === 429) {
+        setMsg(d.detail || (lang === 'zh' ? '游客今日已用完，请登录' : 'Guest limit reached, please login'));
+        onGuestLimitHit?.();
       } else {
         setMsg(d.detail || (lang === 'zh' ? '转换失败' : 'Convert failed'));
       }
@@ -120,7 +126,7 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty }
     setCleaning(true);
     setMsg('');
     try {
-      const r = await apiFetch('/api/temp-clean-empty', { method: 'POST' });
+      const r = await apiFetch(`/api/temp-clean-empty?dashboard_id=${encodeURIComponent(dashboardId)}`, { method: 'POST' });
       const d = await r.json();
       if (r.ok && d.removed > 0) {
         setMsg(lang === 'zh' ? `已清理 ${d.removed} 条空记录` : `Cleaned ${d.removed} empty records`);
@@ -192,7 +198,7 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty }
       <div className="flex flex-wrap items-center gap-3">
         <button
           onClick={handleConfirm}
-          disabled={converting || loading || urlList.length === 0 || pendingIds.length > 0}
+          disabled={converting || loading || (urlList.length === 0 && !parseVideoUrls(inputValue).filter(isValidYoutubeUrl).length) || pendingIds.length > 0}
           className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
         >
           {(converting || loading || pendingIds.length > 0) ? t(lang, 'converting') : t(lang, 'tempBoardConfirm')}

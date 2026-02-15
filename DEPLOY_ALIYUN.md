@@ -101,6 +101,11 @@ pip install -r requirements.txt
 cp .env.example .env
 nano .env   # 或 vim，填入 DEEPSEEK_API_KEY、OPENAI_API_KEY 等
 
+# Whisper 无字幕转录（仅线上正式环境推荐）
+# 当用户上传的 YouTube 视频无自带字幕时，会调用 OpenAI Whisper API 做语音转文字
+# 在 .env 中添加：OPENAI_API_KEY=sk-xxx（仅用于 Whisper，不用于其他功能）
+# 不配置时则回退到本地 openai-whisper（需 pip install openai-whisper）
+
 # 测试运行（确保端口 8000 可访问）
 python3 api.py
 # 另开终端：curl http://localhost:8000/api/dashboards

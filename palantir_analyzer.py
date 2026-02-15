@@ -1456,26 +1456,60 @@ def main():
     )
 
     if args.whisper_one:
-        filter_file = analyzer.output_dir / "filtered_candidates.json"
-        if not filter_file.exists():
-            print("❌ 需要先运行完整流程")
-            return
-        analyzer._write_status(0, 1, "processing", phase="whisper", failed_count=0)
-        with open(filter_file, encoding="utf-8") as f:
-            candidates = json.load(f)
-        details = next((c for c in candidates if c.get("video_id") == args.whisper_one), None)
-        if not details:
-            details = {"video_id": args.whisper_one, "url": f"https://www.youtube.com/watch?v={args.whisper_one}", "title": "Unknown", "rank": "B", "score": 0}
-        transcript = analyzer._transcribe_with_whisper(args.whisper_one)
-        analyzer.save_transcript(details, transcript, details.get("rank", "B"), details.get("score", 0), transcript is not None, category="")
-        analyzer._write_status(1, 1, "idle", phase="whisper")
-        if analyzer.data_dir:
-            analyzer._sync_transcripts_to_data_dir()
-        print("✅ 单视频转换完成")
+        vid = args.whisper_one
+        if channel_id in ("temp", "slim"):
+            dash_dir = Path("frontend/public/data") / channel_id
+            analyzer_whisper = PalantirVideoAnalyzer(output_dir=str(dash_dir), data_dir="frontend/public/data", channel_id=channel_id)
+            for old_f in analyzer_whisper.transcripts_dir.glob("*.txt"):
+                try:
+                    if vid in old_f.read_text(encoding="utf-8"):
+                        old_f.unlink()
+                        break
+                except Exception:
+                    pass
+            details = analyzer_whisper.fetch_video_details(f"https://www.youtube.com/watch?v={vid}")
+            if not details:
+                details = {"video_id": vid, "url": f"https://www.youtube.com/watch?v={vid}", "title": "Unknown", "rank": "B", "score": 0}
+            else:
+                details["rank"] = RankAssigner.get_rank(VideoScorer.calculate_score(details))
+                details["score"] = VideoScorer.calculate_score(details)
+            analyzer_whisper._write_status(0, 1, "processing", phase="whisper", failed_count=0)
+            transcript = analyzer_whisper._transcribe_with_whisper(vid)
+            analyzer_whisper.save_transcript(details, transcript, details.get("rank", "B"), details.get("score", 0), transcript is not None, category=details.get("category", "其他"), source="whisper" if transcript else "")
+            analyzer_whisper._write_status(1, 1, "idle", phase="whisper")
+            if analyzer_whisper.data_dir:
+                analyzer_whisper._generate_master_index_csv()
+                analyzer_whisper._generate_transcript_index()
+                import shutil
+                dst = analyzer_whisper.data_dir / "transcripts"
+                dst.mkdir(exist_ok=True)
+                for f in analyzer_whisper.transcripts_dir.glob("*.txt"):
+                    try:
+                        shutil.copy2(f, dst / f.name)
+                    except Exception:
+                        pass
+            print(f"✅ {channel_id} 看板单视频 Whisper 转换完成")
+        else:
+            filter_file = analyzer.output_dir / "filtered_candidates.json"
+            if not filter_file.exists():
+                print("❌ 需要先运行完整流程")
+                return
+            analyzer._write_status(0, 1, "processing", phase="whisper", failed_count=0)
+            with open(filter_file, encoding="utf-8") as f:
+                candidates = json.load(f)
+            details = next((c for c in candidates if c.get("video_id") == vid), None)
+            if not details:
+                details = {"video_id": vid, "url": f"https://www.youtube.com/watch?v={vid}", "title": "Unknown", "rank": "B", "score": 0}
+            transcript = analyzer._transcribe_with_whisper(vid)
+            analyzer.save_transcript(details, transcript, details.get("rank", "B"), details.get("score", 0), transcript is not None, category="")
+            analyzer._write_status(1, 1, "idle", phase="whisper")
+            if analyzer.data_dir:
+                analyzer._sync_transcripts_to_data_dir()
+            print("✅ 单视频转换完成")
         return
 
     if args.convert_urls:
-        channel_id = "temp"
+        channel_id = args.dashboard if args.dashboard in ("temp", "slim") else "temp"
         temp_data_dir = Path("frontend/public/data") / channel_id
         temp_data_dir.mkdir(parents=True, exist_ok=True)
         # 使用 data_dir 作为 output_dir，使字幕直接保存到 frontend/public/data/temp/transcripts/
