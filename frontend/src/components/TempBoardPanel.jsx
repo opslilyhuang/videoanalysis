@@ -7,6 +7,11 @@ const MAX_URLS = 5;
 const POLL_INTERVAL = 4000;
 const POLL_MAX = 90;
 
+// localStorage keys
+const STORAGE_KEY_URLS = `tempboard_urls_`;
+const STORAGE_KEY_PENDING = `tempboard_pending_`;
+const STORAGE_KEY_TIMESTAMP = `tempboard_timestamp_`;
+
 function parseVideoUrls(text) {
   return text
     .trim()
@@ -32,6 +37,60 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty, 
   const [msg, setMsg] = useState('');
   const [cleaning, setCleaning] = useState(false);
   const pollCountRef = useRef(0);
+  const restoringRef = useRef(false);
+
+  // 从 localStorage 恢复状态
+  useEffect(() => {
+    const storageKey = STORAGE_KEY_PENDING + dashboardId;
+    const timestampKey = STORAGE_KEY_TIMESTAMP + dashboardId;
+
+    try {
+      const savedPending = localStorage.getItem(storageKey);
+      const savedTimestamp = localStorage.getItem(timestampKey);
+
+      if (savedPending && savedTimestamp) {
+        const timestamp = parseInt(savedTimestamp, 10);
+        const now = Date.now();
+        // 如果超过 10 分钟，认为已过期
+        if (now - timestamp > 10 * 60 * 1000) {
+          localStorage.removeItem(storageKey);
+          localStorage.removeItem(timestampKey);
+          return;
+        }
+
+        const pending = JSON.parse(savedPending);
+        if (pending.length > 0) {
+          restoringRef.current = true;
+          setPendingIds(pending);
+          setMsg(lang === 'zh' ? '检测到后台转换任务，正在恢复…' : 'Restoring background tasks…');
+          setTimeout(() => {
+            restoringRef.current = false;
+          }, 1000);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to restore state:', e);
+    }
+  }, [dashboardId, lang]);
+
+  // 保存状态到 localStorage
+  useEffect(() => {
+    if (restoringRef.current) return;
+    const storageKey = STORAGE_KEY_PENDING + dashboardId;
+    const timestampKey = STORAGE_KEY_TIMESTAMP + dashboardId;
+
+    try {
+      if (pendingIds.length > 0) {
+        localStorage.setItem(storageKey, JSON.stringify(pendingIds));
+        localStorage.setItem(timestampKey, Date.now().toString());
+      } else {
+        localStorage.removeItem(storageKey);
+        localStorage.removeItem(timestampKey);
+      }
+    } catch (e) {
+      console.error('Failed to save state:', e);
+    }
+  }, [pendingIds, dashboardId]);
 
   const handleAdd = () => {
     const parsed = parseVideoUrls(inputValue);
@@ -213,6 +272,11 @@ export function TempBoardPanel({ onConvert, loading, lang = 'zh', onCleanEmpty, 
           </button>
         )}
         {msg && <span className="text-sm text-[var(--muted)]">{msg}</span>}
+        {pendingIds.length > 0 && (
+          <span className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded border border-amber-200 dark:border-amber-800">
+            💡 {t(lang, 'backgroundConvertHint')}
+          </span>
+        )}
       </div>
     </div>
   );
