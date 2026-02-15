@@ -356,8 +356,8 @@ class PalantirVideoAnalyzer:
                 extraction_stats.record("yt_dlp", True)
                 return result.text
 
-            # 方法3: BibiGPT API（需要 token）
-            result = self._try_bibigpt_api(video_id, timeout_ms)
+            # 方法3: BibiGPT API（需要 token，使用更长超时）
+            result = self._try_bibigpt_api(video_id, 30000)  # 30秒超时
             if result and result.success:
                 logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
                 extraction_stats.record("bibigpt_api", True)
@@ -367,8 +367,8 @@ class PalantirVideoAnalyzer:
             # 云环境：跳过 YouTube API/yt-dlp（网络不可达），直接使用 BibiGPT
             logger.info(f"[云环境] 使用策略: BibiGPT → Whisper（跳过 YouTube API/yt-dlp）")
 
-            # 方法1: BibiGPT API（需要 token，无需访问 YouTube）
-            result = self._try_bibigpt_api(video_id, timeout_ms)
+            # 方法1: BibiGPT API（需要 token，无需访问 YouTube，使用更长超时）
+            result = self._try_bibigpt_api(video_id, 30000)  # 30秒超时
             if result and result.success:
                 logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
                 extraction_stats.record("bibigpt_api", True)
