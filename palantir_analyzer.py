@@ -387,10 +387,9 @@ class PalantirVideoAnalyzer:
                         "url": youtube_url,
                         "promptConfig": {
                             "outputLanguage": lang,
-                            "customPrompt": "请提取并返回完整的视频字幕原文，不要总结，不要改写，直接输出原始字幕内容。",
                             "isRefresh": True  # 强制刷新缓存
                         },
-                        "includeDetail": True  # 关键：包含详细信息（可能包含字幕）
+                        "includeDetail": True  # 关键：包含详细字幕数据
                     }
 
                     response = requests.post(
@@ -410,36 +409,27 @@ class PalantirVideoAnalyzer:
                         if "detail" in data:
                             detail = data["detail"]
 
-                            # 尝试从 detail 中提取字幕
-                            subtitle_text = None
+                            # 从 subtitlesArray 提取字幕（BibiGPT 返回的字幕格式）
+                            if "subtitlesArray" in detail:
+                                subtitles = detail["subtitlesArray"]
 
-                            # 可能的字幕字段
-                            if "subtitle" in detail:
-                                subtitle_text = detail["subtitle"]
-                            elif "transcript" in detail:
-                                subtitle_text = detail["transcript"]
-                            elif "rawTranscript" in detail:
-                                subtitle_text = detail["rawTranscript"]
-                            elif "segments" in detail:
-                                # 如果是分段字幕，合并
-                                segments = detail["segments"]
-                                if isinstance(segments, list) and len(segments) > 0:
+                                if isinstance(subtitles, list) and len(subtitles) > 0:
+                                    # 合并所有字幕片段
                                     subtitle_text = "\n".join([
-                                        seg.get("text", seg.get("content", str(seg)))
-                                        for seg in segments
+                                        seg.get("text", "")
+                                        for seg in subtitles
+                                        if seg.get("text", "").strip()
                                     ])
 
-                            # 如果找到字幕文本
-                            if subtitle_text and isinstance(subtitle_text, str):
-                                subtitle_text = subtitle_text.strip()
-                                if len(subtitle_text) > 100:  # 确保有实际内容
-                                    duration_ms = int((time.time() - start_time) * 1000)
-                                    return TranscriptResult(
-                                        text=subtitle_text,
-                                        source="bibigpt_api",
-                                        language=lang,
-                                        duration_ms=duration_ms
-                                    )
+                                    if subtitle_text.strip() and len(subtitle_text) > 50:
+                                        duration_ms = int((time.time() - start_time) * 1000)
+                                        logger.info(f"BibiGPT 返回 {len(subtitles)} 个字幕片段")
+                                        return TranscriptResult(
+                                            text=subtitle_text.strip(),
+                                            source="bibigpt_api",
+                                            language=lang,
+                                            duration_ms=duration_ms
+                                        )
 
                 except requests.exceptions.Timeout:
                     logger.warning(f"BibiGPT API 超时 (lang={lang}): {video_id}")
