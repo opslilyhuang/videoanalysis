@@ -339,8 +339,8 @@ class PalantirVideoAnalyzer:
         can_access_youtube = self._can_access_youtube()
 
         if can_access_youtube:
-            # 本地环境：优先使用免费的 YouTube API/yt-dlp
-            logger.info(f"[本地环境] 使用策略: YouTube API → yt-dlp → BibiGPT → Whisper")
+            # 本地环境：优先使用免费的 YouTube API/yt-dlp，不使用 BibiGPT
+            logger.info(f"[本地环境] 使用策略: YouTube API → yt-dlp → OpenAI Whisper → 本地 Whisper")
 
             # 方法1: YouTube Transcript API（免费）
             result = self._try_youtube_transcript_api(video_id, timeout_ms)
@@ -356,11 +356,12 @@ class PalantirVideoAnalyzer:
                 extraction_stats.record("yt_dlp", True)
                 return result.text
 
-            # 方法3: BibiGPT API（需要 token，使用更长超时）
-            result = self._try_bibigpt_api(video_id, 30000)  # 30秒超时
+            # 方法3: OpenAI Whisper API（需要 OPENAI_API_KEY，不消耗 BibiGPT）
+            logger.warning(f"前两种方法失败，尝试 OpenAI Whisper: {video_id}")
+            result = self._try_whisper_transcription(video_id)
             if result and result.success:
-                logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
-                extraction_stats.record("bibigpt_api", True)
+                logger.info(f"✓ Whisper 成功: {video_id} (耗时: {result.duration_ms}ms)")
+                extraction_stats.record(result.source, True)
                 return result.text
 
         else:
