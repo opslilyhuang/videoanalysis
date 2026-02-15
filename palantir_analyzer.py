@@ -21,11 +21,15 @@ import yt_dlp
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 
 # 配置日志
+import os
+# 检测运行环境
+LOG_PATH = '/opt/vedioanalysis/transcript_extraction.log' if os.path.exists('/opt/vedioanalysis') else 'transcript_extraction.log'
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/opt/vedioanalysis/transcript_extraction.log'),
+        logging.FileHandler(LOG_PATH),
         logging.StreamHandler()
     ]
 )
@@ -736,23 +740,39 @@ class PalantirVideoAnalyzer:
     _whisper_model_cache = None
     _can_access_youtube_cache = None
 
-    def _can_access_youtube(self, timeout_ms: int = 3000) -> bool:
+    def _can_access_youtube(self, timeout_ms: int = 5000) -> bool:
         """
         检测当前环境是否能访问 YouTube
-        本地环境：可以访问，优先使用 YouTube API/yt-dlp（免费）
-        云环境：无法访问，直接使用 BibiGPT → Whisper
+        本地环境：可以访问 → 使用 YouTube API/yt-dlp/OpenAI Whisper
+        云环境：无法访问 → 使用 BibiGPT/Whisper
         """
         if PalantirVideoAnalyzer._can_access_youtube_cache is not None:
             return PalantirVideoAnalyzer._can_access_youtube_cache
 
         try:
             import socket
-            # 尝试连接 YouTube（端口 443，超时 3 秒）
+            import urllib.request
+            import ssl
+
+            # 方法1: 尝试 HTTP 请求（忽略 SSL 证书验证）
+            try:
+                ssl_context = ssl._create_unverified_context()
+                response = urllib.request.urlopen('https://www.youtube.com', timeout=timeout_ms/1000, context=ssl_context)
+                if response.status == 200:
+                    PalantirVideoAnalyzer._can_access_youtube_cache = True
+                    logger.info("✓ 检测到可以访问 YouTube（本地环境），优先使用 YouTube API/yt-dlp")
+                    return True
+            except:
+                pass
+
+            # 方法2: socket 连接（备用）
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(timeout_ms / 1000)
             result = sock.connect_ex(("www.youtube.com", 443))
             sock.close()
 
+            # 某些环境下 socket 返回非0但实际可访问
+            # 如果 socket 失败，假设无法访问
             can_access = (result == 0)
             PalantirVideoAnalyzer._can_access_youtube_cache = can_access
 
