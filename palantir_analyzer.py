@@ -324,7 +324,7 @@ class PalantirVideoAnalyzer:
     def _transcribe_with_whisper(self, video_id: str) -> Optional[str]:
         """
         转录无字幕视频。优先使用 OpenAI Whisper API（需 OPENAI_API_KEY），
-        否则使用本地 openai-whisper（需 ffmpeg，pip install openai-whisper）。
+        否则使用本地 faster-whisper（需 ffmpeg，pip install faster-whisper）。
         """
         api_key = os.getenv("OPENAI_API_KEY")
         if api_key:
@@ -389,14 +389,12 @@ class PalantirVideoAnalyzer:
     _whisper_model_cache = None
 
     def _transcribe_whisper_local(self, video_id: str) -> Optional[str]:
-        """使用本地 openai-whisper 转录（需 ffmpeg 用于音频提取）"""
+        """使用本地 faster-whisper 转录（需 ffmpeg 用于音频提取）"""
         import shutil
         try:
-            import ssl
-            ssl._create_default_https_context = ssl._create_unverified_context
-            import whisper
+            from faster_whisper import WhisperModel
         except ImportError:
-            print("   ⚠️ 请安装: pip install openai-whisper")
+            print("   ⚠️ 请安装: pip install faster-whisper")
             return None
 
         has_ffmpeg = bool(shutil.which("ffmpeg"))
@@ -433,15 +431,17 @@ class PalantirVideoAnalyzer:
                 return None
 
             if PalantirVideoAnalyzer._whisper_model_cache is None:
-                PalantirVideoAnalyzer._whisper_model_cache = whisper.load_model("base")
+                # 使用 CPU 模式（faster-whisper 默认）
+                PalantirVideoAnalyzer._whisper_model_cache = WhisperModel("base", device="cpu", compute_type="int8")
             model = PalantirVideoAnalyzer._whisper_model_cache
-            result = model.transcribe(str(audio_path), language="en", fp16=False)
-            text = (result.get("text") or "").strip()
+
+            segments, info = model.transcribe(str(audio_path), language="en", beam_size=5)
+            text = "".join([seg.text for seg in segments]).strip()
             audio_path.unlink(missing_ok=True)
             return text if text else None
         except Exception as e:
             if "ffmpeg" in str(e).lower() or "ffprobe" in str(e).lower():
-                print(f"   ⚠️ 需要 ffmpeg: brew install ffmpeg")
+                print(f"   ⚠️ 需要 ffmpeg")
             else:
                 print(f"   ⚠️ 本地 Whisper 转录失败: {e}")
             return None
