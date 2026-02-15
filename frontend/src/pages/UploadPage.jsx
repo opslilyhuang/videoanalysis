@@ -101,9 +101,9 @@ export function UploadPage() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            {!isAuthenticated && guestRemaining != null && guestRemaining.remaining >= 0 && (
+            {!isAuthenticated && guestRemaining != null && guestRemaining.remaining_count >= 0 && (
               <span className="text-xs text-[var(--muted)]">
-                {t(lang, 'guestRemaining', { n: guestRemaining.remaining })}
+                {t(lang, 'remainingCount', { n: guestRemaining.remaining_count })} / {t(lang, 'remainingMinutes', { n: guestRemaining.remaining_minutes })}
               </span>
             )}
             <button

@@ -128,27 +128,95 @@ GUEST_ALLOWED_PREFIXES = (
     "/api/save-video-meta",
 )
 
-GUEST_DAILY_LIMIT = 10
-_guest_usage: dict[str, int] = {}  # "ip:yyyy-mm-dd" -> count
+# 配额设置
+# 游客：5次/天 或 80分钟/天（按15分钟/次预估）
+GUEST_DAILY_LIMIT_COUNT = 5
+GUEST_DAILY_LIMIT_MINUTES = 80
+VIDEO_DURATION_ESTIMATE = 15  # 每次转换预估15分钟
+
+# 登录用户：20次/天 或 300分钟/天
+AUTH_DAILY_LIMIT_COUNT = 20
+AUTH_DAILY_LIMIT_MINUTES = 300
+
+# 存储格式: "ip:yyyy-mm-dd" -> {"count": int, "minutes": int}
+# 对于登录用户: "user:yyyy-mm-dd" -> {"count": int, "minutes": int}
+_guest_usage: dict[str, dict[str, int]] = {}
+
+
+def _get_user_key(request: Request) -> tuple[str, bool]:
+    """
+    返回 (用户标识, 是否为登录用户)
+    游客: "ip:yyyy-mm-dd", False
+    登录用户: "user:yyyy-mm-dd", True
+    """
+    if _is_authenticated(request):
+        today = datetime.now().strftime("%Y-%m-%d")
+        return f"user:{today}", True
+    else:
+        ip = request.client.host if request.client else "unknown"
+        today = datetime.now().strftime("%Y-%m-%d")
+        return f"{ip}:{today}", False
 
 
 def _get_guest_key(request: Request) -> str:
-    ip = request.client.host if request.client else "unknown"
-    today = datetime.now().strftime("%Y-%m-%d")
-    return f"{ip}:{today}"
+    """兼容旧代码，返回游客 key"""
+    key, _ = _get_user_key(request)
+    return key
+
+
+def _check_quota_limit(request: Request) -> tuple[bool, int, int]:
+    """
+    返回 (是否可继续, 今日已用次数, 今日已用分钟数)
+    同时检查次数和时长限制，任一超限即不可继续
+    """
+    key, is_auth = _get_user_key(request)
+    usage = _guest_usage.get(key, {"count": 0, "minutes": 0})
+
+    if is_auth:
+        # 登录用户限制
+        limit_count = AUTH_DAILY_LIMIT_COUNT
+        limit_minutes = AUTH_DAILY_LIMIT_MINUTES
+    else:
+        # 游客限制
+        limit_count = GUEST_DAILY_LIMIT_COUNT
+        limit_minutes = GUEST_DAILY_LIMIT_MINUTES
+
+    count_ok = usage["count"] < limit_count
+    minutes_ok = usage["minutes"] < limit_minutes
+    can_continue = count_ok and minutes_ok
+
+    return can_continue, usage["count"], usage["minutes"]
 
 
 def _check_guest_limit(request: Request) -> tuple[bool, int]:
-    """返回 (是否可继续, 今日已用次数)"""
-    key = _get_guest_key(request)
-    used = _guest_usage.get(key, 0)
-    return used < GUEST_DAILY_LIMIT, used
+    """兼容旧代码，仅检查游客次数限制"""
+    key, is_auth = _get_user_key(request)
+    if is_auth:
+        return True, 0  # 登录用户无限制（旧逻辑）
+    usage = _guest_usage.get(key, {"count": 0, "minutes": 0})
+    return usage["count"] < GUEST_DAILY_LIMIT_COUNT, usage["count"]
+
+
+def _inc_usage(request: Request, count_delta: int = 1, minutes_delta: int = VIDEO_DURATION_ESTIMATE) -> dict[str, int]:
+    """
+    增加使用量
+    返回更新后的使用情况 {"count": int, "minutes": int}
+    """
+    key, _ = _get_user_key(request)
+    if key not in _guest_usage:
+        _guest_usage[key] = {"count": 0, "minutes": 0}
+    _guest_usage[key]["count"] += count_delta
+    _guest_usage[key]["minutes"] += minutes_delta
+    return _guest_usage[key]
 
 
 def _inc_guest_usage(request: Request, delta: int = 1) -> int:
-    key = _get_guest_key(request)
-    _guest_usage[key] = _guest_usage.get(key, 0) + delta
-    return _guest_usage[key]
+    """兼容旧代码，仅增加次数"""
+    key, _ = _get_user_key(request)
+    if key not in _guest_usage:
+        _guest_usage[key] = {"count": 0, "minutes": 0}
+    _guest_usage[key]["count"] += delta
+    return _guest_usage[key]["count"]
 
 
 def _is_authenticated(request: Request) -> bool:
@@ -852,36 +920,92 @@ def convert_single_transcript(video_id: str, background_tasks: BackgroundTasks, 
 
 @app.get("/api/guest-remaining")
 def guest_remaining(http_req: Request):
-    """游客今日剩余转换次数（未登录时）"""
+    """
+    获取今日剩余配额（次数和分钟数）
+    返回：{"remaining_count": int, "remaining_minutes": int, "limit_count": int, "limit_minutes": int, "used_count": int, "used_minutes": int}
+    登录用户返回 -1 表示无限制
+    """
     if _is_authenticated(http_req):
-        return {"remaining": -1, "limit": -1}  # 登录用户无限制
-    ok, used = _check_guest_limit(http_req)
-    return {"remaining": max(0, GUEST_DAILY_LIMIT - used), "limit": GUEST_DAILY_LIMIT, "used": used}
+        return {
+            "remaining_count": -1,
+            "remaining_minutes": -1,
+            "limit_count": AUTH_DAILY_LIMIT_COUNT,
+            "limit_minutes": AUTH_DAILY_LIMIT_MINUTES,
+            "used_count": 0,
+            "used_minutes": 0
+        }
+
+    key, _ = _get_user_key(http_req)
+    usage = _guest_usage.get(key, {"count": 0, "minutes": 0})
+    remaining_count = max(0, GUEST_DAILY_LIMIT_COUNT - usage["count"])
+    remaining_minutes = max(0, GUEST_DAILY_LIMIT_MINUTES - usage["minutes"])
+
+    return {
+        "remaining_count": remaining_count,
+        "remaining_minutes": remaining_minutes,
+        "limit_count": GUEST_DAILY_LIMIT_COUNT,
+        "limit_minutes": GUEST_DAILY_LIMIT_MINUTES,
+        "used_count": usage["count"],
+        "used_minutes": usage["minutes"]
+    }
 
 
 @app.post("/api/convert-videos")
 def convert_temp_videos(body: ConvertVideosRequest, http_req: Request, background_tasks: BackgroundTasks):
-    """临时转换 1-5 个视频链接（临时/极简看板用）。登录用户无限制；游客每天限 10 个。"""
+    """
+    临时转换 1-5 个视频链接（临时/极简看板用）
+    登录用户：20次/天 或 300分钟/天
+    游客：5次/天 或 80分钟/天（每次按15分钟计）
+    任一上限先到即停止
+    """
     urls = [u.strip() for u in (body.urls or []) if u.strip()][:5]
     if not urls:
         raise HTTPException(status_code=400, detail="请提供 1-5 个 YouTube 视频链接")
     vids = [get_video_id(u) for u in urls]
     if any(not v for v in vids):
         raise HTTPException(status_code=400, detail="包含无效的视频链接")
-    if not _is_authenticated(http_req):
-        ok, used = _check_guest_limit(http_req)
-        if not ok or used + len(vids) > GUEST_DAILY_LIMIT:
+
+    # 检查配额
+    can_continue, used_count, used_minutes = _check_quota_limit(http_req)
+    if not can_continue:
+        is_auth = _is_authenticated(http_req)
+        if is_auth:
             raise HTTPException(
                 status_code=429,
-                detail=f"游客每日限 {GUEST_DAILY_LIMIT} 个视频，今日已用 {used}，请登录后无限制使用"
+                detail=f"登录用户每日限 {AUTH_DAILY_LIMIT_COUNT} 个视频或 {AUTH_DAILY_LIMIT_MINUTES} 分钟，今日已用 {used_count} 次、{used_minutes} 分钟"
             )
+        else:
+            raise HTTPException(
+                status_code=429,
+                detail=f"游客每日限 {GUEST_DAILY_LIMIT_COUNT} 个视频或 {GUEST_DAILY_LIMIT_MINUTES} 分钟，今日已用 {used_count} 次、{used_minutes} 分钟，请登录后获得更高配额"
+            )
+
+    # 检查单次请求数量是否会超限
+    key, is_auth = _get_user_key(http_req)
+    usage = _guest_usage.get(key, {"count": 0, "minutes": 0})
+    new_count = usage["count"] + len(vids)
+    new_minutes = usage["minutes"] + len(vids) * VIDEO_DURATION_ESTIMATE
+
+    if is_auth:
+        if new_count > AUTH_DAILY_LIMIT_COUNT or new_minutes > AUTH_DAILY_LIMIT_MINUTES:
+            raise HTTPException(
+                status_code=429,
+                detail=f"本次请求 {len(vids)} 个视频会超限（次数：{usage['count']}/{AUTH_DAILY_LIMIT_COUNT}，时长：{usage['minutes']}/{AUTH_DAILY_LIMIT_MINUTES}分钟）"
+            )
+    else:
+        if new_count > GUEST_DAILY_LIMIT_COUNT or new_minutes > GUEST_DAILY_LIMIT_MINUTES:
+            raise HTTPException(
+                status_code=429,
+                detail=f"本次请求 {len(vids)} 个视频会超限（次数：{usage['count']}/{GUEST_DAILY_LIMIT_COUNT}，时长：{usage['minutes']}/{GUEST_DAILY_LIMIT_MINUTES}分钟），请登录后获得更高配额"
+            )
+
     script = PROJECT_ROOT / "palantir_analyzer.py"
     if not script.exists():
         raise HTTPException(status_code=500, detail="palantir_analyzer.py 未找到")
     vid_str = ",".join(vids)
 
-    if not _is_authenticated(http_req):
-        _inc_guest_usage(http_req, len(vids))
+    # 增加使用量（次数 + 预估时长）
+    _inc_usage(http_req, count_delta=len(vids), minutes_delta=len(vids) * VIDEO_DURATION_ESTIMATE)
 
     storage = (body.dashboard_id or "temp").strip() or "temp"
     if storage not in ("temp", "slim"):
