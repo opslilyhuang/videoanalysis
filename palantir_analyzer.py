@@ -4,16 +4,72 @@ Target: Strategic competitive analysis for NotebookLM
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 load_dotenv()
 import re
 import json
+import time
+import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Literal
+from dataclasses import dataclass
 
 import yt_dlp
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/opt/vedioanalysis/transcript_extraction.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+@dataclass
+class TranscriptResult:
+    """字幕提取结果"""
+    text: str
+    source: Literal["youtube_api", "yt_dlp", "whisper_api", "whisper_local"]
+    language: str
+    duration_ms: int
+    success: bool = True
+    error: Optional[str] = None
+
+class TranscriptExtractionStats:
+    """字幕提取统计"""
+    def __init__(self):
+        self.stats = {
+            "youtube_api": {"success": 0, "failure": 0},
+            "yt_dlp": {"success": 0, "failure": 0},
+            "whisper_api": {"success": 0, "failure": 0},
+            "whisper_local": {"success": 0, "failure": 0},
+        }
+
+    def record(self, source: str, success: bool):
+        if source in self.stats:
+            if success:
+                self.stats[source]["success"] += 1
+            else:
+                self.stats[source]["failure"] += 1
+
+    def get_report(self) -> dict:
+        total_success = sum(s["success"] for s in self.stats.values())
+        total_failure = sum(s["failure"] for s in self.stats.values())
+        total = total_success + total_failure
+
+        return {
+            **self.stats,
+            "total": total,
+            "success_rate": f"{total_success/total*100:.1f}%" if total > 0 else "N/A"
+        }
+
+# 全局统计实例
+extraction_stats = TranscriptExtractionStats()
 
 
 class VideoScorer:
@@ -249,77 +305,229 @@ class PalantirVideoAnalyzer:
             print(f"❌ 获取视频详情失败 {video_url}: {e}")
             return None
 
-    def get_transcript(self, video_id: str) -> Optional[str]:
+    def get_transcript(self, video_id: str, timeout_ms: int = 10000) -> Optional[str]:
         """
-        获取视频字幕
-        优先级: zh-Hans > en > 任何可用字幕
-        必须包含自动生成字幕
+        获取视频字幕（增强版 fallback 策略）
+
+        Args:
+            video_id: YouTube 视频 ID
+            timeout_ms: 前两种方法的超时时间（毫秒）
+
+        Returns:
+            字幕文本，如果所有方法都失败则返回 None
+
+        Fallback 策略：
+            1. YouTube Transcript API (10秒超时)
+            2. yt-dlp 下载字幕 (10秒超时)
+            3. Whisper 转录 (5分钟)
         """
-        # 方法 1: 使用 youtube-transcript-api
+        start_time = time.time()
+        logger.info(f"开始提取字幕: {video_id}")
+
+        # 方法1: YouTube Transcript API
+        result = self._try_youtube_transcript_api(video_id, timeout_ms)
+        if result and result.success:
+            logger.info(f"✓ YouTube API 成功: {video_id} (耗时: {result.duration_ms}ms)")
+            extraction_stats.record("youtube_api", True)
+            return result.text
+
+        # 方法2: yt-dlp 下载字幕
+        result = self._try_yt_dlp_subtitles(video_id, timeout_ms)
+        if result and result.success:
+            logger.info(f"✓ yt-dlp 成功: {video_id} (耗时: {result.duration_ms}ms)")
+            extraction_stats.record("yt_dlp", True)
+            return result.text
+
+        # 方法3: Whisper 转录
+        logger.warning(f"前两种方法失败，使用 Whisper: {video_id}")
+        result = self._try_whisper_transcription(video_id)
+        if result and result.success:
+            logger.info(f"✓ Whisper 成功: {video_id} (来源: {result.source}, 耗时: {result.duration_ms}ms)")
+            extraction_stats.record(result.source, True)
+            return result.text
+
+        # 所有方法都失败
+        total_time = int((time.time() - start_time) * 1000)
+        logger.error(f"✗ 所有方法都失败: {video_id} (总耗时: {total_time}ms)")
+        extraction_stats.record("whisper_local", False)
+        return None
+
+    def _try_youtube_transcript_api(self, video_id: str, timeout_ms: int) -> Optional[TranscriptResult]:
+        """方法1: 使用 YouTube Transcript API"""
+        start_time = time.time()
         try:
-            api = YouTubeTranscriptApi()
-            transcript_list = api.list(video_id)
+            import signal
 
-            languages = ['zh-Hans', 'zh', 'en', 'en-US', 'en-GB']
+            def timeout_handler(signum, frame):
+                raise TimeoutError("YouTube API 超时")
 
-            for lang in languages:
-                try:
-                    transcript = transcript_list.find_transcript([lang])
-                    return self._format_transcript(transcript.fetch())
-                except NoTranscriptFound:
+            # 设置超时
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.setitimer(signal.ITIMER_REAL, timeout_ms / 1000)
+
+            try:
+                api = YouTubeTranscriptApi()
+                transcript_list = api.list(video_id)
+
+                # 语言优先级
+                languages = ['zh-Hans', 'zh', 'en', 'en-US', 'en-GB']
+
+                for lang in languages:
                     try:
-                        transcript = transcript_list.find_generated_transcript([lang])
-                        return self._format_transcript(transcript.fetch())
-                    except:
-                        continue
+                        transcript = transcript_list.find_transcript([lang])
+                        text = self._format_transcript(transcript.fetch())
+                        duration_ms = int((time.time() - start_time) * 1000)
+                        return TranscriptResult(
+                            text=text,
+                            source="youtube_api",
+                            language=lang,
+                            duration_ms=duration_ms
+                        )
+                    except NoTranscriptFound:
+                        try:
+                            transcript = transcript_list.find_generated_transcript([lang])
+                            text = self._format_transcript(transcript.fetch())
+                            duration_ms = int((time.time() - start_time) * 1000)
+                            return TranscriptResult(
+                                text=text,
+                                source="youtube_api",
+                                language=lang,
+                                duration_ms=duration_ms
+                            )
+                        except:
+                            continue
 
-            for transcript_obj in transcript_list:
-                return self._format_transcript(transcript_obj.fetch())
+                # 尝试任何可用字幕
+                for transcript_obj in transcript_list:
+                    text = self._format_transcript(transcript_obj.fetch())
+                    duration_ms = int((time.time() - start_time) * 1000)
+                    return TranscriptResult(
+                        text=text,
+                        source="youtube_api",
+                        language="unknown",
+                        duration_ms=duration_ms
+                    )
+
+            except TimeoutError:
+                logger.warning(f"YouTube API 超时: {video_id}")
+                extraction_stats.record("youtube_api", False)
+                return None
+            finally:
+                signal.alarm(0)  # 取消超时
 
         except TranscriptsDisabled:
-            pass
-        except Exception:
-            pass
+            logger.info(f"字幕被禁用: {video_id}")
+            extraction_stats.record("youtube_api", False)
+            return None
+        except Exception as e:
+            logger.warning(f"YouTube API 失败: {video_id} - {str(e)}")
+            extraction_stats.record("youtube_api", False)
+            return None
 
-        # 方法 2: 使用 yt-dlp 下载字幕（备用方案）
+    def _try_yt_dlp_subtitles(self, video_id: str, timeout_ms: int) -> Optional[TranscriptResult]:
+        """方法2: 使用 yt-dlp 下载字幕"""
+        start_time = time.time()
+        temp_dir = self.output_dir / '.temp_subs'
+        temp_dir.mkdir(exist_ok=True)
+
         try:
             ydl_opts = {
                 'quiet': True,
                 'no_warnings': True,
                 'writesubtitles': True,
-                'writeautomaticsub': True,  # 关键：包含自动生成字幕
+                'writeautomaticsub': True,
                 'subtitleslangs': ['zh-Hans', 'zh', 'en', 'en-US', 'en-GB'],
                 'skip_download': True,
                 'subtitlesformat': 'vtt',
-                'outtmpl': f'{self.output_dir}/.temp_subs/%(id)s.%(ext)s',
+                'outtmpl': f'{temp_dir}/%(id)s.%(ext)s',
             }
 
-            # 创建临时目录
-            temp_dir = self.output_dir / '.temp_subs'
-            temp_dir.mkdir(exist_ok=True)
+            # 使用 subprocess 添加超时控制
+            import subprocess
+            cmd = [
+                sys.executable, '-m', 'yt_dlp',
+                '--write-sub', '--write-auto-sub',
+                '--sub-langs', 'zh-Hans,zh,en,en-US,en-GB',
+                '--skip-download',
+                '--sub-format', 'vtt',
+                '-o', f'{temp_dir}/%(id)s.%(ext)s',
+                f'https://www.youtube.com/watch?v={video_id}'
+            ]
 
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
+            try:
+                result = subprocess.run(
+                    cmd,
+                    timeout=timeout_ms / 1000,
+                    capture_output=True,
+                    text=True
+                )
+            except subprocess.TimeoutExpired:
+                logger.warning(f"yt-dlp 超时: {video_id}")
+                extraction_stats.record("yt_dlp", False)
+                return None
 
-                # 尝试读取字幕文件
-                sub_file = temp_dir / f'{video_id}.en.vtt'
-                if sub_file.exists():
-                    text = self._parse_vtt(sub_file)
-                    if text:
-                        # 清理临时文件
-                        sub_file.unlink(missing_ok=True)
-                        return text
+            # 查找下载的字幕文件
+            for lang in ['zh-Hans', 'zh', 'en', 'en-US', 'en-GB']:
+                for ext in ['.vtt', '.en.vtt', '.zh.vtt']:
+                    sub_file = temp_dir / f'{video_id}.{ext}'
+                    if sub_file.exists():
+                        text = self._parse_vtt(sub_file)
+                        if text:
+                            # 清理临时文件
+                            sub_file.unlink(missing_ok=True)
+                            duration_ms = int((time.time() - start_time) * 1000)
+                            return TranscriptResult(
+                                text=text,
+                                source="yt_dlp",
+                                language=lang,
+                                duration_ms=duration_ms
+                            )
 
-        except Exception:
-            pass
+            # 尝试任何 .vtt 文件
+            for vtt_file in temp_dir.glob(f'{video_id}*.vtt'):
+                text = self._parse_vtt(vtt_file)
+                if text:
+                    vtt_file.unlink(missing_ok=True)
+                    duration_ms = int((time.time() - start_time) * 1000)
+                    return TranscriptResult(
+                        text=text,
+                        source="yt_dlp",
+                        language="unknown",
+                        duration_ms=duration_ms
+                    )
 
-        # 方法 3: 无字幕时使用 Whisper 语音转文字
+            extraction_stats.record("yt_dlp", False)
+            return None
+
+        except Exception as e:
+            logger.warning(f"yt-dlp 失败: {video_id} - {str(e)}")
+            extraction_stats.record("yt_dlp", False)
+            return None
+
+    def _try_whisper_transcription(self, video_id: str) -> Optional[TranscriptResult]:
+        """方法3: 使用 Whisper 转录"""
+        start_time = time.time()
         transcript = self._transcribe_with_whisper(video_id)
-        if transcript:
-            return transcript
 
-        print(f"⚠️  视频 {video_id} 没有字幕且 Whisper 转录失败")
+        if transcript:
+            duration_ms = int((time.time() - start_time) * 1000)
+            # 判断使用的是 API 还是本地
+            api_key = os.getenv("OPENAI_API_KEY")
+            source = "whisper_api" if api_key else "whisper_local"
+
+            return TranscriptResult(
+                text=transcript,
+                source=source,
+                language="en",  # Whisper 默认英文
+                duration_ms=duration_ms
+            )
+
+        extraction_stats.record("whisper_local", False)
         return None
+
+    def get_extraction_stats(self) -> dict:
+        """获取字幕提取统计报告"""
+        return extraction_stats.get_report()
 
     def _transcribe_with_whisper(self, video_id: str) -> Optional[str]:
         """
