@@ -373,7 +373,8 @@ class PalantirVideoAnalyzer:
             logger.info(f"[云环境] 使用策略: BibiGPT → Whisper（跳过 YouTube API/yt-dlp）")
 
             # 方法1: BibiGPT API（需要 token，无需访问 YouTube，使用更长超时）
-            result = self._try_bibigpt_api(video_id, 30000)  # 30秒超时
+            # 对于长视频（5分钟以上），BibiGPT处理可能需要1-2分钟
+            result = self._try_bibigpt_api(video_id, 90000)  # 90秒超时（原来是30秒）
             if result and result.success:
                 logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
                 extraction_stats.record("bibigpt_api", True)
