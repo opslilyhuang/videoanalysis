@@ -11,6 +11,7 @@ import re
 import json
 import time
 import logging
+import requests
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Literal
@@ -34,7 +35,7 @@ logger = logging.getLogger(__name__)
 class TranscriptResult:
     """字幕提取结果"""
     text: str
-    source: Literal["youtube_api", "yt_dlp", "whisper_api", "whisper_local"]
+    source: Literal["bibigpt_api", "youtube_api", "yt_dlp", "whisper_api", "whisper_local"]
     language: str
     duration_ms: int
     success: bool = True
@@ -44,6 +45,7 @@ class TranscriptExtractionStats:
     """字幕提取统计"""
     def __init__(self):
         self.stats = {
+            "bibigpt_api": {"success": 0, "failure": 0},
             "youtube_api": {"success": 0, "failure": 0},
             "yt_dlp": {"success": 0, "failure": 0},
             "whisper_api": {"success": 0, "failure": 0},
@@ -311,18 +313,26 @@ class PalantirVideoAnalyzer:
 
         Args:
             video_id: YouTube 视频 ID
-            timeout_ms: 前两种方法的超时时间（毫秒）
+            timeout_ms: 前几种方法的超时时间（毫秒）
 
         Returns:
             字幕文本，如果所有方法都失败则返回 None
 
-        Fallback 策略：
-            1. YouTube Transcript API (10秒超时)
-            2. yt-dlp 下载字幕 (10秒超时)
-            3. Whisper 转录 (5分钟)
+        Fallback 策略（优化版）：
+            1. BibiGPT API (10秒超时，不需要访问YouTube)
+            2. YouTube Transcript API (10秒超时)
+            3. yt-dlp 下载字幕 (10秒超时)
+            4. Whisper 转录 (5分钟)
         """
         start_time = time.time()
         logger.info(f"开始提取字幕: {video_id}")
+
+        # 方法0: BibiGPT API (新增，最快速)
+        result = self._try_bibigpt_api(video_id, timeout_ms)
+        if result and result.success:
+            logger.info(f"✓ BibiGPT API 成功: {video_id} (耗时: {result.duration_ms}ms)")
+            extraction_stats.record("bibigpt_api", True)
+            return result.text
 
         # 方法1: YouTube Transcript API
         result = self._try_youtube_transcript_api(video_id, timeout_ms)
@@ -339,7 +349,7 @@ class PalantirVideoAnalyzer:
             return result.text
 
         # 方法3: Whisper 转录
-        logger.warning(f"前两种方法失败，使用 Whisper: {video_id}")
+        logger.warning(f"前三种方法失败，使用 Whisper: {video_id}")
         result = self._try_whisper_transcription(video_id)
         if result and result.success:
             logger.info(f"✓ Whisper 成功: {video_id} (来源: {result.source}, 耗时: {result.duration_ms}ms)")
@@ -351,6 +361,93 @@ class PalantirVideoAnalyzer:
         logger.error(f"✗ 所有方法都失败: {video_id} (总耗时: {total_time}ms)")
         extraction_stats.record("whisper_local", False)
         return None
+
+    def _try_bibigpt_api(self, video_id: str, timeout_ms: int) -> Optional[TranscriptResult]:
+        """
+        方法0: 使用 BibiGPT API 获取字幕
+        优势：不需要访问 YouTube，速度快，支持多平台
+        """
+        start_time = time.time()
+        api_token = os.getenv("BIBIGPT_API_TOKEN")
+
+        if not api_token:
+            logger.info("BibiGPT API token 未配置，跳过")
+            return None
+
+        try:
+            # 构建请求 URL
+            url = "https://api.bibigpt.co/api/v1/getSubtitle"
+            youtube_url = f"https://www.youtube.com/watch?v={video_id}"
+
+            # 尝试多种语言（优先中文，其次英文）
+            languages = ["zh", "en", "auto"]
+
+            for lang in languages:
+                try:
+                    params = {
+                        "url": youtube_url,
+                        "audioLanguage": lang
+                    }
+
+                    # 设置超时
+                    response = requests.get(
+                        url,
+                        params=params,
+                        headers={
+                            "Authorization": f"Bearer {api_token}",
+                            "Content-Type": "application/json"
+                        },
+                        timeout=timeout_ms / 1000
+                    )
+
+                    if response.status_code == 200:
+                        data = response.json()
+
+                        # 解析返回的字幕数据
+                        if "subtitle" in data and data["subtitle"]:
+                            # 清理字幕文本（移除时间戳等）
+                            text = self._clean_bibigpt_subtitle(data["subtitle"])
+                            duration_ms = int((time.time() - start_time) * 1000)
+
+                            return TranscriptResult(
+                                text=text,
+                                source="bibigpt_api",
+                                language=lang,
+                                duration_ms=duration_ms
+                            )
+
+                except requests.exceptions.Timeout:
+                    logger.warning(f"BibiGPT API 超时 (lang={lang}): {video_id}")
+                    continue
+                except Exception as e:
+                    logger.warning(f"BibiGPT API 失败 (lang={lang}): {video_id} - {str(e)}")
+                    continue
+
+            extraction_stats.record("bibigpt_api", False)
+            return None
+
+        except Exception as e:
+            logger.warning(f"BibiGPT API 异常: {video_id} - {str(e)}")
+            extraction_stats.record("bibigpt_api", False)
+            return None
+
+    def _clean_bibigpt_subtitle(self, subtitle_data: str) -> str:
+        """清理 BibiGPT 返回的字幕数据"""
+        if isinstance(subtitle_data, str):
+            # 如果是纯文本，直接返回
+            return subtitle_data.strip()
+        elif isinstance(subtitle_data, dict):
+            # 如果是字典，提取文本内容
+            if "text" in subtitle_data:
+                return subtitle_data["text"].strip()
+            elif "segments" in subtitle_data:
+                # 合并分段字幕
+                return "\n".join([seg.get("text", "") for seg in subtitle_data["segments"]])
+        elif isinstance(subtitle_data, list):
+            # 如果是列表，合并文本
+            return "\n".join([item.get("text", str(item)) for item in subtitle_data])
+
+        return str(subtitle_data).strip()
 
     def _try_youtube_transcript_api(self, video_id: str, timeout_ms: int) -> Optional[TranscriptResult]:
         """方法1: 使用 YouTube Transcript API"""
