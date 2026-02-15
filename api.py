@@ -494,10 +494,9 @@ def get_transcript(video_id: str, dashboard_id: str = "palantirtech"):
     """根据 video_id 获取字幕内容。自动优先选用有实际内容的文件（即使 transcript_index 指向空文件）"""
     filename = _find_best_transcript_file(video_id, dashboard_id)
     if not filename:
-        tp = get_transcripts_dir(dashboard_id)
         raise HTTPException(
             status_code=404,
-            detail=f"未找到该视频的字幕。字幕目录: {tp}，请确认该目录存在且包含对应 .txt 文件"
+            detail="未找到该视频的字幕。请确认视频已成功转换"
         )
     meta, transcript = read_transcript_content(filename, dashboard_id)
     return {"metadata": meta, "transcript": transcript, "filename": filename}

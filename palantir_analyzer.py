@@ -452,15 +452,21 @@ class PalantirVideoAnalyzer:
                                         if seg.get("text", "").strip()
                                     ])
 
-                                    if subtitle_text.strip() and len(subtitle_text) > 50:
+                                    if subtitle_text.strip() and len(subtitle_text) > 10:  # 降低长度限制
                                         duration_ms = int((time.time() - start_time) * 1000)
-                                        logger.info(f"BibiGPT 返回 {len(subtitles)} 个字幕片段")
+                                        logger.info(f"BibiGPT 返回 {len(subtitles)} 个字幕片段，文本长度: {len(subtitle_text)}")
                                         return TranscriptResult(
                                             text=subtitle_text.strip(),
                                             source="bibigpt_api",
                                             language=lang,
                                             duration_ms=duration_ms
                                         )
+                                    else:
+                                        logger.warning(f"BibiGPT 返回字幕文本过短: {len(subtitle_text)} 字符")
+                            else:
+                                logger.warning(f"BibiGPT 响应中缺少 subtitlesArray 字段。detail keys: {list(detail.keys())[:10]}")
+                        else:
+                            logger.warning(f"BibiGPT 响应中缺少 detail 字段。data keys: {list(data.keys())}")
 
                 except requests.exceptions.Timeout:
                     logger.warning(f"BibiGPT API 超时 (lang={lang}): {video_id}")
