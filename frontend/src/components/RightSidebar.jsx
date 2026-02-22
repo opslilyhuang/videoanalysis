@@ -318,7 +318,13 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
       ));
     }
     if (transcriptViewMode === 'zh') {
-      if (loadingTranslate) return <p className="text-[var(--muted)]">{t(lang, 'loading')}</p>;
+      if (loadingTranslate) return (
+        <div className="flex flex-col items-center justify-center py-8 text-[var(--muted)]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)] mb-3"></div>
+          <p>{t(lang, 'loading')}</p>
+          <p className="text-xs mt-2">内容较多，翻译需要一些时间，请耐心等待...</p>
+        </div>
+      );
       const text = translatedZh || rawText;
       const paras = splitIntoParagraphs(text);
       return paras.map((p, i) => (
@@ -329,7 +335,13 @@ export function RightSidebar({ selectedVideo, videos, onMetaSaved, onSourceVideo
       ));
     }
     if (transcriptViewMode === 'bilingual') {
-      if (loadingTranslate) return <p className="text-[var(--muted)]">{t(lang, 'loading')}</p>;
+      if (loadingTranslate) return (
+        <div className="flex flex-col items-center justify-center py-8 text-[var(--muted)]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)] mb-3"></div>
+          <p>{t(lang, 'loading')}</p>
+          <p className="text-xs mt-2">内容较多，翻译需要一些时间，请耐心等待...</p>
+        </div>
+      );
       const origParas = splitIntoParagraphs(rawText);
       const transArr = Array.isArray(translatedParas) ? translatedParas : [];
       return origParas.map((orig, i) => (

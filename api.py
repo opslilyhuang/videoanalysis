@@ -13,6 +13,8 @@ import subprocess
 import sys
 import base64
 import uuid
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List
@@ -856,66 +858,58 @@ class TranslateRequest(BaseModel):
 
 @app.post("/api/translate")
 def translate_text(request: TranslateRequest):
-    """翻译文本，用于双语字幕。采用分段翻译策略，避免长文本被截断。"""
+    """翻译文本，用于双语字幕。采用并发分段翻译，大幅提升速度。"""
     text = (request.text or "").strip()
     if not text or len(text) < 10:
         return {"translated": ""}
     target = "中文" if request.target == "zh" else "English"
 
-    # 分段翻译策略：每段最多3000字符，确保不丢失内容
-    max_chunk_size = 3000
-    print(f"[翻译API] 输入文本长度: {len(text)} 字符")
+    # 统一使用分段翻译：每段最多1500字符
+    max_chunk_size = 1500
+    print(f"[翻译API] 输入文本长度: {len(text)} 字符，启用并发分段翻译")
 
-    if len(text) <= max_chunk_size:
-        # 短文本直接翻译
-        print(f"[翻译API] 短文本，直接翻译")
-        msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{text}"
-        out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
-        result = out.strip()
-        print(f"[翻译API] 翻译完成，输出长度: {len(result)} 字符")
-        return {"translated": result}
-
-    # 长文本分段翻译
-    print(f"[翻译API] 长文本，启用分段翻译")
+    # 分段
     chunks = []
     remaining = text
-
     while remaining:
-        # 取一段，优先在句子边界处分割
         if len(remaining) <= max_chunk_size:
             chunks.append(remaining)
             break
-
-        # 在max_chunk_size附近寻找句子结束符
         split_pos = max_chunk_size
         delimiters = ['.', '!', '?', '。', '！', '？', '\n\n']
         for delimiter in delimiters:
             pos = remaining.rfind(delimiter, 0, max_chunk_size + 100)
-            if pos > max_chunk_size // 2:  # 至少要有段的一半长度
+            if pos > max_chunk_size // 2:
                 split_pos = pos + len(delimiter)
                 break
-
         chunks.append(remaining[:split_pos].strip())
         remaining = remaining[split_pos:].strip()
 
-    print(f"[翻译API] 共分为 {len(chunks)} 段")
-    # 逐段翻译
-    translated_chunks = []
-    for i, chunk in enumerate(chunks):
-        try:
-            print(f"[翻译API] 开始翻译第 {i+1}/{len(chunks)} 段，长度: {len(chunk)} 字符")
-            msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{chunk}"
-            out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
-            translated = out.strip() if out else ""
-            translated_chunks.append(translated)
-            print(f"[翻译API] 第 {i+1} 段翻译完成，输出长度: {len(translated)} 字符")
-        except Exception as e:
-            print(f"[翻译API] 翻译第{i+1}段失败: {e}")
-            translated_chunks.append("")
+    total_chunks = len(chunks)
+    print(f"[翻译API] 共分为 {total_chunks} 段，开始并发翻译")
 
-    # 合并所有翻译结果
+    # 定义单段翻译函数
+    def translate_chunk(idx_chunk):
+        idx, chunk = idx_chunk
+        try:
+            msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{chunk}"
+            out = call_deepseek([{"role": "user", "content": msg}], max_tokens=3000)
+            translated = out.strip() if out else ""
+            print(f"[翻译API] 第 {idx+1}/{total_chunks} 段完成，输出: {len(translated)} 字符")
+            return idx, translated
+        except Exception as e:
+            print(f"[翻译API] 第 {idx+1} 段失败: {e}")
+            return idx, ""
+
+    # 使用线程池并发翻译（最多5个并发，避免API限流）
+    translated_chunks = [""] * total_chunks
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        for idx, result in executor.map(translate_chunk, enumerate(chunks)):
+            translated_chunks[idx] = result
+
+    # 合并结果
     full_translation = "\n\n".join(translated_chunks)
-    print(f"[翻译API] 全部翻译完成，总输出长度: {len(full_translation)} 字符")
+    print(f"[翻译API] 全部完成，总输出: {len(full_translation)} 字符")
     return {"translated": full_translation}
 
 
