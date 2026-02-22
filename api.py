@@ -864,13 +864,19 @@ def translate_text(request: TranslateRequest):
 
     # 分段翻译策略：每段最多3000字符，确保不丢失内容
     max_chunk_size = 3000
+    print(f"[翻译API] 输入文本长度: {len(text)} 字符")
+
     if len(text) <= max_chunk_size:
         # 短文本直接翻译
+        print(f"[翻译API] 短文本，直接翻译")
         msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{text}"
         out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
-        return {"translated": out.strip()}
+        result = out.strip()
+        print(f"[翻译API] 翻译完成，输出长度: {len(result)} 字符")
+        return {"translated": result}
 
     # 长文本分段翻译
+    print(f"[翻译API] 长文本，启用分段翻译")
     chunks = []
     remaining = text
 
@@ -892,19 +898,24 @@ def translate_text(request: TranslateRequest):
         chunks.append(remaining[:split_pos].strip())
         remaining = remaining[split_pos:].strip()
 
+    print(f"[翻译API] 共分为 {len(chunks)} 段")
     # 逐段翻译
     translated_chunks = []
     for i, chunk in enumerate(chunks):
         try:
+            print(f"[翻译API] 开始翻译第 {i+1}/{len(chunks)} 段，长度: {len(chunk)} 字符")
             msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{chunk}"
             out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
-            translated_chunks.append(out.strip() if out else "")
+            translated = out.strip() if out else ""
+            translated_chunks.append(translated)
+            print(f"[翻译API] 第 {i+1} 段翻译完成，输出长度: {len(translated)} 字符")
         except Exception as e:
-            print(f"翻译第{i+1}段失败: {e}")
+            print(f"[翻译API] 翻译第{i+1}段失败: {e}")
             translated_chunks.append("")
 
     # 合并所有翻译结果
     full_translation = "\n\n".join(translated_chunks)
+    print(f"[翻译API] 全部翻译完成，总输出长度: {len(full_translation)} 字符")
     return {"translated": full_translation}
 
 
