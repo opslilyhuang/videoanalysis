@@ -856,14 +856,56 @@ class TranslateRequest(BaseModel):
 
 @app.post("/api/translate")
 def translate_text(request: TranslateRequest):
-    """翻译文本，用于双语字幕"""
+    """翻译文本，用于双语字幕。采用分段翻译策略，避免长文本被截断。"""
     text = (request.text or "").strip()
     if not text or len(text) < 10:
         return {"translated": ""}
     target = "中文" if request.target == "zh" else "English"
-    msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{text[:8000]}"
-    out = call_deepseek([{"role": "user", "content": msg}], max_tokens=2000)
-    return {"translated": out.strip()}
+
+    # 分段翻译策略：每段最多3000字符，确保不丢失内容
+    max_chunk_size = 3000
+    if len(text) <= max_chunk_size:
+        # 短文本直接翻译
+        msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{text}"
+        out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
+        return {"translated": out.strip()}
+
+    # 长文本分段翻译
+    chunks = []
+    remaining = text
+
+    while remaining:
+        # 取一段，优先在句子边界处分割
+        if len(remaining) <= max_chunk_size:
+            chunks.append(remaining)
+            break
+
+        # 在max_chunk_size附近寻找句子结束符
+        split_pos = max_chunk_size
+        delimiters = ['.', '!', '?', '。', '！', '？', '\n\n']
+        for delimiter in delimiters:
+            pos = remaining.rfind(delimiter, 0, max_chunk_size + 100)
+            if pos > max_chunk_size // 2:  # 至少要有段的一半长度
+                split_pos = pos + len(delimiter)
+                break
+
+        chunks.append(remaining[:split_pos].strip())
+        remaining = remaining[split_pos:].strip()
+
+    # 逐段翻译
+    translated_chunks = []
+    for i, chunk in enumerate(chunks):
+        try:
+            msg = f"将以下英文翻译成{target}，只输出翻译结果，不要其他说明：\n\n{chunk}"
+            out = call_deepseek([{"role": "user", "content": msg}], max_tokens=4000)
+            translated_chunks.append(out.strip() if out else "")
+        except Exception as e:
+            print(f"翻译第{i+1}段失败: {e}")
+            translated_chunks.append("")
+
+    # 合并所有翻译结果
+    full_translation = "\n\n".join(translated_chunks)
+    return {"translated": full_translation}
 
 
 class TranslateParagraphsRequest(BaseModel):
