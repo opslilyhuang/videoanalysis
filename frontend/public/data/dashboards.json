@@ -1,16 +1,5 @@
 [
-  {
-    "id": "palantirtech",
-    "name": "Palantir",
-    "channelId": "palantirtech",
-    "channelUrl": "https://www.youtube.com/@palantirtech",
-    "isTemp": false
-  },
-  {
-    "id": "temp",
-    "name": "临时上传",
-    "channelId": null,
-    "channelUrl": null,
-    "isTemp": true
-  }
+  {"id": "palantirtech", "name": "Palantir", "channelId": "palantirtech", "channelUrl": "https://www.youtube.com/@palantirtech", "isTemp": false},
+  {"id": "ontologize", "name": "Ontologize", "channelId": "ontologize", "channelUrl": "https://www.youtube.com/@ontologize", "isTemp": false},
+  {"id": "temp", "name": "临时上传", "channelId": null, "channelUrl": null, "isTemp": true}
 ]

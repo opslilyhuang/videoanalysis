@@ -1,0 +1,24 @@
+[
+  {
+    "current": 96,
+    "total": 96,
+    "status": "idle",
+    "phase": "filter",
+    "failed_count": 0,
+    "channel": "ontologize",
+    "updatedAt": "2026-02-23T09:53:01.417984Z",
+    "completedAt": "2026-02-23T09:53:01.418192Z",
+    "phase_label": "筛选"
+  },
+  {
+    "current": 96,
+    "total": 96,
+    "status": "idle",
+    "phase": "process",
+    "failed_count": 0,
+    "channel": "ontologize",
+    "updatedAt": "2026-02-23T10:05:58.370516Z",
+    "completedAt": "2026-02-23T10:05:58.370737Z",
+    "phase_label": "处理"
+  }
+]

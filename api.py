@@ -735,7 +735,10 @@ def save_app_config(body: AppConfigBody):
 def get_dashboards():
     path = DATA_BASE / "dashboards.json"
     if not path.exists():
-        return [{"id": "palantirtech", "name": "Palantir", "channelId": "palantirtech", "channelUrl": "https://www.youtube.com/@palantirtech", "isTemp": False}]
+        return [
+            {"id": "palantirtech", "name": "Palantir", "channelId": "palantirtech", "channelUrl": "https://www.youtube.com/@palantirtech", "isTemp": False},
+            {"id": "ontologize", "name": "Ontologize", "channelId": "ontologize", "channelUrl": "https://www.youtube.com/@ontologize", "isTemp": False},
+        ]
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 

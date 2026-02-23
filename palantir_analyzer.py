@@ -1854,10 +1854,28 @@ def main():
     args = parser.parse_args()
 
     channel_id = args.dashboard
-    PALANTIR_CHANNEL_URL = "https://www.youtube.com/@palantirtech"
+    # 从 dashboards.json 解析当前看板的频道 URL，若无则用 Palantir 默认
+    channel_url = "https://www.youtube.com/@palantirtech"
+    if channel_id not in ("temp", "slim"):
+        dashboards_path = Path("frontend/public/data/dashboards.json")
+        if dashboards_path.exists():
+            try:
+                boards = json.load(dashboards_path.open(encoding="utf-8"))
+                board = next((b for b in boards if b.get("id") == channel_id), None)
+                if board and board.get("channelUrl"):
+                    channel_url = (board["channelUrl"] or "").rstrip("/")
+            except Exception:
+                pass
+    # 临时看板在各自分支内单独建 analyzer；palantir 沿用 palantir_analysis，其余看板用 data/{id}
+    if channel_id in ("temp", "slim"):
+        output_dir = "palantir_analysis"
+    elif channel_id == "palantirtech":
+        output_dir = "palantir_analysis"
+    else:
+        output_dir = str(Path("frontend/public/data") / channel_id)
     analyzer = PalantirVideoAnalyzer(
-        output_dir="palantir_analysis",
-        data_dir="frontend/public/data",  # 前端数据目录
+        output_dir=output_dir,
+        data_dir="frontend/public/data",
         channel_id=channel_id,
     )
 
@@ -1946,11 +1964,11 @@ def main():
         return
 
     if args.process_others:
-        analyzer.process_others(PALANTIR_CHANNEL_URL, limit=args.limit)
+        analyzer.process_others(channel_url, limit=args.limit)
         return
 
     # 阶段 1：先筛选
-    analyzer.filter_channel(PALANTIR_CHANNEL_URL, limit=args.limit)
+    analyzer.filter_channel(channel_url, limit=args.limit)
 
     if args.filter_only:
         print("\n✅ 筛选完成，三类数量已输出。执行完整流程请去掉 --filter-only")
