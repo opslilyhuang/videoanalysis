@@ -3,6 +3,50 @@ import { t } from '../i18n';
 
 const CHANGELOG_ZH = [
   {
+    version: 'v2.3.0',
+    date: '2026-02-23',
+    title: 'Ontologize 看板 & 翻译性能飞跃',
+    features: [
+      { icon: '📊', title: 'Ontologize 看板', desc: '新增 Ontologize 频道看板，包含 96 个视频；支持多看板系统：Palantir、Ontologize、临时上传、极简上传' },
+      { icon: '⚡', title: '翻译性能飞跃', desc: '使用 5 线程并发翻译，速度提升约 5 倍；22 段翻译从 1-2 分钟缩短至 10-20 秒' },
+      { icon: '🔧', title: '分段翻译策略', desc: '统一使用分段翻译（每段 1500 字符），彻底解决长视频中文翻译被截断的问题' },
+      { icon: '🎨', title: '加载体验优化', desc: '新增旋转加载动画和友好提示文本，翻译等待时提供更好的视觉反馈' },
+    ],
+    tech: ['后端：ThreadPoolExecutor 并发翻译', '优化：分段翻译避免 token 限制', '配置：多看板动态路由支持'],
+  },
+  {
+    version: 'v2.2.0',
+    date: '2026-02-22',
+    title: '视频上传功能',
+    features: [
+      { icon: '📤', title: '临时上传看板', desc: '支持用户上传 YouTube 链接进行分析；API: /api/convert-videos；数据路径: frontend/public/data/temp/' },
+      { icon: '🚀', title: '极简上传看板', desc: '简化版上传界面；数据路径: frontend/public/data/slim/' },
+      { icon: '📝', title: '批量上传', desc: '支持一次上传多个视频链接；实时显示处理进度；友好的错误信息展示' },
+    ],
+  },
+  {
+    version: 'v2.1.0',
+    date: '2026-02-15',
+    title: '系统稳定性改进',
+    features: [
+      { icon: '🔒', title: 'SSL 证书优化', desc: '本地环境不再验证 BibiGPT API SSL 证书，提升开发体验' },
+      { icon: '🛡️', title: 'API 安全性', desc: '修复 BibiGPT API 解析问题和潜在安全隐患' },
+    ],
+    tech: ['Commit: 42b447a', 'Commit: 2c18dab'],
+  },
+  {
+    version: 'v2.0.0',
+    date: '2026-02-14',
+    title: 'Palantir 视频分析系统',
+    features: [
+      { icon: '🎯', title: 'YouTube 频道分析', desc: '自动获取 Palantir 频道视频，实现智能分析、评分、分类' },
+      { icon: '📊', title: '视频评分系统', desc: 'Score = V_score × 0.4 + T_score × 0.3 + K_score × 0.3；S/A/B 等级分类' },
+      { icon: '🎬', title: '多级字幕提取', desc: 'YouTube API → yt-dlp → BibiGPT → Whisper；支持中英文双语字幕' },
+      { icon: '🤖', title: '智能报告生成', desc: '基于视频内容生成 AI 分析报告；支持自定义报告模板' },
+    ],
+    tech: ['后端：FastAPI + yt-dlp + OpenAI/DeepSeek', '前端：React + Vite + TailwindCSS', '字幕：Whisper + BibiGPT'],
+  },
+  {
     version: 'v1.6.0',
     date: '2025-02-15',
     title: '极简上传 & 字幕增强',
@@ -75,6 +119,50 @@ const CHANGELOG_ZH = [
 ];
 
 const CHANGELOG_EN = [
+  {
+    version: 'v2.3.0',
+    date: '2026-02-23',
+    title: 'Ontologize Dashboard & Translation Boost',
+    features: [
+      { icon: '📊', title: 'Ontologize Dashboard', desc: 'Added Ontologize channel dashboard with 96 videos; multi-dashboard system: Palantir, Ontologize, Temp Upload, Slim Upload' },
+      { icon: '⚡', title: 'Translation Performance Boost', desc: '5-thread concurrent translation, ~5x faster; 22-segment translation reduced from 1-2 min to 10-20 sec' },
+      { icon: '🔧', title: 'Segmented Translation', desc: 'Unified segmented translation (1500 chars per segment); completely fixes Chinese translation truncation for long videos' },
+      { icon: '🎨', title: 'Loading UX', desc: 'Added spinner animation and friendly text prompts for better visual feedback during translation' },
+    ],
+    tech: ['Backend: ThreadPoolExecutor concurrent translation', 'Optimization: Segmented translation avoids token limits', 'Config: Multi-dashboard dynamic routing'],
+  },
+  {
+    version: 'v2.2.0',
+    date: '2026-02-22',
+    title: 'Video Upload Feature',
+    features: [
+      { icon: '📤', title: 'Temp Upload Dashboard', desc: 'Users can upload YouTube links for analysis; API: /api/convert-videos; data path: frontend/public/data/temp/' },
+      { icon: '🚀', title: 'Slim Upload Dashboard', desc: 'Simplified upload interface; data path: frontend/public/data/slim/' },
+      { icon: '📝', title: 'Batch Upload', desc: 'Support uploading multiple video links at once; real-time progress display; friendly error messages' },
+    ],
+  },
+  {
+    version: 'v2.1.0',
+    date: '2026-02-15',
+    title: 'System Stability Improvements',
+    features: [
+      { icon: '🔒', title: 'SSL Certificate Optimization', desc: 'Local environment no longer validates BibiGPT API SSL certificates for better dev experience' },
+      { icon: '🛡️', title: 'API Security', desc: 'Fixed BibiGPT API parsing issues and potential security risks' },
+    ],
+    tech: ['Commit: 42b447a', 'Commit: 2c18dab'],
+  },
+  {
+    version: 'v2.0.0',
+    date: '2026-02-14',
+    title: 'Palantir Video Analysis System',
+    features: [
+      { icon: '🎯', title: 'YouTube Channel Analysis', desc: 'Auto-fetch Palantir channel videos for intelligent analysis, scoring, and classification' },
+      { icon: '📊', title: 'Video Scoring System', desc: 'Score = V_score × 0.4 + T_score × 0.3 + K_score × 0.3; S/A/B tier classification' },
+      { icon: '🎬', title: 'Multi-tier Transcript Extraction', desc: 'YouTube API → yt-dlp → BibiGPT → Whisper; supports Chinese/English bilingual subtitles' },
+      { icon: '🤖', title: 'Smart Report Generation', desc: 'AI-powered analysis reports based on video content; supports custom report templates' },
+    ],
+    tech: ['Backend: FastAPI + yt-dlp + OpenAI/DeepSeek', 'Frontend: React + Vite + TailwindCSS', 'Subtitles: Whisper + BibiGPT'],
+  },
   {
     version: 'v1.6.0',
     date: '2025-02-15',
